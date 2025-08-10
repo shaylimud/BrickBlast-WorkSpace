@@ -5,6 +5,11 @@ namespace Ray.Services
 {
     public class EventService : MonoBehaviour
     {
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+
         public static readonly ApplicationEvent Application = new ApplicationEvent();
         public static readonly UIEvent UI = new UIEvent();
         public static readonly LevelEvent Level = new LevelEvent();

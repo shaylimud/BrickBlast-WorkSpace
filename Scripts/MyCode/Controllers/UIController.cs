@@ -53,6 +53,7 @@ namespace Ray.Controllers
             EventService.Application.OnGameContentStart += TryOfferFreeGift;
 
             EventService.Resource.OnMenuResourceChanged += RefreshCurrencies;
+            EventService.Resource.OnMenuResourceChanged += RefreshShop;
 
             EventService.UI.OnToggleSound += ToggleSoundSprite;
             EventService.UI.OnToggleTutorial += ToggleTutorial;
@@ -114,6 +115,7 @@ namespace Ray.Controllers
             EventService.Application.OnGameContentStart -= TryOfferFreeGift;
 
             EventService.Resource.OnMenuResourceChanged -= RefreshCurrencies;
+            EventService.Resource.OnMenuResourceChanged -= RefreshShop;
 
             EventService.UI.OnToggleSound -= ToggleSoundSprite;
             EventService.UI.OnToggleTutorial -= ToggleTutorial;
@@ -322,10 +324,21 @@ namespace Ray.Controllers
 
             _view.PulseCurrency(_element.Shop.ShopCurrency, Database.UserData.Stats.TotalCurrency);
 
+
+            var brick = RayBrickMediator.Instance;
+            if (brick != null)
+            {
+                _view.PulseCurrency(brick.Shop.Currency, Database.UserData.Stats.TotalCurrency);
+                RefreshBoosterItem(brick.Shop.ClearRow, Database.UserData.Stats.Power_1);
+                RefreshBoosterItem(brick.Shop.ClearColumn, Database.UserData.Stats.Power_2);
+                RefreshBoosterItem(brick.Shop.ClearSquare, Database.UserData.Stats.Power_3);
+            }
+
 //            _view.PulseCurrency(_brick.Shop.Currency, Database.UserData.Stats.TotalCurrency);
             RefreshBoosterItem(_brick.Shop.ClearRow, Database.UserData.Stats.Power_1);
             RefreshBoosterItem(_brick.Shop.ClearColumn, Database.UserData.Stats.Power_2);
             RefreshBoosterItem(_brick.Shop.ClearSquare, Database.UserData.Stats.Power_3);
+
 
             if (IAPService.Instance.IsSubsribed(Database.GameSettings.InAppPurchases.SubscriptionNoAds))
             {

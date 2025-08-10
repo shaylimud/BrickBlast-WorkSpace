@@ -3,6 +3,20 @@ using UnityEngine;
 
 public class RayBrickMediator : MonoBehaviour
 {
+
+    public static RayBrickMediator Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
+    }
+
+
     [System.Serializable]
     public class BoosterItem
     {

@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class UIEventMediator : MonoBehaviour
 {
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     // Application Open
     public void _OnUpdateApplicationBtn() => EventService.UI.OnUpdateApplicationBtn.Invoke(this);
 
