@@ -551,8 +551,9 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             }
         }
 
-        private IEnumerator DestroyLines(List<List<Cell>> lines, Shape shape)
+        public IEnumerator DestroyLines(List<List<Cell>> lines, Shape shape)
         {
+            Debug.Log($"[Codex] DestroyLines called with {lines?.Count ?? 0} lines");
             SoundBase.instance.PlayLimitSound(SoundBase.instance.combo[Mathf.Min(comboCounter, SoundBase.instance.combo.Length - 1)]);
             EventManager.GetEvent<Shape>(EGameEvent.LineDestroyed).Invoke(shape);
 
@@ -562,12 +563,15 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 foreach (var cell in line)
                 {
                     cell.SetDestroying(true);
+                    Debug.Log($"[Codex] Mark cell {cell.name} for destruction");
                 }
             }
-            
+
             foreach (var line in lines)
             {
                 if (line.Count == 0) continue;
+
+                Debug.Log("[Codex] Playing line explosion");
                 
                 var lineExplosion = lineExplosionPool.Get();
                 lineExplosion.Play(line, shape, RectTransformUtils.GetMinMaxAndSizeForCanvas(line, gameCanvas.GetComponent<Canvas>()), GetExplosionColor(shape));
@@ -577,13 +581,25 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                     cell.DestroyCell();
                 }
             }
-            
+
+            Debug.Log("[Codex] DestroyLines completed");
             yield return null;
         }
 
         private Color GetExplosionColor(Shape shape)
         {
-            var itemTemplateTopColor = shape.GetActiveItems()[0].itemTemplate.overlayColor;
+            if (shape == null)
+            {
+                return Color.white;
+            }
+
+            var items = shape.GetActiveItems();
+            if (items == null || items.Count == 0)
+            {
+                return Color.white;
+            }
+
+            var itemTemplateTopColor = items[0].itemTemplate.overlayColor;
             if (_levelData.levelType.singleColorMode)
             {
                 itemTemplateTopColor = itemFactory.GetOneColor().overlayColor;
