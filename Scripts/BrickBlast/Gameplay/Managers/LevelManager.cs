@@ -553,7 +553,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         public IEnumerator DestroyLines(List<List<Cell>> lines, Shape shape)
         {
-            Debug.Log($"[Codex] DestroyLines called with {lines?.Count ?? 0} lines");
             SoundBase.instance.PlayLimitSound(SoundBase.instance.combo[Mathf.Min(comboCounter, SoundBase.instance.combo.Length - 1)]);
             EventManager.GetEvent<Shape>(EGameEvent.LineDestroyed).Invoke(shape);
 
@@ -563,7 +562,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 foreach (var cell in line)
                 {
                     cell.SetDestroying(true);
-                    Debug.Log($"[Codex] Mark cell {cell.name} for destruction");
                 }
             }
 
@@ -571,8 +569,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             {
                 if (line.Count == 0) continue;
 
-                Debug.Log("[Codex] Playing line explosion");
-                
                 var lineExplosion = lineExplosionPool.Get();
                 lineExplosion.Play(line, shape, RectTransformUtils.GetMinMaxAndSizeForCanvas(line, gameCanvas.GetComponent<Canvas>()), GetExplosionColor(shape));
                 DOVirtual.DelayedCall(1.5f, () => { lineExplosionPool.Release(lineExplosion); });
@@ -582,7 +578,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 }
             }
 
-            Debug.Log("[Codex] DestroyLines completed");
             yield return null;
         }
 
