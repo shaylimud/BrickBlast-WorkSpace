@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class RayBrickMediator : MonoBehaviour
 {
+
     public static RayBrickMediator Instance { get; private set; }
 
     private void Awake()
@@ -14,6 +15,7 @@ public class RayBrickMediator : MonoBehaviour
     {
         if (Instance == this) Instance = null;
     }
+
 
     [System.Serializable]
     public class BoosterItem
