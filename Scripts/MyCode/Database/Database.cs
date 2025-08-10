@@ -149,6 +149,8 @@ namespace Ray.Services
                     UserData.Application.CurrentVersion = int.Parse(Application.version);
                     _rayDebug.Log($"LoadUserData() - Application version set to {UserData.Application.CurrentVersion}", this);
 
+                    await MigrateLegacyProgress();
+
                     await Save(UserData);
                     _rayDebug.Log("User Data Loaded and Saved: " + JsonUtility.ToJson(UserData, true), this);
                 }
@@ -162,6 +164,36 @@ namespace Ray.Services
             {
                 _rayDebug.LogError($"Database: Error loading User Data - {e}", this);
             }
+        }
+
+        private async Task MigrateLegacyProgress()
+        {
+            if (PlayerPrefs.GetInt("MigratedToUserData", 0) == 1)
+            {
+                return;
+            }
+
+            bool changed = false;
+
+            if (PlayerPrefs.HasKey("Coins"))
+            {
+                UserData.Coins = PlayerPrefs.GetInt("Coins");
+                changed = true;
+            }
+
+            if (PlayerPrefs.HasKey("Level"))
+            {
+                UserData.Level = PlayerPrefs.GetInt("Level");
+                changed = true;
+            }
+
+            if (changed)
+            {
+                await Save(UserData);
+            }
+
+            PlayerPrefs.SetInt("MigratedToUserData", 1);
+            PlayerPrefs.Save();
         }
         private void EnsureAllFieldsExist(object obj)
         {

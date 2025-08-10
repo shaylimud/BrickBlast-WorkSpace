@@ -16,6 +16,7 @@ using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.LevelsData;
 using UnityEditor;
 using UnityEngine;
+using Ray.Services;
 
 namespace BlockPuzzleGameToolkit.Scripts.System
 {
@@ -29,8 +30,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public static void ClearPlayerProgress()
         {
-            PlayerPrefs.DeleteKey("Level");
-            PlayerPrefs.Save();
+            Database.UserData.SetLevel(1);
         }
 
         public static void ClearALlData()
@@ -44,27 +44,26 @@ namespace BlockPuzzleGameToolkit.Scripts.System
             }
 
             AssetDatabase.SaveAssets();
-
             PlayerPrefs.DeleteAll();
             PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
+            Database.UserData.SetLevel(1);
             #endif
         }
 
         public static void UnlockLevel(int currentLevel)
         {
-            int savedLevel = PlayerPrefs.GetInt("Level", 1);
+            int savedLevel = Database.UserData.Level;
             if (savedLevel < currentLevel)
             {
                 LevelNum = currentLevel;
-                PlayerPrefs.SetInt("Level", currentLevel);
-                PlayerPrefs.Save();
+                Database.UserData.SetLevel(currentLevel);
             }
         }
 
         public static int GetLevelNum()
         {
-            return PlayerPrefs.GetInt("Level", 1);
+            return Database.UserData.Level;
         }
 
         public static Level GetLevel()
@@ -102,8 +101,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         public static void SetAllLevelsCompleted()
         {
             var levels = Resources.LoadAll<Level>("Levels").Length;
-            PlayerPrefs.SetInt("Level", levels);
-            PlayerPrefs.Save();
+            Database.UserData.SetLevel(levels);
         }
 
         internal static bool HasMoreLevels()
@@ -116,6 +114,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         public static void SetLevelNum(int stateCurrentLevel)
         {
             LevelNum = stateCurrentLevel;
+            Database.UserData.SetLevel(stateCurrentLevel);
         }
     }
 }

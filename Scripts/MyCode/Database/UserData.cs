@@ -1,6 +1,7 @@
 using Firebase.Firestore;
 using Newtonsoft.Json;
 using System;
+using Ray.Services;
 
 [FirestoreData]
 public class UserData
@@ -11,6 +12,42 @@ public class UserData
     [FirestoreProperty] public TenjinData Tenjin { get; set; } = new TenjinData();
     [FirestoreProperty] public FeaturesData Features { get; set; } = new FeaturesData();
     [FirestoreProperty] public brdData bightdData { get; set; } = new brdData();
+
+    public event Action<int> CoinsChanged;
+    public event Action<int> LevelChanged;
+
+    private int coins;
+    private int level = 1;
+
+    [FirestoreProperty]
+    public int Coins
+    {
+        get => coins;
+        set
+        {
+            if (coins != value)
+            {
+                coins = value;
+                Stats.TotalCurrency = value;
+                CoinsChanged?.Invoke(value);
+            }
+        }
+    }
+
+    [FirestoreProperty]
+    public int Level
+    {
+        get => level;
+        set
+        {
+            if (level != value)
+            {
+                level = value;
+                Stats.ReachLevel = value;
+                LevelChanged?.Invoke(value);
+            }
+        }
+    }
 
     [FirestoreData]
     public class ApplicationData
@@ -32,7 +69,7 @@ public class UserData
     public class StatsData
     {
         [FirestoreProperty] public int TotalCurrency { get; set; } = 0;
-        [FirestoreProperty] public int ReachLevel { get; set; } = 0;
+        [FirestoreProperty] public int ReachLevel { get; set; } = 1;
         [FirestoreProperty] public int SpaceLevel { get; set; } = 0;
         [FirestoreProperty] public int RvCount { get; set; } = 0;
         [FirestoreProperty] public int HighestReachEvent { get; set; } = 0;
@@ -69,6 +106,29 @@ public class UserData
         var _rayDebug = ServiceAllocator.Instance.GetDebugService(ConfigType.Services);
         //_rayDebug.LogWarning($"SAVE DATA COPY{prettyJson}", _rayDebug);
 
-        return JsonConvert.DeserializeObject<UserData>(json);     
+        return JsonConvert.DeserializeObject<UserData>(json);
+    }
+
+    public void AddCoins(int amount)
+    {
+        Coins += amount;
+        Database.Instance?.Save(this);
+    }
+
+    public bool SpendCoins(int amount)
+    {
+        if (Coins >= amount)
+        {
+            Coins -= amount;
+            Database.Instance?.Save(this);
+            return true;
+        }
+        return false;
+    }
+
+    public void SetLevel(int value)
+    {
+        Level = value;
+        Database.Instance?.Save(this);
     }
 }

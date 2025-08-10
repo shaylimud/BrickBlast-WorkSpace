@@ -11,7 +11,6 @@
 // // THE SOFTWARE.
 
 using BlockPuzzleGameToolkit.Scripts.Audio;
-using BlockPuzzleGameToolkit.Scripts.Data;
 using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.System;
@@ -93,17 +92,21 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
                 return;
             }
 
-            var coinsResource = ResourceManager.instance.GetResource("Coins");
-            if (coinsResource.Consume(price))
+            var data = Ray.Services.Database.UserData;
+            if (data.SpendCoins(price))
             {
                 hasContinued = true;
                 continueButton.interactable = false;
                 rewardButton.interactable = false;
-                                
+
                 CancelInvoke(nameof(UpdateTimer));
                 ShowCoinsSpendFX(continueButton.transform.position);
                 StopInteration();
                 OnContinue();
+            }
+            else
+            {
+                MenuManager.instance.ShowPopup<CoinsShop>();
             }
         }
 
