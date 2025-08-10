@@ -322,7 +322,7 @@ namespace Ray.Controllers
 
             _view.PulseCurrency(_element.Shop.ShopCurrency, Database.UserData.Stats.TotalCurrency);
 
-            _view.PulseCurrency(_brick.Shop.Currency, Database.UserData.Stats.TotalCurrency);
+//            _view.PulseCurrency(_brick.Shop.Currency, Database.UserData.Stats.TotalCurrency);
             RefreshBoosterItem(_brick.Shop.ClearRow, Database.UserData.Stats.Power_1);
             RefreshBoosterItem(_brick.Shop.ClearColumn, Database.UserData.Stats.Power_2);
             RefreshBoosterItem(_brick.Shop.ClearSquare, Database.UserData.Stats.Power_3);
