@@ -52,6 +52,7 @@ namespace Ray.Controllers
             EventService.Application.OnGameContentStart += TryOfferFreeGift;
 
             EventService.Resource.OnMenuResourceChanged += RefreshCurrencies;
+            EventService.Resource.OnMenuResourceChanged += RefreshShop;
 
             EventService.UI.OnToggleSound += ToggleSoundSprite;
             EventService.UI.OnToggleTutorial += ToggleTutorial;
@@ -113,6 +114,7 @@ namespace Ray.Controllers
             EventService.Application.OnGameContentStart -= TryOfferFreeGift;
 
             EventService.Resource.OnMenuResourceChanged -= RefreshCurrencies;
+            EventService.Resource.OnMenuResourceChanged -= RefreshShop;
 
             EventService.UI.OnToggleSound -= ToggleSoundSprite;
             EventService.UI.OnToggleTutorial -= ToggleTutorial;
@@ -321,11 +323,28 @@ namespace Ray.Controllers
 
             _view.PulseCurrency(_element.Shop.ShopCurrency, Database.UserData.Stats.TotalCurrency);
 
+            var brick = RayBrickMediator.Instance;
+            if (brick != null)
+            {
+                _view.PulseCurrency(brick.Shop.Currency, Database.UserData.Stats.TotalCurrency);
+                RefreshBoosterItem(brick.Shop.ClearRow, Database.UserData.Stats.Power_1);
+                RefreshBoosterItem(brick.Shop.ClearColumn, Database.UserData.Stats.Power_2);
+                RefreshBoosterItem(brick.Shop.ClearSquare, Database.UserData.Stats.Power_3);
+            }
+
             if (IAPService.Instance.IsSubsribed(Database.GameSettings.InAppPurchases.SubscriptionNoAds))
             {
                 _view.Hide(_element.Shop.CtnrSubscriptionNoAds);
             }
             else _view.Show(_element.Shop.CtnrSubscriptionNoAds);
+        }
+
+        private void RefreshBoosterItem(RayBrickMediator.BoosterItem item, int amount)
+        {
+            _view.SetText(item.Amount, amount);
+            _view.SetText(item.Cost, item.Price);
+            bool canBuy = Database.UserData.Stats.TotalCurrency >= item.Price && amount < 99;
+            _view.ButtonInteractableState(canBuy, item.BtnPurchase);
         }
 
         // Features

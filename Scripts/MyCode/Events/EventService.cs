@@ -5,6 +5,11 @@ namespace Ray.Services
 {
     public class EventService : MonoBehaviour
     {
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+
         public static readonly ApplicationEvent Application = new ApplicationEvent();
         public static readonly UIEvent UI = new UIEvent();
         public static readonly LevelEvent Level = new LevelEvent();
@@ -35,6 +40,8 @@ namespace Ray.Services
             public UnityAction<Component> OnToggleInsufficient;
             public UnityAction<Component> OnToggleDataMismatch;
             public UnityAction<Component> OnToggleShop;
+
+            public UnityAction<Component, BoosterType, int> OnBoosterPurchaseBtn;
 
             public UnityAction<Component, string> OnIAPPurchaseBtn;
 
