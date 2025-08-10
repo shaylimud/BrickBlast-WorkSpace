@@ -1,9 +1,16 @@
 using TMPro;
 using UnityEngine;
+
 using UnityEngine.UI;
 
 public class RayBrickMediator : MonoBehaviour
 {
+
+
+public class RayBrickMediator : MonoBehaviour
+{
+
+
     public static RayBrickMediator Instance { get; private set; }
 
     private void Awake()
@@ -15,6 +22,7 @@ public class RayBrickMediator : MonoBehaviour
     {
         if (Instance == this) Instance = null;
     }
+
 
     private void Start()
     {
@@ -28,6 +36,7 @@ public class RayBrickMediator : MonoBehaviour
             Shop.Panel.SetActive(false);
     }
 
+
     [System.Serializable]
     public class BoosterItem
     {
@@ -40,9 +49,11 @@ public class RayBrickMediator : MonoBehaviour
     [System.Serializable]
     public class BoosterShopElements
     {
+
         public GameObject Panel;
         public GameObject BtnOpen;
         public GameObject BtnClose;
+
         public TextMeshProUGUI Currency;
         public BoosterItem ClearRow;
         public BoosterItem ClearColumn;
@@ -51,6 +62,7 @@ public class RayBrickMediator : MonoBehaviour
 
     [Header("Booster Shop")]
     public BoosterShopElements Shop = new BoosterShopElements();
+
 
     private void OpenShop()
     {
@@ -63,4 +75,5 @@ public class RayBrickMediator : MonoBehaviour
         if (Shop.Panel != null)
             Shop.Panel.SetActive(false);
     }
+
 }
