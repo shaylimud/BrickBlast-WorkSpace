@@ -74,6 +74,9 @@ public class UserData
         [FirestoreProperty] public int RvCount { get; set; } = 0;
         [FirestoreProperty] public int HighestReachEvent { get; set; } = 0;
         [FirestoreProperty] public int TotalSessions { get; set; } = 0;
+        [FirestoreProperty] public int Power_1 { get; set; } = 0;
+        [FirestoreProperty] public int Power_2 { get; set; } = 0;
+        [FirestoreProperty] public int Power_3 { get; set; } = 0;
     }
 
     [FirestoreData]
