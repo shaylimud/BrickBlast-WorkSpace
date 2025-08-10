@@ -66,20 +66,28 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
     rowVisual.gameObject.SetActive(true);
 
-    // Compute the hovered row
+    // Compute the hovered row/column
     float cellSize = fieldManager.GetCellSize();
     float pivotOffsetY = fieldManager.field.rect.height * fieldManager.field.pivot.y;
+    float pivotOffsetX = fieldManager.field.rect.width * fieldManager.field.pivot.x;
     int rows = fieldManager.cells.GetLength(0);
+    int cols = fieldManager.cells.GetLength(1);
 
-    int rowIndex = Mathf.Clamp(
+    int rowFromBottom = Mathf.Clamp(
         Mathf.FloorToInt((local.y + pivotOffsetY) / cellSize),
         0,
         rows - 1);
 
-    Debug.Log($"[Codex] Hovering row {rowIndex}");
+    int rowIndex = rows - 1 - rowFromBottom;
+    int colIndex = Mathf.Clamp(
+        Mathf.FloorToInt((local.x + pivotOffsetX) / cellSize),
+        0,
+        cols - 1);
+
+    Debug.Log($"[Codex] Hovering row {rowIndex}, col {colIndex}");
 
     // Position/size the highlight
-    float yPos = rowIndex * cellSize - pivotOffsetY;
+    float yPos = rowFromBottom * cellSize - pivotOffsetY;
     rowVisual.anchoredPosition = new Vector2(0f, yPos);
     rowVisual.sizeDelta = new Vector2(fieldManager.field.rect.width, cellSize);
 
@@ -142,11 +150,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             rt.anchorMax = new Vector2(0, 0);
             rt.pivot = new Vector2(0, 0);
             return rt;
-
-
-            int score = GameManager.instance.GameSettings.ScorePerLine;
-            levelManager.OnScored?.Invoke(score);
-
         }
     }
 }
