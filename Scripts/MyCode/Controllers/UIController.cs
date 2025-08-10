@@ -323,8 +323,7 @@ namespace Ray.Controllers
             _rayDebug.Event("RefreshShop", c, this);
 
             _view.PulseCurrency(_element.Shop.ShopCurrency, Database.UserData.Stats.TotalCurrency);
-
-
+            
             var brick = RayBrickMediator.Instance;
             if (brick != null)
             {
@@ -339,16 +338,12 @@ namespace Ray.Controllers
             RefreshBoosterItem(_brick.Shop.ClearRow, Database.UserData.Stats.Power_1);
             RefreshBoosterItem(_brick.Shop.ClearColumn, Database.UserData.Stats.Power_2);
             RefreshBoosterItem(_brick.Shop.ClearSquare, Database.UserData.Stats.Power_3);
-
-
-
             if (IAPService.Instance.IsSubsribed(Database.GameSettings.InAppPurchases.SubscriptionNoAds))
             {
                 _view.Hide(_element.Shop.CtnrSubscriptionNoAds);
             }
             else _view.Show(_element.Shop.CtnrSubscriptionNoAds);
         }
-
         private void RefreshBoosterItem(RayBrickMediator.BoosterItem item, int amount)
         {
             _view.SetText(item.Amount, amount);
