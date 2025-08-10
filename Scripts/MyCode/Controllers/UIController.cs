@@ -317,7 +317,7 @@ namespace Ray.Controllers
                 Debug.LogWarning($"Text path '{textPath}' not found in {container.name}");
             }
         }
-        private void RefreshShop(Component c)
+        public  void RefreshShop(Component c)
         {
             _rayDebug.Event("RefreshShop", c, this);
 

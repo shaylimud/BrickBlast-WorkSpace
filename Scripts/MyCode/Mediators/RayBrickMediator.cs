@@ -1,3 +1,4 @@
+using Ray.Controllers;
 using TMPro;
 using UnityEngine;
 
@@ -64,6 +65,7 @@ public class RayBrickMediator : MonoBehaviour
         {
             if (Shop.Panel != null)
                 Shop.Panel.SetActive(true);
+            UIController.Instance.RefreshShop(this);
         }
 
         private void CloseShop()
