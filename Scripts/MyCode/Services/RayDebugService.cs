@@ -11,10 +11,16 @@ public class RayDebugService : ScriptableObject
 
     private RayDebugConfig _rayDebugConfig { get { return ServiceAllocator.Instance.RayDebugConfig; } }
 
-    public void Event(object message, Component Sender , Object receiver)
+    public void Event(object message, Component Sender, Object receiver)
     {
         if (!_showThisLog || !_rayDebugConfig.IncludeEventLogs) return;
-        Debug.Log($"{GetColorHex(Color.cyan)}EVENT: {Sender.name} >> {receiver.name} :: {message}</color>", receiver);
+
+        // Guard against destroyed objects which evaluate to null in Unity
+        var senderName = Sender != null ? Sender.name : "null";
+        var receiverName = receiver != null ? receiver.name : "null";
+        var context = receiver != null ? receiver : null;
+
+        Debug.Log($"{GetColorHex(Color.cyan)}EVENT: {senderName} >> {receiverName} :: {message}</color>", context);
     }
 
     public void Log(object message, Object sender)
