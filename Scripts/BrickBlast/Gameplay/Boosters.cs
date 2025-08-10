@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BlockPuzzleGameToolkit.Scripts.System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,11 +24,15 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         {
             if (Keyboard.current != null && Keyboard.current.jKey.wasPressedThisFrame)
             {
+                Debug.Log("This : 1");
                 ToggleDeleteRow();
             }
+            Debug.Log("This : 2");
 
             if (!deleteRowMode || fieldManager == null || levelManager == null)
             {
+                Debug.Log("This : 3");
+
                 return;
             }
 
