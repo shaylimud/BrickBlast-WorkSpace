@@ -36,6 +36,8 @@ namespace Ray.Services
             public UnityAction<Component> OnToggleDataMismatch;
             public UnityAction<Component> OnToggleShop;
 
+            public UnityAction<Component, BoosterType, int> OnBoosterPurchaseBtn;
+
             public UnityAction<Component, string> OnIAPPurchaseBtn;
 
             public UnityAction<Component, RewardedType> OnRewardedBtn;

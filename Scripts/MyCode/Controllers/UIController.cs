@@ -17,6 +17,7 @@ namespace Ray.Controllers
 
         [Header("Configs")]
         [SerializeField, RequireReference] private UIElementMediator _element;
+        [SerializeField, RequireReference] private RayBrickMediator _brick;
 
         [Header("References")]
         [SerializeField, RequireReference] UIView _view;
@@ -321,11 +322,24 @@ namespace Ray.Controllers
 
             _view.PulseCurrency(_element.Shop.ShopCurrency, Database.UserData.Stats.TotalCurrency);
 
+            _view.PulseCurrency(_brick.Shop.Currency, Database.UserData.Stats.TotalCurrency);
+            RefreshBoosterItem(_brick.Shop.ClearRow, Database.UserData.Stats.Power_1);
+            RefreshBoosterItem(_brick.Shop.ClearColumn, Database.UserData.Stats.Power_2);
+            RefreshBoosterItem(_brick.Shop.ClearSquare, Database.UserData.Stats.Power_3);
+
             if (IAPService.Instance.IsSubsribed(Database.GameSettings.InAppPurchases.SubscriptionNoAds))
             {
                 _view.Hide(_element.Shop.CtnrSubscriptionNoAds);
             }
             else _view.Show(_element.Shop.CtnrSubscriptionNoAds);
+        }
+
+        private void RefreshBoosterItem(RayBrickMediator.BoosterItem item, int amount)
+        {
+            _view.SetText(item.Amount, amount);
+            _view.SetText(item.Cost, item.Price);
+            bool canBuy = Database.UserData.Stats.TotalCurrency >= item.Price && amount < 99;
+            _view.ButtonInteractableState(canBuy, item.BtnPurchase);
         }
 
         // Features
