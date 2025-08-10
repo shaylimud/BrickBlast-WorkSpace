@@ -226,8 +226,12 @@ namespace Ray.Services
                 if (defaultSnapshot.Exists)
                 {
                     Dictionary<string, object> defaultData = defaultSnapshot.ToDictionary();
-                    int defaultReachLevel = defaultData.ContainsKey("ReachLevel") ? Convert.ToInt32(defaultData["ReachLevel"]) : 0;
+                    int defaultLevel = defaultData.ContainsKey("Level") ? Convert.ToInt32(defaultData["Level"]) : 1;
+                    int defaultReachLevel = defaultData.ContainsKey("ReachLevel") ? Convert.ToInt32(defaultData["ReachLevel"]) : defaultLevel;
                     int defaultSpaceLevel = defaultData.ContainsKey("SpaceLevel") ? Convert.ToInt32(defaultData["SpaceLevel"]) : 0;
+                    int defaultPower1 = defaultData.ContainsKey("Power_1") ? Convert.ToInt32(defaultData["Power_1"]) : 0;
+                    int defaultPower2 = defaultData.ContainsKey("Power_2") ? Convert.ToInt32(defaultData["Power_2"]) : 0;
+                    int defaultPower3 = defaultData.ContainsKey("Power_3") ? Convert.ToInt32(defaultData["Power_3"]) : 0;
 
                     Timestamp currentTime = await TimeApiService.Instance.GetCurrentTime();
 
@@ -243,8 +247,13 @@ namespace Ray.Services
                         Stats = new UserData.StatsData
                         {
                             ReachLevel = defaultReachLevel,
-                            SpaceLevel = defaultSpaceLevel
-                        }
+                            SpaceLevel = defaultSpaceLevel,
+                            Power_1 = defaultPower1,
+                            Power_2 = defaultPower2,
+                            Power_3 = defaultPower3
+                        },
+
+                        Level = defaultLevel
                     };
 
                     // Save new user data to Firestore
