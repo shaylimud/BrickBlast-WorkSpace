@@ -334,10 +334,12 @@ namespace Ray.Controllers
                 RefreshBoosterItem(brick.Shop.ClearSquare, Database.UserData.Stats.Power_3);
             }
 
+
 //            _view.PulseCurrency(_brick.Shop.Currency, Database.UserData.Stats.TotalCurrency);
             RefreshBoosterItem(_brick.Shop.ClearRow, Database.UserData.Stats.Power_1);
             RefreshBoosterItem(_brick.Shop.ClearColumn, Database.UserData.Stats.Power_2);
             RefreshBoosterItem(_brick.Shop.ClearSquare, Database.UserData.Stats.Power_3);
+
 
 
             if (IAPService.Instance.IsSubsribed(Database.GameSettings.InAppPurchases.SubscriptionNoAds))
