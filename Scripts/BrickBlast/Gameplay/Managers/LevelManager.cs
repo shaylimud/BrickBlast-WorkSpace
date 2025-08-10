@@ -551,7 +551,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             }
         }
 
-        private IEnumerator DestroyLines(List<List<Cell>> lines, Shape shape)
+        public IEnumerator DestroyLines(List<List<Cell>> lines, Shape shape)
         {
             SoundBase.instance.PlayLimitSound(SoundBase.instance.combo[Mathf.Min(comboCounter, SoundBase.instance.combo.Length - 1)]);
             EventManager.GetEvent<Shape>(EGameEvent.LineDestroyed).Invoke(shape);
@@ -583,7 +583,18 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         private Color GetExplosionColor(Shape shape)
         {
-            var itemTemplateTopColor = shape.GetActiveItems()[0].itemTemplate.overlayColor;
+            if (shape == null)
+            {
+                return Color.white;
+            }
+
+            var items = shape.GetActiveItems();
+            if (items == null || items.Count == 0)
+            {
+                return Color.white;
+            }
+
+            var itemTemplateTopColor = items[0].itemTemplate.overlayColor;
             if (_levelData.levelType.singleColorMode)
             {
                 itemTemplateTopColor = itemFactory.GetOneColor().overlayColor;
