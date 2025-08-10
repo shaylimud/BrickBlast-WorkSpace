@@ -14,7 +14,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using BlockPuzzleGameToolkit.Scripts.Audio;
-using BlockPuzzleGameToolkit.Scripts.Data;
 using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.Popups.Reward;
 using BlockPuzzleGameToolkit.Scripts.Settings;
@@ -138,10 +137,15 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 
         private void BuySpin()
         {
-            if (ResourceManager.instance.Consume("Coins", spinSettings.costToSpin))
+            var data = Ray.Services.Database.UserData;
+            if (data.SpendCoins(spinSettings.costToSpin))
             {
                 ShowCoinsSpendFX(buySpinButton.transform.position);
                 Spin();
+            }
+            else
+            {
+                MenuManager.instance.ShowPopup<CoinsShop>();
             }
         }
 

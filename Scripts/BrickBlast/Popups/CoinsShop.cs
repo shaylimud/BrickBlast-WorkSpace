@@ -12,7 +12,6 @@
 
 using System.Linq;
 using BlockPuzzleGameToolkit.Scripts.Audio;
-using BlockPuzzleGameToolkit.Scripts.Data;
 using BlockPuzzleGameToolkit.Scripts.GUI.Labels;
 using BlockPuzzleGameToolkit.Scripts.Services.IAP;
 using BlockPuzzleGameToolkit.Scripts.Settings;
@@ -70,7 +69,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             var count = shopItem.settingsShopItem.Value;
             LabelAnim.AnimateForResource(shopItem.resource, shopItem.BuyItemButton.transform.position, "+" + count, SoundBase.instance.coins, () =>
             {
-                ResourceManager.instance.GetResource("Coins").Add(count);
+                Ray.Services.Database.UserData.AddCoins(count);
                 GetComponentInParent<Popup>().CloseDelay();
             });
 
@@ -102,10 +101,9 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         public void AwawrdCoins()
         {
             var coins = GameManager.instance.GameSettings.coinsForAd;
-            var resourceObject = ResourceManager.instance.GetResource("Coins");
-            LabelAnim.AnimateForResource(resourceObject, watchAd.BuyItemButton.transform.position, "+" + coins, SoundBase.instance.coins, () =>
+            LabelAnim.AnimateForResource(watchAd.resource, watchAd.BuyItemButton.transform.position, "+" + coins, SoundBase.instance.coins, () =>
             {
-                resourceObject.Add(coins);
+                Ray.Services.Database.UserData.AddCoins(coins);
                 GetComponentInParent<Popup>().Close();
             });
         }

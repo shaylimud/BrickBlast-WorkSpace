@@ -13,6 +13,7 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using Ray.Services;
 
 namespace BlockPuzzleGameToolkit.Scripts.Data
 {
@@ -22,6 +23,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
 
         //name of the resource
         private string ResourceName => name;
+        private bool IsCoins => ResourceName == "Coins";
 
         public abstract int DefaultValue { get; }
 
@@ -55,6 +57,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
 
         public int LoadResource()
         {
+            if (IsCoins)
+            {
+                return Database.UserData?.Coins ?? DefaultValue;
+            }
+
             return PlayerPrefs.GetInt(ResourceName, DefaultValue);
         }
 
@@ -62,7 +69,18 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
         public void Add(int amount)
         {
             Resource += amount;
-            PlayerPrefs.SetInt(ResourceName, Resource);
+            if (IsCoins)
+            {
+                if (Database.UserData != null)
+                {
+                    Database.UserData.Coins = Resource;
+                    Database.Instance?.Save(Database.UserData);
+                }
+            }
+            else
+            {
+                PlayerPrefs.SetInt(ResourceName, Resource);
+            }
             OnResourceChanged();
         }
 
@@ -70,8 +88,19 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
         public void Set(int amount)
         {
             Resource = amount;
-            PlayerPrefs.SetInt(ResourceName, Resource);
-            PlayerPrefs.Save();
+            if (IsCoins)
+            {
+                if (Database.UserData != null)
+                {
+                    Database.UserData.Coins = Resource;
+                    Database.Instance?.Save(Database.UserData);
+                }
+            }
+            else
+            {
+                PlayerPrefs.SetInt(ResourceName, Resource);
+                PlayerPrefs.Save();
+            }
             OnResourceChanged();
         }
 
@@ -81,8 +110,19 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
             if (IsEnough(amount))
             {
                 Resource -= amount;
-                PlayerPrefs.SetInt(ResourceName, Resource);
-                PlayerPrefs.Save();
+                if (IsCoins)
+                {
+                    if (Database.UserData != null)
+                    {
+                        Database.UserData.Coins = Resource;
+                        Database.Instance?.Save(Database.UserData);
+                    }
+                }
+                else
+                {
+                    PlayerPrefs.SetInt(ResourceName, Resource);
+                    PlayerPrefs.Save();
+                }
                 OnResourceChanged();
                 return true;
             }
