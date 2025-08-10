@@ -34,12 +34,11 @@ namespace Ray.Services
             await ConnectionService.Instance.WaitForConnection();
             _rayDebug.Log("Single Code Entry - Connection Established", this);
 
-            await Database.Instance.Initialize();
-            _rayDebug.Log("Single Code Entry - Database Initialized", this);
-
-
             TenjinService.Instance.Initialize();
             _rayDebug.Log("Single Code Entry - TenjinService Initialized", this);
+
+            await Database.Instance.Initialize();
+            _rayDebug.Log("Single Code Entry - Database Initialized", this);
 
 #if UNITY_ANDROID
             //await CMPService.Instance.Initialize();

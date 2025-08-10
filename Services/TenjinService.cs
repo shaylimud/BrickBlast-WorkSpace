@@ -117,6 +117,12 @@ namespace Ray.Services
 
         public void SendCheatEvent(string fieldKey, string oldValue, string newValue)
         {
+            if (_baseTenjin == null)
+            {
+                _rayDebug.LogWarning("TenjinService not initialized; cheat event not sent", this);
+                return;
+            }
+
             _baseTenjin.SendEvent($"Cheated_{fieldKey}", newValue);
         }
 
