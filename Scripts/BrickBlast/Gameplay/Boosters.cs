@@ -21,103 +21,76 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             levelManager = FindObjectOfType<LevelManager>();
         }
 
-        private void Update()
-        {
-            if (Keyboard.current != null && Keyboard.current.jKey.wasPressedThisFrame)
-            {
+    private void Update()
+{
+    // Toggle booster mode with J
+    if (Keyboard.current?.jKey.wasPressedThisFrame == true)
+    {
+        Debug.Log("[Codex] J key pressed");
+        ToggleDeleteRow();
+    }
 
-                Debug.Log("[Codex] J key pressed");
-                ToggleDeleteRow();
-            }
+    // If booster is off or managers are missing, hide any visual and bail
+    if (!deleteRowMode || fieldManager == null || levelManager == null)
+    {
+        if (rowVisual != null)
+            rowVisual.gameObject.SetActive(false);
+        return;
+    }
 
-            if (!deleteRowMode || fieldManager == null || levelManager == null)
-            {
-                Debug.Log("[Codex] Booster inactive or managers missing");
+    // Read pointer position
+    Vector2 pointer = Mouse.current?.position.ReadValue() ?? Vector2.zero;
 
-                Debug.Log("This : 1");
-                ToggleDeleteRow();
-            }
-            Debug.Log("This : 2");
+    // Convert to local point; if pointer is outside the field, hide visual and bail
+    if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(fieldManager.field, pointer, null, out var local))
+    {
+        if (rowVisual != null)
+            rowVisual.gameObject.SetActive(false);
+        Debug.Log("[Codex] Pointer outside field");
+        return;
+    }
 
-            if (!deleteRowMode || fieldManager == null || levelManager == null)
-            {
-                Debug.Log("This : 3");
+    Debug.Log("[Codex] Pointer inside field");
 
+    // Ensure we have a row visual
+    if (rowVisual == null)
+    {
+        rowVisual = rowVisualPrefab != null
+            ? Instantiate(rowVisualPrefab, fieldManager.field)
+            : CreateDefaultRowVisual();
 
-                return;
-            }
+        Debug.Log(rowVisualPrefab != null
+            ? "[Codex] Row visual instantiated from prefab"
+            : "[Codex] Default row visual created");
+    }
 
-            Vector2 pointer = Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(fieldManager.field, pointer, null, out var local))
-            {
+    rowVisual.gameObject.SetActive(true);
 
-                Debug.Log("[Codex] Pointer inside field");
-                if (rowVisual == null)
-                {
-                    if (rowVisualPrefab != null)
-                    {
-                        rowVisual = Instantiate(rowVisualPrefab, fieldManager.field);
-                        Debug.Log("[Codex] Row visual instantiated from prefab");
-                    }
-                    else
-                    {
-                        Debug.Log("[Codex] No prefab provided, creating default row visual");
-                        rowVisual = CreateDefaultRowVisual();
-                    }
+    // Compute the hovered row
+    float cellSize = fieldManager.GetCellSize();
+    float pivotOffsetY = fieldManager.field.rect.height * fieldManager.field.pivot.y;
+    int rows = fieldManager.cells.GetLength(0);
 
-                if (rowVisual == null)
-                {
-                    if (rowVisualPrefab == null)
-                    {
-                        return;
-                    }
-                    rowVisual = Instantiate(rowVisualPrefab, fieldManager.field);
+    int rowIndex = Mathf.Clamp(
+        Mathf.FloorToInt((local.y + pivotOffsetY) / cellSize),
+        0,
+        rows - 1);
 
-                }
+    Debug.Log($"[Codex] Hovering row {rowIndex}");
 
-                rowVisual.gameObject.SetActive(true);
+    // Position/size the highlight
+    float yPos = rowIndex * cellSize - pivotOffsetY;
+    rowVisual.anchoredPosition = new Vector2(0f, yPos);
+    rowVisual.sizeDelta = new Vector2(fieldManager.field.rect.width, cellSize);
 
-                float cellSize = fieldManager.GetCellSize();
+    // Apply on click
+    if (Mouse.current?.leftButton.wasPressedThisFrame == true)
+    {
+        Debug.Log($"[Codex] Deleting row {rowIndex}");
+        ApplyDeleteRow(rowIndex);
+    }
+}
 
-                float pivotOffset = fieldManager.field.rect.height * fieldManager.field.pivot.y;
-                int rowIndex = Mathf.Clamp(
-                    Mathf.FloorToInt((local.y + pivotOffset) / cellSize),
-                    0,
-                    fieldManager.cells.GetLength(0) - 1);
-                Debug.Log($"[Codex] Hovering row {rowIndex}");
-
-                float yPos = rowIndex * cellSize - pivotOffset;
-
-                int rowIndex = Mathf.Clamp(Mathf.FloorToInt(local.y / cellSize), 0, fieldManager.cells.GetLength(0) - 1);
-
-                rowVisual.anchoredPosition = new Vector2(0, rowIndex * cellSize);
-
-                rowVisual.sizeDelta = new Vector2(fieldManager.field.rect.width, cellSize);
-
-                if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
-                {
-
-                    Debug.Log($"[Codex] Deleting row {rowIndex}");
-                    ApplyDeleteRow(rowIndex);
-                }
-            }
-            else
-            {
-                if (rowVisual != null)
-                {
-                    rowVisual.gameObject.SetActive(false);
-                }
-                Debug.Log("[Codex] Pointer outside field");
-
-                    ApplyDeleteRow(rowIndex);
-                }
-            }
-            else if (rowVisual != null)
-            {
-                rowVisual.gameObject.SetActive(false);
-
-            }
-        }
 
         private void ToggleDeleteRow()
         {
