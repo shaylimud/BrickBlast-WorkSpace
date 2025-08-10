@@ -32,6 +32,7 @@ namespace Ray.Services
             EventService.UI.OnSpaceUpgradeBtn += ProcessSpaceUpgrade;
             EventService.UI.OnReachUpgradeBtn += ProcessReachUpgrade;
             EventService.UI.OnBackToMenu += HandleBackToMenu;
+            EventService.UI.OnBoosterPurchaseBtn += ProcessBoosterPurchase;
 
             EventService.Level.OnStart += ResetLevelResources;
 
@@ -116,6 +117,41 @@ namespace Ray.Services
             }
 
             return Mathf.FloorToInt(currentCost);
+        }
+
+        private async void ProcessBoosterPurchase(Component c, BoosterType boosterType, int cost)
+        {
+            _rayDebug.Event($"ProcessBoosterPurchase - {boosterType}", c, this);
+
+            if (Database.UserData.Stats.TotalCurrency < cost)
+            {
+                EventService.UI.OnToggleInsufficient.Invoke(this);
+                return;
+            }
+
+            var saveData = Database.UserData.Copy();
+
+            switch (boosterType)
+            {
+                case BoosterType.ClearRow:
+                    if (saveData.Stats.Power_1 >= 99) return;
+                    saveData.Stats.Power_1 = Mathf.Clamp(saveData.Stats.Power_1 + 1, 0, 99);
+                    break;
+                case BoosterType.ClearColumn:
+                    if (saveData.Stats.Power_2 >= 99) return;
+                    saveData.Stats.Power_2 = Mathf.Clamp(saveData.Stats.Power_2 + 1, 0, 99);
+                    break;
+                case BoosterType.ClearSquare:
+                    if (saveData.Stats.Power_3 >= 99) return;
+                    saveData.Stats.Power_3 = Mathf.Clamp(saveData.Stats.Power_3 + 1, 0, 99);
+                    break;
+            }
+
+            saveData.Stats.TotalCurrency -= cost;
+
+            await Database.Instance.Save(saveData);
+
+            EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }
 
         public async void RewardNoEnemies(Component c)

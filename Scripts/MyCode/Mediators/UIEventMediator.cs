@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class UIEventMediator : MonoBehaviour
 {
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     // Application Open
     public void _OnUpdateApplicationBtn() => EventService.UI.OnUpdateApplicationBtn.Invoke(this);
 
@@ -16,6 +21,10 @@ public class UIEventMediator : MonoBehaviour
     public void _OnToggleInsufficientBtn() => EventService.UI.OnToggleInsufficient.Invoke(this);
     public void _OnToggleDataMismatchBtn() => EventService.UI.OnToggleDataMismatch.Invoke(this);
     public void _OnToggleShop() => EventService.UI.OnToggleShop.Invoke(this);
+
+    public void _OnBuyClearRow(int cost) => EventService.UI.OnBoosterPurchaseBtn.Invoke(this, BoosterType.ClearRow, cost);
+    public void _OnBuyClearColumn(int cost) => EventService.UI.OnBoosterPurchaseBtn.Invoke(this, BoosterType.ClearColumn, cost);
+    public void _OnBuyClearSquare(int cost) => EventService.UI.OnBoosterPurchaseBtn.Invoke(this, BoosterType.ClearSquare, cost);
 
     // Rewarded
     public void _OnPenaltyBtn() => EventService.UI.OnRewardedBtn.Invoke(this, RewardedType.Penalty);
