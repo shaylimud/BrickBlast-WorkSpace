@@ -332,11 +332,11 @@ namespace Ray.Controllers
                 RefreshBoosterItem(brick.Shop.ClearSquare, Database.UserData.Stats.Power_3);
             }
 
-            if (IAPService.Instance.IsSubsribed(Database.GameSettings.InAppPurchases.SubscriptionNoAds))
+         /*   if (IAPService.Instance.IsSubsribed(Database.GameSettings.InAppPurchases.SubscriptionNoAds))
             {
                 _view.Hide(_element.Shop.CtnrSubscriptionNoAds);
             }
-            else _view.Show(_element.Shop.CtnrSubscriptionNoAds);
+            else _view.Show(_element.Shop.CtnrSubscriptionNoAds);*/
         }
         private void RefreshBoosterItem(RayBrickMediator.BoosterItem item, int amount)
         {
