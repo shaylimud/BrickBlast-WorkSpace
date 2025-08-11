@@ -138,6 +138,27 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
                     EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Invoke(null);
                 }
+
+                private void FillColumn(int columnIndex)
+                {
+                    var itemTemplate = Resources.Load<ItemTemplate>("Items/ItemTemplate 0");
+                    if (itemTemplate == null)
+                    {
+                        Debug.Log("[BoosterManager] ItemTemplate 0 not found.");
+                        return;
+                    }
+
+                    for (int row = 0; row < fieldManager.cells.GetLength(0); row++)
+                    {
+                        var targetCell = fieldManager.cells[row, columnIndex];
+                        if (targetCell != null && targetCell.IsEmpty())
+                        {
+                            targetCell.FillCell(itemTemplate);
+                        }
+                    }
+
+                    EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Invoke(null);
+                }
     }
     
 }
