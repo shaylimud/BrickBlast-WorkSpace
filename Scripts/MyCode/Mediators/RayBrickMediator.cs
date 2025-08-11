@@ -118,6 +118,10 @@ public class RayBrickMediator : MonoBehaviour
                 var button = item.BtnPurchase.GetComponent<Button>();
                 button.interactable = Database.UserData.Stats.TotalCurrency >= item.Price && amount < 99;
             }
+
+            Shop.ClearRow.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_1);
+            Shop.ClearColumn.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_2);
+            Shop.ClearSquare.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_3);
         }
 
         private int CalculateBoosterPrice(int amount)
