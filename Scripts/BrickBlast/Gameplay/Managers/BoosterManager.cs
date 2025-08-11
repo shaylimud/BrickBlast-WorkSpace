@@ -106,7 +106,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                                 if (fieldManager.cells[row, col] == cell)
                                 {
                                     Debug.Log($"[BoosterManager] Cell coordinates -> Row: {row}, Col: {col}");
-                                    FillRow(row);
+                                    //FillRow(row);
+                                    FillColumn(col);
                                     return;
                                 }
                             }
