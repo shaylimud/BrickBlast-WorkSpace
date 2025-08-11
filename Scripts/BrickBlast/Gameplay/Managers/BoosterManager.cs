@@ -1,11 +1,11 @@
 using UnityEngine;
+using BlockPuzzleGameToolkit.Scripts.LevelsData;
 
 namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 {
     public class BoosterManager : MonoBehaviour
     {
         [SerializeField]private FieldManager fieldManager;
-        private Cell lastHighlightedCell;
         private Camera mainCamera;
 
         private void Awake()
@@ -78,14 +78,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         private void HighlightCell(Cell cell)
         {
             Debug.Log("[BoosterManager] Highlighting cell.");
-            if (lastHighlightedCell != null)
-            {
-                Debug.Log("[BoosterManager] Clearing previous highlighted cell.");
-                lastHighlightedCell.ClearCell();
-            }
-
-            cell.HighlightCellTutorial();
-            lastHighlightedCell = cell;
 
             if (fieldManager != null && fieldManager.cells != null)
             {
@@ -96,6 +88,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                         if (fieldManager.cells[row, col] == cell)
                         {
                             Debug.Log($"[BoosterManager] Cell coordinates -> Row: {row}, Col: {col}");
+                            FillRow(row);
                             return;
                         }
                     }
@@ -105,6 +98,25 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             else
             {
                 Debug.Log("[BoosterManager] FieldManager or cells array not initialized.");
+            }
+        }
+
+        private void FillRow(int rowIndex)
+        {
+            var itemTemplate = Resources.Load<ItemTemplate>("Items/ItemTemplate 0");
+            if (itemTemplate == null)
+            {
+                Debug.Log("[BoosterManager] ItemTemplate 0 not found.");
+                return;
+            }
+
+            for (int col = 0; col < fieldManager.cells.GetLength(1); col++)
+            {
+                var targetCell = fieldManager.cells[rowIndex, col];
+                if (targetCell != null && targetCell.IsEmpty())
+                {
+                    targetCell.FillCell(itemTemplate);
+                }
             }
         }
     }
