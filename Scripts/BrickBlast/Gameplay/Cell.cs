@@ -184,7 +184,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 originalItem = null;
                 group = item.GetComponent<CanvasGroup>();
             }
-            
+
+            image.color = Color.white;
             item.transform.localScale = Vector3.one;
             if (saveTemplate == null && !busy)
             {

@@ -37,6 +37,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
             // Get input position (mouse or first touch)
             bool pressed = false;
+            bool released = false;
             Vector3 screenPos = Vector3.zero;
 
 #if UNITY_EDITOR || UNITY_STANDALONE
@@ -45,13 +46,31 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 pressed = true;
                 screenPos = Input.mousePosition;
             }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                released = true;
+            }
 #else
-    if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-    {
-        pressed = true;
-        screenPos = Input.GetTouch(0).position;
-    }
+            if (Input.touchCount > 0)
+            {
+                var touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began)
+                {
+                    pressed = true;
+                    screenPos = touch.position;
+                }
+                else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+                {
+                    released = true;
+                }
+            }
 #endif
+
+            if (released && lastHighlightedCell != null)
+            {
+                lastHighlightedCell.ClearCell();
+                lastHighlightedCell = null;
+            }
 
             if (!pressed || mainCamera == null)
                 return;
