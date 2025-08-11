@@ -1,7 +1,7 @@
 using Ray.Controllers;
+using Ray.Services;
 using TMPro;
 using UnityEngine;
-
 using UnityEngine.UI;
 
 public class RayBrickMediator : MonoBehaviour
@@ -19,8 +19,8 @@ public class RayBrickMediator : MonoBehaviour
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
+            EventService.Resource.OnMenuResourceChanged -= UpdatePrices;
         }
-
 
         private void Start()
         {
@@ -29,6 +29,13 @@ public class RayBrickMediator : MonoBehaviour
 
             if (Shop.BtnClose != null)
                 Shop.BtnClose.GetComponent<Button>().onClick.AddListener(CloseShop);
+
+            SetupBoosterButton(Shop.ClearRow, BoosterType.ClearRow);
+            SetupBoosterButton(Shop.ClearColumn, BoosterType.ClearColumn);
+            SetupBoosterButton(Shop.ClearSquare, BoosterType.ClearSquare);
+
+            EventService.Resource.OnMenuResourceChanged += UpdatePrices;
+            UpdatePrices(this);
 
             if (Shop.Panel != null)
                 Shop.Panel.SetActive(false);
@@ -72,6 +79,30 @@ public class RayBrickMediator : MonoBehaviour
         {
             if (Shop.Panel != null)
                 Shop.Panel.SetActive(false);
+        }
+
+        private void SetupBoosterButton(BoosterItem item, BoosterType type)
+        {
+            if (item?.BtnPurchase == null) return;
+
+            var button = item.BtnPurchase.GetComponent<Button>();
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() =>
+            {
+                EventService.UI.OnBoosterPurchaseBtn?.Invoke(this, type, item.Price);
+            });
+        }
+
+        private void UpdatePrices(Component c)
+        {
+            Shop.ClearRow.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_1);
+            Shop.ClearColumn.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_2);
+            Shop.ClearSquare.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_3);
+        }
+
+        private int CalculateBoosterPrice(int amount)
+        {
+            return Mathf.FloorToInt(100f * Mathf.Pow(1.17f, amount));
         }
 
     }
