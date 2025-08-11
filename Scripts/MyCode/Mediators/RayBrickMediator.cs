@@ -7,8 +7,6 @@ using UnityEngine.UI;
 public class RayBrickMediator : MonoBehaviour
 {
 
-
-
         public static RayBrickMediator Instance { get; private set; }
 
         private void Awake()
@@ -99,7 +97,7 @@ public class RayBrickMediator : MonoBehaviour
             UpdateBoosterItem(Shop.ClearRow, Database.UserData.Stats.Power_1);
             UpdateBoosterItem(Shop.ClearColumn, Database.UserData.Stats.Power_2);
             UpdateBoosterItem(Shop.ClearSquare, Database.UserData.Stats.Power_3);
-            //UIController.Instance.RefreshShop(this);
+            Shop.Currency.text = Database.UserData.Stats.TotalCurrency.ToString();
         }
 
         private void UpdateBoosterItem(BoosterItem item, int amount)
