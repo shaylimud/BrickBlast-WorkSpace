@@ -2,7 +2,8 @@ using Firebase.Firestore;
 using Newtonsoft.Json;
 using System;
 using Ray.Services;
-
+using System.Threading;
+using System.Threading.Tasks;
 [FirestoreData]
 public class UserData
 {
