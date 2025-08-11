@@ -3,6 +3,7 @@ using Ray.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using BlockPuzzleGameToolkit.Scripts.Gameplay;
 
 public class RayBrickMediator : MonoBehaviour
 {
@@ -31,6 +32,10 @@ public class RayBrickMediator : MonoBehaviour
             SetupBoosterButton(Shop.ClearRow, BoosterType.ClearRow);
             SetupBoosterButton(Shop.ClearColumn, BoosterType.ClearColumn);
             SetupBoosterButton(Shop.ClearSquare, BoosterType.ClearSquare);
+
+            SetupUseBoosterButton(Level.ClearRow, BoosterType.ClearRow);
+            SetupUseBoosterButton(Level.ClearColumn, BoosterType.ClearColumn);
+            SetupUseBoosterButton(Level.ClearSquare, BoosterType.ClearSquare);
 
             EventService.Resource.OnMenuResourceChanged += UpdatePrices;
             UpdatePrices(this);
@@ -65,6 +70,16 @@ public class RayBrickMediator : MonoBehaviour
 
         [Header("Booster Shop")] public BoosterShopElements Shop = new BoosterShopElements();
 
+        [System.Serializable]
+        public class BoosterLevelElements
+        {
+            public GameObject ClearRow;
+            public GameObject ClearColumn;
+            public GameObject ClearSquare;
+        }
+
+        [Header("Level Boosters")] public BoosterLevelElements Level = new BoosterLevelElements();
+
 
         private void OpenShop()
         {
@@ -88,6 +103,20 @@ public class RayBrickMediator : MonoBehaviour
             button.onClick.AddListener(() =>
             {
                 EventService.UI.OnBoosterPurchaseBtn?.Invoke(this, type, item.Price);
+            });
+        }
+
+        private void SetupUseBoosterButton(GameObject obj, BoosterType type)
+        {
+            if (obj == null) return;
+
+            var button = obj.GetComponent<Button>();
+            if (button == null) return;
+
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() =>
+            {
+                BlockPuzzleGameToolkit.Scripts.Gameplay.BoosterManager.Instance?.SelectBooster(type);
             });
         }
 

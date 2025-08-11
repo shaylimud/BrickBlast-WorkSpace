@@ -2,17 +2,22 @@ using UnityEngine;
 using BlockPuzzleGameToolkit.Scripts.LevelsData;
 using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.System;
+using Ray.Services;
 
 namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 {
     public class BoosterManager : MonoBehaviour
     {
+        public static BoosterManager Instance { get; private set; }
+
         [SerializeField] private FieldManager fieldManager;
         private Cell lastHighlightedCell;
         private Camera mainCamera;
+        private BoosterType? activeBooster;
 
         private void Awake()
         {
+            Instance = this;
             Debug.Log("[BoosterManager] Awake");
             fieldManager = FindObjectOfType<FieldManager>();
             if (fieldManager == null)
@@ -27,8 +32,21 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             }
         }
 
+        private void OnDestroy()
+        {
+            if (Instance == this) Instance = null;
+        }
+
+        public void SelectBooster(BoosterType booster)
+        {
+            activeBooster = booster;
+        }
+
         private void Update()
         {
+            if (activeBooster == null)
+                return;
+
             if (fieldManager == null)
                 fieldManager = FindObjectOfType<FieldManager>();
 
@@ -103,82 +121,122 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             }
         }
 
-          
-                private void HighlightCell(Cell cell)
+
+        private void HighlightCell(Cell cell)
+        {
+            Debug.Log("[BoosterManager] Highlighting cell.");
+            if (lastHighlightedCell != null)
+            {
+                Debug.Log("[BoosterManager] Clearing previous highlighted cell.");
+                lastHighlightedCell.ClearCell();
+            }
+
+            //cell.HighlightCellTutorial();
+            lastHighlightedCell = cell;
+
+            if (fieldManager != null && fieldManager.cells != null)
+            {
+                for (int row = 0; row < fieldManager.cells.GetLength(0); row++)
                 {
-                    Debug.Log("[BoosterManager] Highlighting cell.");
-                    if (lastHighlightedCell != null)
-                    {
-                        Debug.Log("[BoosterManager] Clearing previous highlighted cell.");
-                        lastHighlightedCell.ClearCell();
-                    }
-
-                    //cell.HighlightCellTutorial();
-                    lastHighlightedCell = cell;
-
-                    if (fieldManager != null && fieldManager.cells != null)
-                    {
-                        for (int row = 0; row < fieldManager.cells.GetLength(0); row++)
-                        {
-                            for (int col = 0; col < fieldManager.cells.GetLength(1); col++)
-                            {
-                                if (fieldManager.cells[row, col] == cell)
-                                {
-                                    Debug.Log($"[BoosterManager] Cell coordinates -> Row: {row}, Col: {col}");
-                                    //FillRow(row);
-                                    FillColumn(col);
-                                    return;
-                                }
-                            }
-                        }
-                        Debug.Log("[BoosterManager] Cell not found in FieldManager grid.");
-                    }
-                    else
-                    {
-                        Debug.Log("[BoosterManager] FieldManager or cells array not initialized.");
-                    }
-                }
-                private void FillRow(int rowIndex)
-                {
-                    var itemTemplate = Resources.Load<ItemTemplate>("Items/ItemTemplate 0");
-                    if (itemTemplate == null)
-                    {
-                        Debug.Log("[BoosterManager] ItemTemplate 0 not found.");
-                        return;
-                    }
-
                     for (int col = 0; col < fieldManager.cells.GetLength(1); col++)
                     {
-                        var targetCell = fieldManager.cells[rowIndex, col];
-                        if (targetCell != null && targetCell.IsEmpty())
+                        if (fieldManager.cells[row, col] == cell)
                         {
-                            targetCell.FillCell(itemTemplate);
+                            Debug.Log($"[BoosterManager] Cell coordinates -> Row: {row}, Col: {col}");
+                            switch (activeBooster)
+                            {
+                                case BoosterType.ClearRow:
+                                    FillRow(row);
+                                    break;
+                                case BoosterType.ClearColumn:
+                                    FillColumn(col);
+                                    break;
+                                case BoosterType.ClearSquare:
+                                    FillSquare(row, col);
+                                    break;
+                            }
+                            activeBooster = null;
+                            lastHighlightedCell = null;
+                            return;
                         }
                     }
-
-                    EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Invoke(null);
                 }
+                Debug.Log("[BoosterManager] Cell not found in FieldManager grid.");
+            }
+            else
+            {
+                Debug.Log("[BoosterManager] FieldManager or cells array not initialized.");
+            }
+        }
 
-                private void FillColumn(int columnIndex)
+        private void FillRow(int rowIndex)
+        {
+            var itemTemplate = Resources.Load<ItemTemplate>("Items/ItemTemplate 0");
+            if (itemTemplate == null)
+            {
+                Debug.Log("[BoosterManager] ItemTemplate 0 not found.");
+                return;
+            }
+
+            for (int col = 0; col < fieldManager.cells.GetLength(1); col++)
+            {
+                var targetCell = fieldManager.cells[rowIndex, col];
+                if (targetCell != null && targetCell.IsEmpty())
                 {
-                    var itemTemplate = Resources.Load<ItemTemplate>("Items/ItemTemplate 0");
-                    if (itemTemplate == null)
-                    {
-                        Debug.Log("[BoosterManager] ItemTemplate 0 not found.");
-                        return;
-                    }
-
-                    for (int row = 0; row < fieldManager.cells.GetLength(0); row++)
-                    {
-                        var targetCell = fieldManager.cells[row, columnIndex];
-                        if (targetCell != null && targetCell.IsEmpty())
-                        {
-                            targetCell.FillCell(itemTemplate);
-                        }
-                    }
-
-                    EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Invoke(null);
+                    targetCell.FillCell(itemTemplate);
                 }
+            }
+
+            EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Invoke(null);
+        }
+
+        private void FillColumn(int columnIndex)
+        {
+            var itemTemplate = Resources.Load<ItemTemplate>("Items/ItemTemplate 0");
+            if (itemTemplate == null)
+            {
+                Debug.Log("[BoosterManager] ItemTemplate 0 not found.");
+                return;
+            }
+
+            for (int row = 0; row < fieldManager.cells.GetLength(0); row++)
+            {
+                var targetCell = fieldManager.cells[row, columnIndex];
+                if (targetCell != null && targetCell.IsEmpty())
+                {
+                    targetCell.FillCell(itemTemplate);
+                }
+            }
+
+            EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Invoke(null);
+        }
+
+        private void FillSquare(int rowIndex, int columnIndex)
+        {
+            var itemTemplate = Resources.Load<ItemTemplate>("Items/ItemTemplate 0");
+            if (itemTemplate == null)
+            {
+                Debug.Log("[BoosterManager] ItemTemplate 0 not found.");
+                return;
+            }
+
+            for (int row = rowIndex - 1; row <= rowIndex + 1; row++)
+            {
+                for (int col = columnIndex - 1; col <= columnIndex + 1; col++)
+                {
+                    if (row < 0 || col < 0 || row >= fieldManager.cells.GetLength(0) || col >= fieldManager.cells.GetLength(1))
+                        continue;
+
+                    var targetCell = fieldManager.cells[row, col];
+                    if (targetCell != null && targetCell.IsEmpty())
+                    {
+                        targetCell.FillCell(itemTemplate);
+                    }
+                }
+            }
+
+            EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Invoke(null);
+        }
     }
     
 }
