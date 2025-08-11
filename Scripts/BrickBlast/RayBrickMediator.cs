@@ -18,7 +18,7 @@ public class RayBrickMediator : MonoBehaviour
         private void OnDestroy()
         {
             if (Instance == this) Instance = null;
-            EventService.Resource.OnMenuResourceChanged -= UpdatePrices;
+            EventService.Resource.OnMenuResourceChanged -= RefreshShop;
         }
 
         private void Start()
@@ -37,8 +37,8 @@ public class RayBrickMediator : MonoBehaviour
             SetupUseBoosterButton(Level.ClearColumn, BoosterType.ClearColumn);
             SetupUseBoosterButton(Level.ClearSquare, BoosterType.ClearSquare);
 
-            EventService.Resource.OnMenuResourceChanged += UpdatePrices;
-            UpdatePrices(this);
+            EventService.Resource.OnMenuResourceChanged += RefreshShop;
+            RefreshShop(this);
 
             if (Shop.Panel != null)
                 Shop.Panel.SetActive(false);
@@ -85,6 +85,7 @@ public class RayBrickMediator : MonoBehaviour
         {
             if (Shop.Panel != null)
                 Shop.Panel.SetActive(true);
+            RefreshShop(this);
             UIController.Instance.RefreshShop(this);
         }
 
@@ -124,16 +125,16 @@ public class RayBrickMediator : MonoBehaviour
             });
         }
 
-        private void UpdatePrices(Component c)
+        private void RefreshShop(Component c)
         {
-            
-            UpdateBoosterItem(Shop.ClearRow, Database.UserData.Stats.Power_1);
-            UpdateBoosterItem(Shop.ClearColumn, Database.UserData.Stats.Power_2);
-            UpdateBoosterItem(Shop.ClearSquare, Database.UserData.Stats.Power_3);
+
+            RefreshBoosterItem(Shop.ClearRow, Database.UserData.Stats.Power_1);
+            RefreshBoosterItem(Shop.ClearColumn, Database.UserData.Stats.Power_2);
+            RefreshBoosterItem(Shop.ClearSquare, Database.UserData.Stats.Power_3);
             Shop.Currency.text = Database.UserData.Stats.TotalCurrency.ToString();
         }
 
-        private void UpdateBoosterItem(BoosterItem item, int amount)
+        private void RefreshBoosterItem(BoosterItem item, int amount)
         {
             if (item == null) return;
 
