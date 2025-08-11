@@ -113,7 +113,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                         lastHighlightedCell.ClearCell();
                     }
 
-                    cell.HighlightCellTutorial();
+                    //cell.HighlightCellTutorial();
                     lastHighlightedCell = cell;
 
                     if (fieldManager != null && fieldManager.cells != null)
