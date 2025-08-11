@@ -116,7 +116,11 @@ public class RayBrickMediator : MonoBehaviour
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
             {
+
                 BlockPuzzleGameToolkit.Scripts.Gameplay.BoosterManager.Instance?.SelectBooster(type);
+
+                BoosterManager.Instance?.SelectBooster(type);
+
             });
         }
 
