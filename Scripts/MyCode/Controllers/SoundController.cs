@@ -8,6 +8,9 @@ namespace Ray.Controllers
 {
     public class SoundController : MonoBehaviour
     {
+        // Singleton Instance
+        public static SoundController Instance { get; private set; }
+
         [Header("Configs")]
         [SerializeField, RequireReference] private SoundCollection soundCollection;
 
@@ -19,6 +22,20 @@ namespace Ray.Controllers
 
         private AudioSource _bgm;
         private bool _muteState;
+
+        private void Awake()
+        {
+            // Ensure only one instance exists
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+
+            // Optional: Persist between scenes
+            DontDestroyOnLoad(gameObject);
+        }
 
         private void OnEnable()
         {
@@ -78,12 +95,11 @@ namespace Ray.Controllers
             var save = SaveSystem.Load();
             _muteState = save.muteSounds;
             CreateBGM();
-
             SetMuteState();
         }
         private void CreateBGM()
         {
-            if(soundCollection.BgmInfo.AudioClip == null)
+            if (soundCollection.BgmInfo.AudioClip == null)
             {
                 _rayDebug.LogError($"BGM is missing from SoundCollection!.", this);
                 return;
@@ -107,25 +123,21 @@ namespace Ray.Controllers
                 audioSource.transform.SetParent(transform);
                 _audioPool.Enqueue(audioSource);
             }
-        }      
+        }
         public void Play(SoundType soundType)
         {
             var soundInfo = soundCollection.GetSoundInfoForType(soundType);
 
-            if (_muteState)
-            {
-                return;
-            }
+            if (_muteState) return;
 
             if (_audioPool.Count == 0)
             {
                 _rayDebug.LogWarning($"No empty space left in _audioPool , Sound play is Ignored!.", this);
-
                 return;
             }
 
             AudioSource source = _audioPool.Dequeue();
-            source.clip = soundInfo.AudioClips[Random.Range(0,soundInfo.AudioClips.Length)];
+            source.clip = soundInfo.AudioClips[Random.Range(0, soundInfo.AudioClips.Length)];
 
             var rndVolumePitch = RandomizedVolumePitch(soundInfo.RndVolumePitch, soundInfo.Volume, soundInfo.Pitch);
             source.volume = rndVolumePitch.Item1;
@@ -145,22 +157,16 @@ namespace Ray.Controllers
                 case RndAmount.None:
                     break;
                 case RndAmount.Low:
-                    {
-                        rndVolume += Random.Range(-0.1f, 0.1f);
-                        rndPitch += Random.Range(-0.1f, 0.1f);
-                    }
+                    rndVolume += Random.Range(-0.1f, 0.1f);
+                    rndPitch += Random.Range(-0.1f, 0.1f);
                     break;
                 case RndAmount.Mid:
-                    {
-                        rndVolume += Random.Range(-0.15f, 0.15f);
-                        rndPitch += Random.Range(-0.2f, 0.2f);
-                    }
+                    rndVolume += Random.Range(-0.15f, 0.15f);
+                    rndPitch += Random.Range(-0.2f, 0.2f);
                     break;
                 case RndAmount.High:
-                    {
-                        rndVolume += Random.Range(-0.2f, 0.2f);
-                        rndPitch += Random.Range(-0.35f, 0.35f);
-                    }
+                    rndVolume += Random.Range(-0.2f, 0.2f);
+                    rndPitch += Random.Range(-0.35f, 0.35f);
                     break;
             }
 
@@ -185,7 +191,7 @@ namespace Ray.Controllers
         }
         void SetMuteState()
         {
-            _bgm.mute = _muteState;
+            if (_bgm != null) _bgm.mute = _muteState;
 
             foreach (var source in _audioPool)
             {
