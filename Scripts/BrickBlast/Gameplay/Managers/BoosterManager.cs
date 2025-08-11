@@ -4,7 +4,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 {
     public class BoosterManager : MonoBehaviour
     {
-        private FieldManager fieldManager;
+        [SerializeField]private FieldManager fieldManager;
         private Cell lastHighlightedCell;
         private Camera mainCamera;
 
@@ -14,18 +14,22 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             fieldManager = FindObjectOfType<FieldManager>();
             if (fieldManager == null)
             {
-                Debug.LogError("[BoosterManager] FieldManager not found.");
+                Debug.Log("[BoosterManager] FieldManager not found.");
             }
 
             mainCamera = Camera.main;
             if (mainCamera == null)
             {
-                Debug.LogError("[BoosterManager] Main camera not found.");
+                Debug.Log("[BoosterManager] Main camera not found.");
             }
         }
 
         private void Update()
         {
+            if (fieldManager == null)
+            {
+                fieldManager = FindObjectOfType<FieldManager>();
+            }
             if (Input.GetMouseButtonDown(0))
             {
                 Debug.Log("[BoosterManager] Mouse click detected.");
