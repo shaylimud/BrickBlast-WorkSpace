@@ -21,20 +21,18 @@ public class BufferService : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton guard + persist across scenes
+        // If there's already an instance, destroy the old one and replace it
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
-            return;
+            Destroy(Instance.gameObject);
         }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
-
-        // Try to bind in the first scene too
         TryFindReferences();
-        UpdateBufferState(); // ensure correct UI state on boot
+        UpdateBufferState();
     }
 
     private void OnDestroy()
