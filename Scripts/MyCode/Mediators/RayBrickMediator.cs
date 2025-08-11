@@ -95,10 +95,11 @@ public class RayBrickMediator : MonoBehaviour
 
         private void UpdatePrices(Component c)
         {
+            
             UpdateBoosterItem(Shop.ClearRow, Database.UserData.Stats.Power_1);
             UpdateBoosterItem(Shop.ClearColumn, Database.UserData.Stats.Power_2);
             UpdateBoosterItem(Shop.ClearSquare, Database.UserData.Stats.Power_3);
-            UIController.Instance.RefreshShop(this);
+            //UIController.Instance.RefreshShop(this);
         }
 
         private void UpdateBoosterItem(BoosterItem item, int amount)
