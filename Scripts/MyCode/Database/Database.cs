@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -19,6 +20,7 @@ namespace Ray.Services
 
         private FirebaseFirestore _firestore;
         private string _userID;
+        private readonly SemaphoreSlim _saveSemaphore = new SemaphoreSlim(1, 1);
 
         private RayDebugService _rayDebug => ServiceAllocator.Instance.GetDebugService(ConfigType.Services);
 
@@ -273,79 +275,86 @@ namespace Ray.Services
 
         public async Task Save(UserData saveData)
         {
-            BufferService.Instance.RequestBuffer();
-
-            var userDoc = _firestore.Collection("UserData").Document(_userID);
-            DocumentSnapshot serverSnapshot = await userDoc.GetSnapshotAsync();
-            UserData serverUserData = serverSnapshot.ConvertTo<UserData>();
-
-            // Cheat Detection
-            List<string> mismatchedFields = new List<string>();
-            Dictionary<string, (int oldValue, int newValue)> mismatchedValues = new Dictionary<string, (int, int)>();
-
-            foreach (PropertyInfo prop in typeof(UserData.StatsData).GetProperties())
+            await _saveSemaphore.WaitAsync();
+            try
             {
-                if (prop.PropertyType == typeof(int)) // Ensure property is an int before casting
-                {
-                    int clientValue = (int)prop.GetValue(UserData.Stats);
-                    int serverValue = (int)prop.GetValue(serverUserData.Stats);
+                BufferService.Instance.RequestBuffer();
 
-                    if (!Equals(clientValue, serverValue))
+                var userDoc = _firestore.Collection("UserData").Document(_userID);
+                DocumentSnapshot serverSnapshot = await userDoc.GetSnapshotAsync();
+                UserData serverUserData = serverSnapshot.ConvertTo<UserData>();
+
+                // Cheat Detection
+                List<string> mismatchedFields = new List<string>();
+                Dictionary<string, (int oldValue, int newValue)> mismatchedValues = new Dictionary<string, (int, int)>();
+
+                foreach (PropertyInfo prop in typeof(UserData.StatsData).GetProperties())
+                {
+                    if (prop.PropertyType == typeof(int)) // Ensure property is an int before casting
                     {
-                        mismatchedFields.Add(prop.Name);
-                        mismatchedValues[prop.Name] = (serverValue, clientValue);
+                        int clientValue = (int)prop.GetValue(UserData.Stats);
+                        int serverValue = (int)prop.GetValue(serverUserData.Stats);
+
+                        if (!Equals(clientValue, serverValue))
+                        {
+                            mismatchedFields.Add(prop.Name);
+                            mismatchedValues[prop.Name] = (serverValue, clientValue);
+                        }
+                    }
+                    else
+                    {
+                        _rayDebug.LogWarning($"Skipping property {prop.Name} because it is not an int. Type: {prop.PropertyType}", this);
                     }
                 }
-                else
-                {
-                    _rayDebug.LogWarning($"Skipping property {prop.Name} because it is not an int. Type: {prop.PropertyType}", this);
-                }
-            }
 
-            if (mismatchedFields.Count > 0)
+                if (mismatchedFields.Count > 0)
+                {
+                    _rayDebug.LogWarning($"Stats data mismatch detected in: {string.Join(", ", mismatchedFields)}!", this);
+                    foreach (var field in mismatchedValues)
+                    {
+                        _rayDebug.LogWarning($"{field.Key} - Server: {field.Value.oldValue}, Client: {field.Value.newValue}", this);
+
+                        // Ensure there is a listener before invoking to avoid null reference exceptions
+                        EventService.Database.OnMismatchDetected?.Invoke(this);
+                        TenjinService.Instance.SendCheatEvent(field.Key, field.Value.oldValue.ToString(), field.Value.newValue.ToString());
+                    }
+
+                    saveData.Stats = serverUserData.Stats;
+                    saveData.Security.Cheater = true;
+                }
+
+                UserData = saveData; // Transfer modifications to client after cheat check
+
+                // Check and update Highest Reach Event
+                if (UserData.Stats.ReachLevel > serverUserData.Stats.ReachLevel)
+                {
+                    List<int> sortedReachEvents = GameSettings.Events.SortedReachEvents();
+                    int highestValidEvent = sortedReachEvents.Where(e => e <= UserData.Stats.ReachLevel).DefaultIfEmpty(0).Max();
+                    if (highestValidEvent > UserData.Stats.HighestReachEvent)
+                    {
+                        UserData.Stats.HighestReachEvent = highestValidEvent;
+
+                        TenjinService.Instance.SendReachEvent(UserData.Security.Cheater, highestValidEvent);
+
+                        _rayDebug.Log($"Updated HighestReachEvent to {highestValidEvent}", this);
+                    }
+                }
+
+                if (ResourceService.Instance.IncreaseRvCount.Value) UserData.Stats.RvCount++;
+                ResourceService.Instance.IncreaseRvCount.Value = false;
+
+                UserData.Application.LastTimestamp = await TimeApiService.Instance.GetCurrentTime();
+
+                await userDoc.SetAsync(UserData);
+                _rayDebug.Log("Server User Data Updated", this);
+
+                if (mismatchedFields.Count > 0) EventService.Resource.OnMenuResourceChanged.Invoke(this); // Used to change Upgrade Cost Icons to RV for penalty
+            }
+            finally
             {
-                _rayDebug.LogWarning($"Stats data mismatch detected in: {string.Join(", ", mismatchedFields)}!", this);
-                foreach (var field in mismatchedValues)
-                {
-                    _rayDebug.LogWarning($"{field.Key} - Server: {field.Value.oldValue}, Client: {field.Value.newValue}", this);
-
-                    // Ensure there is a listener before invoking to avoid null reference exceptions
-                    EventService.Database.OnMismatchDetected?.Invoke(this);
-                    TenjinService.Instance.SendCheatEvent(field.Key, field.Value.oldValue.ToString(), field.Value.newValue.ToString());
-                }
-
-                saveData.Stats = serverUserData.Stats;
-                saveData.Security.Cheater = true;
+                BufferService.Instance.ReleaseBuffer();
+                _saveSemaphore.Release();
             }
-
-            UserData = saveData; // Transfer modifications to client after cheat check
-
-            // Check and update Highest Reach Event
-            if (UserData.Stats.ReachLevel > serverUserData.Stats.ReachLevel)
-            {
-                List<int> sortedReachEvents = GameSettings.Events.SortedReachEvents();
-                int highestValidEvent = sortedReachEvents.Where(e => e <= UserData.Stats.ReachLevel).DefaultIfEmpty(0).Max();
-                if (highestValidEvent > UserData.Stats.HighestReachEvent)
-                {
-                    UserData.Stats.HighestReachEvent = highestValidEvent;
-
-                    TenjinService.Instance.SendReachEvent(UserData.Security.Cheater, highestValidEvent);
-
-                    _rayDebug.Log($"Updated HighestReachEvent to {highestValidEvent}", this);
-                }
-            }
-
-            if (ResourceService.Instance.IncreaseRvCount.Value) UserData.Stats.RvCount++;
-            ResourceService.Instance.IncreaseRvCount.Value = false;
-
-            UserData.Application.LastTimestamp = await TimeApiService.Instance.GetCurrentTime();
-
-            await userDoc.SetAsync(UserData);
-            _rayDebug.Log("Server User Data Updated", this);
-
-            if (mismatchedFields.Count > 0) EventService.Resource.OnMenuResourceChanged.Invoke(this); // Used to change Upgrade Cost Icons to RV for penalty
-
-            BufferService.Instance.ReleaseBuffer();
         }
 
         // QA

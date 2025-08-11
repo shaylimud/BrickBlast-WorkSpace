@@ -66,15 +66,16 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
         }
 
         //adds amount to resource and saves to player prefs
-        public void Add(int amount)
+        public async void Add(int amount)
         {
             Resource += amount;
             if (IsCoins)
             {
                 if (Database.UserData != null)
                 {
-                    Database.UserData.TotalCurrency = Resource;
-                    Database.Instance?.Save(Database.UserData);
+                    var saveData = Database.UserData.Copy();
+                    saveData.TotalCurrency += amount;
+                    await Database.Instance.Save(saveData);
                 }
             }
             else
@@ -85,15 +86,16 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
         }
 
         //sets resource to amount and saves to player prefs
-        public void Set(int amount)
+        public async void Set(int amount)
         {
             Resource = amount;
             if (IsCoins)
             {
                 if (Database.UserData != null)
                 {
-                    Database.UserData.TotalCurrency = Resource;
-                    Database.Instance?.Save(Database.UserData);
+                    var saveData = Database.UserData.Copy();
+                    saveData.TotalCurrency = amount;
+                    await Database.Instance.Save(saveData);
                 }
             }
             else
@@ -112,11 +114,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
                 Resource -= amount;
                 if (IsCoins)
                 {
-                if (Database.UserData != null)
-                {
-                    Database.UserData.TotalCurrency = Resource;
-                    Database.Instance?.Save(Database.UserData);
-                }
+                    if (Database.UserData != null)
+                    {
+                        var saveData = Database.UserData.Copy();
+                        saveData.TotalCurrency -= amount;
+                        _ = Database.Instance.Save(saveData);
+                    }
                 }
                 else
                 {
