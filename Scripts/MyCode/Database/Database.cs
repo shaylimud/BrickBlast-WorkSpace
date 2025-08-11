@@ -309,7 +309,8 @@ namespace Ray.Services
                 {
                     _rayDebug.LogWarning($"{field.Key} - Server: {field.Value.oldValue}, Client: {field.Value.newValue}", this);
 
-                    EventService.Database.OnMismatchDetected.Invoke(this);
+                    // Ensure there is a listener before invoking to avoid null reference exceptions
+                    EventService.Database.OnMismatchDetected?.Invoke(this);
                     TenjinService.Instance.SendCheatEvent(field.Key, field.Value.oldValue.ToString(), field.Value.newValue.ToString());
                 }
 
