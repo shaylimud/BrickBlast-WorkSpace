@@ -27,8 +27,8 @@ namespace BlockPuzzleGameToolkit.Scripts.GUI.Labels
         {
             if (resourceObject != null && resourceObject.name == "Coins")
             {
-                Ray.Services.Database.UserData.CoinsChanged += UpdateValue;
-                UpdateValue(Ray.Services.Database.UserData.Coins);
+                Ray.Services.Database.UserData.TotalCurrencyChanged += UpdateValue;
+                UpdateValue(Ray.Services.Database.UserData.TotalCurrency);
             }
             else
             {
@@ -41,7 +41,7 @@ namespace BlockPuzzleGameToolkit.Scripts.GUI.Labels
         {
             if (resourceObject != null && resourceObject.name == "Coins")
             {
-                Ray.Services.Database.UserData.CoinsChanged -= UpdateValue;
+                Ray.Services.Database.UserData.TotalCurrencyChanged -= UpdateValue;
             }
             else
             {

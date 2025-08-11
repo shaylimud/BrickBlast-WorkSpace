@@ -93,7 +93,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             }
 
             var data = Ray.Services.Database.UserData;
-            if (data.SpendCoins(price))
+            if (data.SpendCurrency(price))
             {
                 hasContinued = true;
                 continueButton.interactable = false;

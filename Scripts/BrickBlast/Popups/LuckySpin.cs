@@ -138,7 +138,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         private void BuySpin()
         {
             var data = Ray.Services.Database.UserData;
-            if (data.SpendCoins(spinSettings.costToSpin))
+            if (data.SpendCurrency(spinSettings.costToSpin))
             {
                 ShowCoinsSpendFX(buySpinButton.transform.position);
                 Spin();
