@@ -85,7 +85,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             CancelInvoke(nameof(UpdateTimer));
         }
 
-        protected virtual void Continue()
+        protected virtual async void Continue()
         {
             if (timer <= 0 || hasContinued)
             {
@@ -93,7 +93,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             }
 
             var data = Ray.Services.Database.UserData;
-            if (data.SpendCurrency(price))
+            if (await data.SpendCurrency(price))
             {
                 hasContinued = true;
                 continueButton.interactable = false;

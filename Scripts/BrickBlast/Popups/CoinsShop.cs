@@ -63,13 +63,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             }
         }
 
-        private void PurchaseSucceded(string id)
+        private async void PurchaseSucceded(string id)
         {
             var shopItem = packs.First(i => i.productID.ID == id);
             var count = shopItem.settingsShopItem.Value;
-            LabelAnim.AnimateForResource(shopItem.resource, shopItem.BuyItemButton.transform.position, "+" + count, SoundBase.instance.coins, () =>
+            LabelAnim.AnimateForResource(shopItem.resource, shopItem.BuyItemButton.transform.position, "+" + count, SoundBase.instance.coins, async () =>
             {
-                Ray.Services.Database.UserData.AddCurrency(count);
+                await Ray.Services.Database.UserData.AddCurrency(count);
                 GetComponentInParent<Popup>().CloseDelay();
             });
 
@@ -98,12 +98,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 #endif
         }
 
-        public void AwawrdCoins()
+        public async void AwawrdCoins()
         {
             var coins = GameManager.instance.GameSettings.coinsForAd;
-            LabelAnim.AnimateForResource(watchAd.resource, watchAd.BuyItemButton.transform.position, "+" + coins, SoundBase.instance.coins, () =>
+            LabelAnim.AnimateForResource(watchAd.resource, watchAd.BuyItemButton.transform.position, "+" + coins, SoundBase.instance.coins, async () =>
             {
-                Ray.Services.Database.UserData.AddCurrency(coins);
+                await Ray.Services.Database.UserData.AddCurrency(coins);
                 GetComponentInParent<Popup>().Close();
             });
         }

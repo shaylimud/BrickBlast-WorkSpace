@@ -108,20 +108,20 @@ public class UserData
         return JsonConvert.DeserializeObject<UserData>(json);
     }
 
-    public void AddCurrency(int amount)
+    public async Task AddCurrency(int amount)
     {
         var saveData = Database.UserData.Copy();
         saveData.TotalCurrency += amount;
-        Database.Instance?.Save(saveData);
+        await Database.Instance?.Save(saveData);
     }
 
-    public bool SpendCurrency(int amount)
+    public async Task<bool> SpendCurrency(int amount)
     {
         if (TotalCurrency >= amount)
         {
             var saveData = Database.UserData.Copy();
             saveData.TotalCurrency -= amount;
-            Database.Instance?.Save(saveData);
+            await Database.Instance?.Save(saveData);
             return true;
         }
         return false;
