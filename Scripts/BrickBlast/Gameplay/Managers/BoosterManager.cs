@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using BlockPuzzleGameToolkit.Scripts.LevelsData;
 using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.System;
@@ -11,6 +12,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         public static BoosterManager Instance { get; private set; }
 
         [SerializeField] private FieldManager fieldManager;
+        [SerializeField] private Button rowButton;
+        [SerializeField] private Button columnButton;
+        [SerializeField] private Button squareButton;
+
         private Cell lastHighlightedCell;
         private Camera mainCamera;
         private BoosterType? activeBooster;
@@ -30,6 +35,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             {
                 Debug.Log("[BoosterManager] Main camera not found.");
             }
+
+            if (rowButton != null)
+                rowButton.onClick.AddListener(() => SelectBooster(BoosterType.ClearRow));
+            if (columnButton != null)
+                columnButton.onClick.AddListener(() => SelectBooster(BoosterType.ClearColumn));
+            if (squareButton != null)
+                squareButton.onClick.AddListener(() => SelectBooster(BoosterType.ClearSquare));
         }
 
         private void OnDestroy()
