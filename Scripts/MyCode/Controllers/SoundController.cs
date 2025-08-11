@@ -68,6 +68,45 @@ namespace Ray.Controllers
             EventService.Item.OnObstacleCollected += PlayerHit;
         }
 
+        private void OnDisable()
+        {
+            EventService.UI.OnToggleSound -= ToggleSounds;
+
+            EventService.UI.OnStartBtn -= Click;
+            EventService.UI.OnSpaceUpgradeBtn -= Click;
+            EventService.UI.OnReachUpgradeBtn -= Click;
+            EventService.UI.OnToggleSound -= Click;
+
+            EventService.UI.OnToggleInsufficient -= Error;
+            EventService.UI.OnToggleDataMismatch -= Error;
+            EventService.UI.OnToggleTutorial -= OpenPopup;
+
+            EventService.UI.OnMeterStart -= RushMeter;
+
+            EventService.Resource.OnMenuResourceChanged -= Purchase;
+            EventService.IAP.OnPurchasedConsumable -= Purchase;
+            EventService.IAP.OnPurchasedSubscriptionNoAds -= Purchase;
+
+            EventService.Level.OnStart -= StartLevel;
+
+            EventService.Ad.OnReviveWatched -= AdReward;
+            EventService.Ad.OnTripleWatched -= AdReward;
+            EventService.Ad.OnNoEnemiesWatched -= AdReward;
+            EventService.Ad.OnFreeGiftWatched -= AdReward;
+            EventService.Ad.OnExtraSpaceWatched -= AdReward;
+
+            EventService.Item.OnItemCollected -= PlayItemCollection;
+            EventService.Item.OnObstacleCollected -= PlayerHit;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
+            }
+        }
+
         // Play Methods
         private void AdReward(Component c) => Play(SoundType.AdReward);
         private void Click(Component c) => Play(SoundType.Click);
