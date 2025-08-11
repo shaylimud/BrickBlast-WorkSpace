@@ -137,6 +137,13 @@ namespace Ray.Controllers
             }
 
             AudioSource source = _audioPool.Dequeue();
+
+            if (!source)
+            {
+                source = new GameObject("AudioSource").AddComponent<AudioSource>();
+                source.transform.SetParent(transform);
+            }
+
             source.clip = soundInfo.AudioClips[Random.Range(0, soundInfo.AudioClips.Length)];
 
             var rndVolumePitch = RandomizedVolumePitch(soundInfo.RndVolumePitch, soundInfo.Volume, soundInfo.Pitch);
@@ -145,7 +152,10 @@ namespace Ray.Controllers
 
             source.Play();
 
-            StartCoroutine(ReturnToPool(source));
+            if (source)
+            {
+                StartCoroutine(ReturnToPool(source));
+            }
         }
         private (float, float) RandomizedVolumePitch(RndAmount randomization, float originalValume, float originalPitch)
         {
@@ -174,8 +184,14 @@ namespace Ray.Controllers
         }
         private IEnumerator ReturnToPool(AudioSource source)
         {
-            yield return new WaitWhile(() => source.isPlaying);
-            _audioPool.Enqueue(source);
+            if (!source) yield break;
+
+            yield return new WaitWhile(() => source && source.isPlaying);
+
+            if (source)
+            {
+                _audioPool.Enqueue(source);
+            }
         }
         public void ToggleSounds(Component c)
         {
@@ -195,7 +211,7 @@ namespace Ray.Controllers
 
             foreach (var source in _audioPool)
             {
-                source.mute = _muteState;
+                if (source) source.mute = _muteState;
             }
         }
     }
