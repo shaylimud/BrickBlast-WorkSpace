@@ -95,6 +95,30 @@ public class RayBrickMediator : MonoBehaviour
 
         private void UpdatePrices(Component c)
         {
+            UpdateBoosterItem(Shop.ClearRow, Database.UserData.Stats.Power_1);
+            UpdateBoosterItem(Shop.ClearColumn, Database.UserData.Stats.Power_2);
+            UpdateBoosterItem(Shop.ClearSquare, Database.UserData.Stats.Power_3);
+            UIController.Instance.RefreshShop(this);
+        }
+
+        private void UpdateBoosterItem(BoosterItem item, int amount)
+        {
+            if (item == null) return;
+
+            item.Price = CalculateBoosterPrice(amount);
+
+            if (item.Amount != null)
+                item.Amount.text = amount.ToString();
+
+            if (item.Cost != null)
+                item.Cost.text = item.Price.ToString();
+
+            if (item.BtnPurchase != null)
+            {
+                var button = item.BtnPurchase.GetComponent<Button>();
+                button.interactable = Database.UserData.Stats.TotalCurrency >= item.Price && amount < 99;
+            }
+
             Shop.ClearRow.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_1);
             Shop.ClearColumn.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_2);
             Shop.ClearSquare.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_3);
