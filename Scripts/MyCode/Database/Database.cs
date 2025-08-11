@@ -177,7 +177,7 @@ namespace Ray.Services
 
             if (PlayerPrefs.HasKey("Coins"))
             {
-                UserData.Coins = PlayerPrefs.GetInt("Coins");
+                UserData.TotalCurrency = PlayerPrefs.GetInt("Coins");
                 changed = true;
             }
 

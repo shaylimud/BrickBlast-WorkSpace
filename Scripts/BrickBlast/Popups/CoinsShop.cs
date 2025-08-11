@@ -69,7 +69,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             var count = shopItem.settingsShopItem.Value;
             LabelAnim.AnimateForResource(shopItem.resource, shopItem.BuyItemButton.transform.position, "+" + count, SoundBase.instance.coins, () =>
             {
-                Ray.Services.Database.UserData.AddCoins(count);
+                Ray.Services.Database.UserData.AddCurrency(count);
                 GetComponentInParent<Popup>().CloseDelay();
             });
 
@@ -103,7 +103,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             var coins = GameManager.instance.GameSettings.coinsForAd;
             LabelAnim.AnimateForResource(watchAd.resource, watchAd.BuyItemButton.transform.position, "+" + coins, SoundBase.instance.coins, () =>
             {
-                Ray.Services.Database.UserData.AddCoins(coins);
+                Ray.Services.Database.UserData.AddCurrency(coins);
                 GetComponentInParent<Popup>().Close();
             });
         }

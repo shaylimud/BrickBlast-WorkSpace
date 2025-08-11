@@ -13,23 +13,19 @@ public class UserData
     [FirestoreProperty] public FeaturesData Features { get; set; } = new FeaturesData();
     [FirestoreProperty] public brdData bightdData { get; set; } = new brdData();
 
-    public event Action<int> CoinsChanged;
+    public event Action<int> TotalCurrencyChanged;
     public event Action<int> LevelChanged;
-
-    private int coins;
     private int level = 1;
 
-    [FirestoreProperty]
-    public int Coins
+    public int TotalCurrency
     {
-        get => coins;
+        get => Stats.TotalCurrency;
         set
         {
-            if (coins != value)
+            if (Stats.TotalCurrency != value)
             {
-                coins = value;
                 Stats.TotalCurrency = value;
-                CoinsChanged?.Invoke(value);
+                TotalCurrencyChanged?.Invoke(value);
             }
         }
     }
@@ -112,18 +108,20 @@ public class UserData
         return JsonConvert.DeserializeObject<UserData>(json);
     }
 
-    public void AddCoins(int amount)
+    public void AddCurrency(int amount)
     {
-        Coins += amount;
-        Database.Instance?.Save(this);
+        var saveData = Database.UserData.Copy();
+        saveData.TotalCurrency += amount;
+        Database.Instance?.Save(saveData);
     }
 
-    public bool SpendCoins(int amount)
+    public bool SpendCurrency(int amount)
     {
-        if (Coins >= amount)
+        if (TotalCurrency >= amount)
         {
-            Coins -= amount;
-            Database.Instance?.Save(this);
+            var saveData = Database.UserData.Copy();
+            saveData.TotalCurrency -= amount;
+            Database.Instance?.Save(saveData);
             return true;
         }
         return false;
@@ -131,7 +129,8 @@ public class UserData
 
     public void SetLevel(int value)
     {
-        Level = value;
-        Database.Instance?.Save(this);
+        var saveData = Database.UserData.Copy();
+        saveData.Level = value;
+        Database.Instance?.Save(saveData);
     }
 }

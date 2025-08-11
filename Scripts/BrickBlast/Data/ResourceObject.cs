@@ -59,7 +59,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
         {
             if (IsCoins)
             {
-                return Database.UserData?.Coins ?? DefaultValue;
+                return Database.UserData?.TotalCurrency ?? DefaultValue;
             }
 
             return PlayerPrefs.GetInt(ResourceName, DefaultValue);
@@ -73,7 +73,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
             {
                 if (Database.UserData != null)
                 {
-                    Database.UserData.Coins = Resource;
+                    Database.UserData.TotalCurrency = Resource;
                     Database.Instance?.Save(Database.UserData);
                 }
             }
@@ -92,7 +92,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
             {
                 if (Database.UserData != null)
                 {
-                    Database.UserData.Coins = Resource;
+                    Database.UserData.TotalCurrency = Resource;
                     Database.Instance?.Save(Database.UserData);
                 }
             }
@@ -112,11 +112,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
                 Resource -= amount;
                 if (IsCoins)
                 {
-                    if (Database.UserData != null)
-                    {
-                        Database.UserData.Coins = Resource;
-                        Database.Instance?.Save(Database.UserData);
-                    }
+                if (Database.UserData != null)
+                {
+                    Database.UserData.TotalCurrency = Resource;
+                    Database.Instance?.Save(Database.UserData);
+                }
                 }
                 else
                 {
