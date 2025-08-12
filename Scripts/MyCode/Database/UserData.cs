@@ -90,6 +90,7 @@ public class UserData
         [FirestoreProperty] public int Power_1 { get; set; } = 0;
         [FirestoreProperty] public int Power_2 { get; set; } = 0;
         [FirestoreProperty] public int Power_3 { get; set; } = 0;
+        [FirestoreProperty] public int Power_4 { get; set; } = 0;
     }
 
     [FirestoreData]

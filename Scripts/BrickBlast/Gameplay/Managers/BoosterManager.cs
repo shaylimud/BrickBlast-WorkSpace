@@ -15,6 +15,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         [SerializeField] private Button rowButton;
         [SerializeField] private Button columnButton;
         [SerializeField] private Button squareButton;
+        [SerializeField] private Button changeShapeButton;
 
         private Cell lastHighlightedCell;
         private Camera mainCamera;
@@ -42,6 +43,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 columnButton.onClick.AddListener(() => SelectBooster(BoosterType.ClearColumn));
             if (squareButton != null)
                 squareButton.onClick.AddListener(() => SelectBooster(BoosterType.ClearSquare));
+            if (changeShapeButton != null)
+                changeShapeButton.onClick.AddListener(() => SelectBooster(BoosterType.ChangeShape));
         }
 
         private void OnDestroy()
@@ -51,7 +54,23 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         public void SelectBooster(BoosterType booster)
         {
+            if (booster == BoosterType.ChangeShape)
+            {
+                ChangeShapes();
+                return;
+            }
+
             activeBooster = booster;
+        }
+
+        private void ChangeShapes()
+        {
+            var deckManager = FindObjectOfType<CellDeckManager>();
+            if (deckManager != null)
+            {
+                deckManager.UpdateCellDeckAfterFail();
+            }
+            activeBooster = null;
         }
 
         private void Update()
@@ -165,6 +184,9 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                                     break;
                                 case BoosterType.ClearSquare:
                                     FillSquare(row, col);
+                                    break;
+                                case BoosterType.ChangeShape:
+                                    ChangeShapes();
                                     break;
                             }
                             activeBooster = null;

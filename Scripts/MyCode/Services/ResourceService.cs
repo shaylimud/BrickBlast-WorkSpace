@@ -145,6 +145,10 @@ namespace Ray.Services
                     if (saveData.Stats.Power_3 >= 99) return;
                     saveData.Stats.Power_3 = Mathf.Clamp(saveData.Stats.Power_3 + 1, 0, 99);
                     break;
+                case BoosterType.ChangeShape:
+                    if (saveData.Stats.Power_4 >= 99) return;
+                    saveData.Stats.Power_4 = Mathf.Clamp(saveData.Stats.Power_4 + 1, 0, 99);
+                    break;
             }
 
             saveData.Stats.TotalCurrency -= cost;

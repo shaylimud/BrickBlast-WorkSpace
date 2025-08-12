@@ -6,6 +6,7 @@ namespace Ray.Services
     {
         ClearRow,
         ClearColumn,
-        ClearSquare
+        ClearSquare,
+        ChangeShape
     }
 }
