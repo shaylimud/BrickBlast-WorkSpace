@@ -32,10 +32,12 @@ public class RayBrickMediator : MonoBehaviour
             SetupBoosterButton(Shop.ClearRow, BoosterType.ClearRow);
             SetupBoosterButton(Shop.ClearColumn, BoosterType.ClearColumn);
             SetupBoosterButton(Shop.ClearSquare, BoosterType.ClearSquare);
+            SetupBoosterButton(Shop.ChangeShape, BoosterType.ChangeShape);
 
             SetupUseBoosterButton(Level.ClearRow, BoosterType.ClearRow);
             SetupUseBoosterButton(Level.ClearColumn, BoosterType.ClearColumn);
             SetupUseBoosterButton(Level.ClearSquare, BoosterType.ClearSquare);
+            SetupUseBoosterButton(Level.ChangeShape, BoosterType.ChangeShape);
 
             EventService.Resource.OnMenuResourceChanged += RefreshShop;
             RefreshShop(this);
@@ -66,6 +68,7 @@ public class RayBrickMediator : MonoBehaviour
             public BoosterItem ClearRow;
             public BoosterItem ClearColumn;
             public BoosterItem ClearSquare;
+            public BoosterItem ChangeShape;
         }
 
         [Header("Booster Shop")] public BoosterShopElements Shop = new BoosterShopElements();
@@ -76,6 +79,7 @@ public class RayBrickMediator : MonoBehaviour
             public GameObject ClearRow;
             public GameObject ClearColumn;
             public GameObject ClearSquare;
+            public GameObject ChangeShape;
         }
 
         [Header("Level Boosters")] public BoosterLevelElements Level = new BoosterLevelElements();
@@ -131,6 +135,7 @@ public class RayBrickMediator : MonoBehaviour
             RefreshBoosterItem(Shop.ClearRow, Database.UserData.Stats.Power_1);
             RefreshBoosterItem(Shop.ClearColumn, Database.UserData.Stats.Power_2);
             RefreshBoosterItem(Shop.ClearSquare, Database.UserData.Stats.Power_3);
+            RefreshBoosterItem(Shop.ChangeShape, Database.UserData.Stats.Power_4);
             Shop.Currency.text = Database.UserData.Stats.TotalCurrency.ToString();
         }
 
@@ -155,6 +160,7 @@ public class RayBrickMediator : MonoBehaviour
             Shop.ClearRow.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_1);
             Shop.ClearColumn.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_2);
             Shop.ClearSquare.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_3);
+            Shop.ChangeShape.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_4);
         }
 
         private int CalculateBoosterPrice(int amount)

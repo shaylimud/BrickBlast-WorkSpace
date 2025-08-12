@@ -234,6 +234,7 @@ namespace Ray.Services
                     int defaultPower1 = defaultData.ContainsKey("Power_1") ? Convert.ToInt32(defaultData["Power_1"]) : 0;
                     int defaultPower2 = defaultData.ContainsKey("Power_2") ? Convert.ToInt32(defaultData["Power_2"]) : 0;
                     int defaultPower3 = defaultData.ContainsKey("Power_3") ? Convert.ToInt32(defaultData["Power_3"]) : 0;
+                    int defaultPower4 = defaultData.ContainsKey("Power_4") ? Convert.ToInt32(defaultData["Power_4"]) : 0;
 
                     Timestamp currentTime = await TimeApiService.Instance.GetCurrentTime();
 
@@ -252,7 +253,8 @@ namespace Ray.Services
                             SpaceLevel = defaultSpaceLevel,
                             Power_1 = defaultPower1,
                             Power_2 = defaultPower2,
-                            Power_3 = defaultPower3
+                            Power_3 = defaultPower3,
+                            Power_4 = defaultPower4
                         },
 
                         Level = defaultLevel
