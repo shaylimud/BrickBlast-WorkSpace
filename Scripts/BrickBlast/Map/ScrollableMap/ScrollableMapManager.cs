@@ -49,8 +49,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
         private void Start()
         {
             backButton.onClick.AddListener(SceneLoader.instance.GoMain);
-            var lvls = FindObjectsOfType<LevelPin>().OrderBy(x => x.number).ToArray();
-            var lastLevel = Mathf.CeilToInt(GameDataManager.GetLevelNum() / 3f);
+            var lvls = FindObjectsOfType<LevelPin>().OrderBy(x => x.groupIndex).ToArray();
+            var lastGroup = GameDataManager.GetGroupIndex();
 
             List<Vector3> fullPathPoints = new List<Vector3>();
             openedLevels.Clear();
@@ -59,14 +59,14 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
             
             foreach (var levelPin in lvls)
             {
-                var start = (levelPin.number - 1) * 3 + 1;
+                var start = (levelPin.groupIndex - 1) * 3 + 1;
                 var end = start + 2;
                 levelPin.name = $"Level_{start}_{end}";
-                levelPin.SetNumber(levelPin.number);
+                levelPin.SetNumber(levelPin.groupIndex);
                 fullPathPoints.Add(levelPin.transform.position);
-                existingLevelNumbers.Add(levelPin.number);
+                existingLevelNumbers.Add(levelPin.groupIndex);
 
-                if (levelPin.number > lastLevel)
+                if (levelPin.groupIndex > lastGroup)
                 {
                     levelPin.Lock();
                 }
@@ -74,7 +74,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
                 {
                     levelPin.UnLock();
                     openedLevels.Add(levelPin);
-                    levelPin.SetCurrent(levelPin.number == lastLevel);
+                    levelPin.SetCurrent(levelPin.groupIndex == lastGroup);
                 }
             }
 
@@ -150,7 +150,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
             // Get total level groups from Resources for level number validation
             int totalLevelsInResources = Mathf.CeilToInt(Resources.LoadAll<LevelsData.Level>("Levels").Length / 3f);
             int baseLevelCount = originalLevels.Length;
-            var lastLevel = Mathf.CeilToInt(GameDataManager.GetLevelNum() / 3f);
+            var lastGroup = GameDataManager.GetGroupIndex();
             
             for (int repetition = 0; repetition < repetitions; repetition++)
             {
@@ -160,7 +160,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
                 foreach (var originalPin in originalLevels)
                 {
                     // Calculate the new level group number
-                    int newLevelNumber = baseLevelCount * (repetition + 1) + originalPin.number;
+                    int newLevelNumber = baseLevelCount * (repetition + 1) + originalPin.groupIndex;
 
                     // Skip if the level group number exceeds total available groups
                     if (newLevelNumber > totalLevelsInResources)
@@ -176,7 +176,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
                     newPin.SetNumber(newLevelNumber);
 
                     // Set lock state based on current progress
-                    if (newLevelNumber > lastLevel)
+                    if (newLevelNumber > lastGroup)
                     {
                         newPin.Lock();
                     }
@@ -187,7 +187,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
                         {
                             openedLevels.Add(newPin);
                         }
-                        newPin.SetCurrent(newLevelNumber == lastLevel);
+                        newPin.SetCurrent(newLevelNumber == lastGroup);
                     }
                 }
                 
@@ -282,8 +282,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
 
         private Vector3 GetPositionOpenedLevel()
         {
-            var currentLevel = Mathf.CeilToInt(GameDataManager.GetLevelNum() / 3f);
-            var currentLevelPin = openedLevels.FirstOrDefault(pin => pin.number == currentLevel);
+            var currentGroup = GameDataManager.GetGroupIndex();
+            var currentLevelPin = openedLevels.FirstOrDefault(pin => pin.groupIndex == currentGroup);
             return currentLevelPin != null ? currentLevelPin.transform.position : openedLevels[^1].transform.position;
         }
 
@@ -294,12 +294,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
         
         public void UpdateLevelPinsAfterWin()
         {
-            var lastLevel = Mathf.CeilToInt(GameDataManager.GetLevelNum() / 3f);
-            var allLevelPins = levelsGrid.GetComponentsInChildren<LevelPin>().OrderBy(x => x.number).ToArray();
+            var lastGroup = GameDataManager.GetGroupIndex();
+            var allLevelPins = levelsGrid.GetComponentsInChildren<LevelPin>().OrderBy(x => x.groupIndex).ToArray();
             
             foreach (var levelPin in allLevelPins)
             {
-                if (levelPin.number > lastLevel)
+                if (levelPin.groupIndex > lastGroup)
                 {
                     levelPin.Lock();
                 }
@@ -310,7 +310,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
                     {
                         openedLevels.Add(levelPin);
                     }
-                    levelPin.SetCurrent(levelPin.number == lastLevel);
+                    levelPin.SetCurrent(levelPin.groupIndex == lastGroup);
                 }
             }
             

@@ -521,6 +521,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             }
             else
             {
+                int currentGroup = Mathf.CeilToInt(currentLevel / 3f);
+                GameDataManager.UnlockGroup(currentGroup + 1);
                 GameDataManager.ResetSubLevelIndex();
                 GameManager.instance.OpenMap();
             }
