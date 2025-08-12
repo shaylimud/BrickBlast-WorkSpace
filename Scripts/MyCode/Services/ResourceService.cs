@@ -14,6 +14,7 @@ namespace Ray.Services
         [SerializeField, RequireReference] private ResourceEvaluationConfig _resourceEvaluationConfig;
 
         [HideInInspector] public EncryptedField<int> LevelCurrency = new EncryptedField<int>(0);
+        [HideInInspector] public EncryptedField<int> LevelScore = new EncryptedField<int>(0);
         [HideInInspector] public EncryptedField<int> LevelSpace = new EncryptedField<int>(0);
         [HideInInspector] public EncryptedField<int> LevelsPlayed = new EncryptedField<int>(0);
         [HideInInspector] public EncryptedField<bool> NoEnemies = new EncryptedField<bool>(false);
@@ -53,6 +54,11 @@ namespace Ray.Services
         private void ProcessSpaceUpgrade(Component c) => ProcessUpgrade(c, UpgradeType.Space);
 
         private void ProcessReachUpgrade(Component c) => ProcessUpgrade(c, UpgradeType.Reach);
+
+        public void SubmitLevelScore(int score)
+        {
+            LevelScore.Value = score;
+        }
 
         private async void ProcessUpgrade(Component c, UpgradeType upgradeType)
         {
@@ -203,6 +209,7 @@ namespace Ray.Services
             _rayDebug.Event("ResetLevelResources", c, this);
 
             LevelCurrency.Value = 0;
+            LevelScore.Value = 0;
 
             LevelSpace.Value = Database.UserData.Stats.SpaceLevel;
 
@@ -238,12 +245,20 @@ namespace Ray.Services
         {
             _rayDebug.Event("RewardEndCurrency", c, this);
 
+
+            int total = LevelCurrency.Value + LevelScore.Value;
+
+            LevelCurrency.Value = total;
+            await Database.UserData.AddScoreAsCurrency(total);
+            LevelScore.Value = 0;
+
             var handler = FindObjectsOfType<BaseModeHandler>().FirstOrDefault(h => h.isActiveAndEnabled);
             int total = LevelCurrency.Value + (handler?.score ?? 0);
 
             LevelCurrency.Value = total;
             await Database.UserData.AddScoreAsCurrency(total);
             handler?.ResetScore();
+
 
             EventService.Resource.OnEndCurrencyChanged(this);
         }
