@@ -28,6 +28,24 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public static bool isTestPlay = false;
 
+        private const string SubLevelKey = "SubLevelIndex";
+
+        public static int GetSubLevelIndex()
+        {
+            return PlayerPrefs.GetInt(SubLevelKey, 1);
+        }
+
+        public static void SetSubLevelIndex(int index)
+        {
+            PlayerPrefs.SetInt(SubLevelKey, index);
+            PlayerPrefs.Save();
+        }
+
+        public static void ResetSubLevelIndex()
+        {
+            SetSubLevelIndex(1);
+        }
+
         public static void ClearPlayerProgress()
         {
             Database.UserData.SetLevel(1);

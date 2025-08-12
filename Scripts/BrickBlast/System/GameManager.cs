@@ -214,6 +214,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
             }
             else
             {
+                GameDataManager.ResetSubLevelIndex();
                 SceneLoader.instance.StartMapScene();
             }
         }

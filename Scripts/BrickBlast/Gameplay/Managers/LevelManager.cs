@@ -512,7 +512,18 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         private void SetWin()
         {
             GameDataManager.UnlockLevel(currentLevel + 1);
-            EventManager.GameStatus = EGameState.PreWin;
+            int subLevel = GameDataManager.GetSubLevelIndex();
+            if (subLevel < 3)
+            {
+                GameDataManager.SetSubLevelIndex(subLevel + 1);
+                GameManager.instance.OpenGame();
+                GameManager.instance.RestartLevel();
+            }
+            else
+            {
+                GameDataManager.ResetSubLevelIndex();
+                GameManager.instance.OpenMap();
+            }
         }
 
         private void SetLose()
