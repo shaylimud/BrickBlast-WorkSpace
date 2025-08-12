@@ -39,14 +39,18 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
         private void OnValidate()
         {
             number = transform.GetSiblingIndex() + 1;
-            name = "Level_" + number;
-            numberLabel.text = number.ToString();
+            name = "LevelGroup_" + number;
+            var start = (number - 1) * 3 + 1;
+            var end = start + 2;
+            numberLabel.text = start + "-" + end;
         }
 
         public void SetNumber(int number)
         {
             this.number = number;
-            numberLabel.text = number.ToString();
+            var start = (number - 1) * 3 + 1;
+            var end = start + 2;
+            numberLabel.text = start + "-" + end;
         }
 
         public void Lock()
@@ -81,7 +85,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
         {
             if (isLocked)
                 return;
-            ScrollableMapManager.instance.OpenLevel(number);
+            var startLevel = (number - 1) * 3 + 1;
+            ScrollableMapManager.instance.OpenLevel(startLevel);
         }
     }
 }
