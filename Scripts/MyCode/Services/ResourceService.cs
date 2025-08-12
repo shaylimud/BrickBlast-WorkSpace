@@ -1,3 +1,4 @@
+using BlockPuzzleGameToolkit.Scripts.Gameplay;
 using Firebase.Firestore;
 using System;
 using System.Linq;
@@ -237,11 +238,12 @@ namespace Ray.Services
         {
             _rayDebug.Event("RewardEndCurrency", c, this);
 
-            var saveData = Database.UserData.Copy();
-            saveData.Stats.TotalCurrency += LevelCurrency.Value;
-            saveData.Stats.TotalSessions++;
+            var handler = FindObjectsOfType<BaseModeHandler>().FirstOrDefault(h => h.isActiveAndEnabled);
+            int total = LevelCurrency.Value + (handler?.score ?? 0);
 
-            await Database.Instance.Save(saveData);
+            LevelCurrency.Value = total;
+            await Database.UserData.AddScoreAsCurrency(total);
+            handler?.ResetScore();
 
             EventService.Resource.OnEndCurrencyChanged(this);
         }
