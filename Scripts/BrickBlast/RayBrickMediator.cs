@@ -129,9 +129,8 @@ public class RayBrickMediator : MonoBehaviour
             });
         }
 
-        private void RefreshShop(Component c)
+        public void RefreshShop(Component c)
         {
-
             RefreshBoosterItem(Shop.ClearRow, Database.UserData.Stats.Power_1);
             RefreshBoosterItem(Shop.ClearColumn, Database.UserData.Stats.Power_2);
             RefreshBoosterItem(Shop.ClearSquare, Database.UserData.Stats.Power_3);
