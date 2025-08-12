@@ -54,6 +54,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         public void SelectBooster(BoosterType booster)
         {
+            // Prevent using boosters when the player has none available
+            if (GetBoosterCount(booster) <= 0)
+            {
+                EventService.UI.OnToggleInsufficient?.Invoke(this);
+                return;
+            }
+
             if (booster == BoosterType.ChangeShape)
             {
                 ChangeShapes();
@@ -61,6 +68,23 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             }
 
             activeBooster = booster;
+        }
+
+        private int GetBoosterCount(BoosterType booster)
+        {
+            switch (booster)
+            {
+                case BoosterType.ClearRow:
+                    return Database.UserData.Stats.Power_1;
+                case BoosterType.ClearColumn:
+                    return Database.UserData.Stats.Power_2;
+                case BoosterType.ClearSquare:
+                    return Database.UserData.Stats.Power_3;
+                case BoosterType.ChangeShape:
+                    return Database.UserData.Stats.Power_4;
+                default:
+                    return 0;
+            }
         }
 
         private void ChangeShapes()
