@@ -94,6 +94,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             {
                 deckManager.UpdateCellDeckAfterFail();
             }
+            ResourceService.Instance?.ConsumeBooster(BoosterType.ChangeShape);
             activeBooster = null;
         }
 
