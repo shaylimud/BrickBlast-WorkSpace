@@ -11,6 +11,7 @@
 // // THE SOFTWARE.
 
 using BlockPuzzleGameToolkit.Scripts.Enums;
+using BlockPuzzleGameToolkit.Scripts.System;
 
 namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 {
@@ -20,10 +21,30 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         {
             var currentLevel = GetCurrentLevel();
             var stateHandler = currentLevel.levelType.stateHandler;
-            
+
             if (stateHandler != null)
             {
                 stateHandler.HandleState(newState, this);
+            }
+
+            if (newState == EGameState.Failed)
+            {
+                HandleLevelFail();
+            }
+        }
+
+        private void HandleLevelFail()
+        {
+            int subLevelIndex = GameDataManager.GetSubLevelIndex();
+            if (subLevelIndex > 1)
+            {
+                int groupIndex = (currentLevel - 1) / 3;
+                int newLevel = groupIndex * 3 + 1;
+                currentLevel = newLevel;
+                GameDataManager.SetLevelNum(newLevel);
+                GameDataManager.ResetSubLevelIndex();
+                GameDataManager.SetLevel(null);
+                GameManager.instance.RestartLevel();
             }
         }
     }
