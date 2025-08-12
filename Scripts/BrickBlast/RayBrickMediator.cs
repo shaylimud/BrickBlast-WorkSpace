@@ -121,6 +121,28 @@ public class RayBrickMediator : MonoBehaviour
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
             {
+                int count = 0;
+                switch (type)
+                {
+                    case BoosterType.ClearRow:
+                        count = Database.UserData.Stats.Power_1;
+                        break;
+                    case BoosterType.ClearColumn:
+                        count = Database.UserData.Stats.Power_2;
+                        break;
+                    case BoosterType.ClearSquare:
+                        count = Database.UserData.Stats.Power_3;
+                        break;
+                    case BoosterType.ChangeShape:
+                        count = Database.UserData.Stats.Power_4;
+                        break;
+                }
+
+                if (count <= 0)
+                {
+                    EventService.UI.OnToggleInsufficient?.Invoke(this);
+                    return;
+                }
 
                 BlockPuzzleGameToolkit.Scripts.Gameplay.BoosterManager.Instance?.SelectBooster(type);
 
@@ -131,14 +153,14 @@ public class RayBrickMediator : MonoBehaviour
 
         public void RefreshShop(Component c)
         {
-            RefreshBoosterItem(Shop.ClearRow, Database.UserData.Stats.Power_1);
-            RefreshBoosterItem(Shop.ClearColumn, Database.UserData.Stats.Power_2);
-            RefreshBoosterItem(Shop.ClearSquare, Database.UserData.Stats.Power_3);
-            RefreshBoosterItem(Shop.ChangeShape, Database.UserData.Stats.Power_4);
+            RefreshBoosterItem(Shop.ClearRow, Database.UserData.Stats.Power_1, Level.ClearRow);
+            RefreshBoosterItem(Shop.ClearColumn, Database.UserData.Stats.Power_2, Level.ClearColumn);
+            RefreshBoosterItem(Shop.ClearSquare, Database.UserData.Stats.Power_3, Level.ClearSquare);
+            RefreshBoosterItem(Shop.ChangeShape, Database.UserData.Stats.Power_4, Level.ChangeShape);
             Shop.Currency.text = Database.UserData.Stats.TotalCurrency.ToString();
         }
 
-        private void RefreshBoosterItem(BoosterItem item, int amount)
+        private void RefreshBoosterItem(BoosterItem item, int amount, GameObject levelButton)
         {
             if (item == null) return;
 
@@ -154,6 +176,13 @@ public class RayBrickMediator : MonoBehaviour
             {
                 var button = item.BtnPurchase.GetComponent<Button>();
                 button.interactable = Database.UserData.Stats.TotalCurrency >= item.Price && amount < 99;
+            }
+
+            if (levelButton != null)
+            {
+                var button = levelButton.GetComponent<Button>();
+                if (button != null)
+                    button.interactable = amount > 0;
             }
 
             Shop.ClearRow.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_1);
