@@ -45,8 +45,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Map
         {
             maxLevelsInRow = GameManager.instance.GameSettings.maxLevelsInRow;
             maxRows = GameManager.instance.GameSettings.maxRows;
-            // get levels count
-            var length = Resources.LoadAll<Level>("Levels").Length;
+            // get level groups count (3 levels per group)
+            var length = Mathf.CeilToInt(Resources.LoadAll<Level>("Levels").Length / 3f);
             StartCoroutine(SetLevels(length));
             levelButton.onClick.AddListener(MapStart);
             backButton.onClick.AddListener(() => SceneLoader.instance.GoMain());
@@ -72,7 +72,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map
         private IEnumerator SetLevels(int levels)
         {
             cells = new List<Cell>(levels);
-            var currentLevel = GameDataManager.GetLevelNum();
+            var currentLevel = Mathf.CeilToInt(GameDataManager.GetLevelNum() / 3f);
             var segmentSize = maxRows * maxLevelsInRow;
             var segmentStartLevel = (currentLevel - 1) / segmentSize * segmentSize + 1;
             var segmentEndLevel = Mathf.Min(segmentStartLevel + segmentSize - 1, levels);
@@ -100,9 +100,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Map
                     cell.ClearCell();
                     cells.Insert(i * maxLevelsInRow + j, cell);
 
-                    // Name the cell by its level number
+                    // Name the cell by the start level of the group
                     var levelNum = segmentStartLevel + levelsCreated;
-                    cell.name = "Level_" + levelNum;
+                    var startLevel = (levelNum - 1) * 3 + 1;
+                    var endLevel = startLevel + 2;
+                    cell.name = $"Level_{startLevel}_{endLevel}";
 
                     levelsCreated++;
                 }
@@ -116,7 +118,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Map
             {
                 var cell = cells[i];
                 var levelNum = segmentStartLevel + i;
-                var level = Resources.Load<Level>("Levels/Level_" + levelNum);
+                var startLevel = (levelNum - 1) * 3 + 1;
+                var level = Resources.Load<Level>("Levels/Level_" + startLevel);
                 if (level != null && levelNum <= currentLevel)
                 {
                     if (level.levelType.elevelType == ELevelType.CollectItems)

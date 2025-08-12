@@ -50,7 +50,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
         {
             backButton.onClick.AddListener(SceneLoader.instance.GoMain);
             var lvls = FindObjectsOfType<LevelPin>().OrderBy(x => x.number).ToArray();
-            var lastLevel = GameDataManager.GetLevelNum();
+            var lastLevel = Mathf.CeilToInt(GameDataManager.GetLevelNum() / 3f);
 
             List<Vector3> fullPathPoints = new List<Vector3>();
             openedLevels.Clear();
@@ -59,10 +59,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
             
             foreach (var levelPin in lvls)
             {
-                levelPin.name = $"Level_{levelPin.number}";
+                var start = (levelPin.number - 1) * 3 + 1;
+                var end = start + 2;
+                levelPin.name = $"Level_{start}_{end}";
+                levelPin.SetNumber(levelPin.number);
                 fullPathPoints.Add(levelPin.transform.position);
                 existingLevelNumbers.Add(levelPin.number);
-                
+
                 if (levelPin.number > lastLevel)
                 {
                     levelPin.Lock();
@@ -74,16 +77,16 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
                     levelPin.SetCurrent(levelPin.number == lastLevel);
                 }
             }
-            
-            // Get the total level count from Resources
-            int totalLevelsInResources = Resources.LoadAll<LevelsData.Level>("Levels").Length;
+
+            // Get the total level count from Resources (grouped by 3)
+            int totalLevelsInResources = Mathf.CeilToInt(Resources.LoadAll<LevelsData.Level>("Levels").Length / 3f);
             int baseLevelCount = lvls.Length;
-            
-            // Calculate how many repetitions we need to cover all available levels
+
+            // Calculate how many repetitions we need to cover all available level groups
             int requiredRepetitions = Mathf.CeilToInt((float)(totalLevelsInResources - baseLevelCount) / baseLevelCount);
             requiredRepetitions = Mathf.Clamp(requiredRepetitions, 1, 20); // Reasonable limit
-            
-            Debug.Log($"Total levels in resources: {totalLevelsInResources}, Base levels: {baseLevelCount}, Required repetitions: {requiredRepetitions}");
+
+            Debug.Log($"Total level groups in resources: {totalLevelsInResources}, Base groups: {baseLevelCount}, Required repetitions: {requiredRepetitions}");
             
             // Duplicate levels vertically
             if (lvls.Length > 0)
@@ -144,10 +147,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
             // Use the configurable gap setting
             float totalHeight = setHeight + levelSegmentGap;
             
-            // Get total levels from Resources for level number validation
-            int totalLevelsInResources = Resources.LoadAll<LevelsData.Level>("Levels").Length;
+            // Get total level groups from Resources for level number validation
+            int totalLevelsInResources = Mathf.CeilToInt(Resources.LoadAll<LevelsData.Level>("Levels").Length / 3f);
             int baseLevelCount = originalLevels.Length;
-            var lastLevel = GameDataManager.GetLevelNum();
+            var lastLevel = Mathf.CeilToInt(GameDataManager.GetLevelNum() / 3f);
             
             for (int repetition = 0; repetition < repetitions; repetition++)
             {
@@ -156,20 +159,22 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
                 // Duplicate level pins
                 foreach (var originalPin in originalLevels)
                 {
-                    // Calculate the new level number
+                    // Calculate the new level group number
                     int newLevelNumber = baseLevelCount * (repetition + 1) + originalPin.number;
-                    
-                    // Skip if the level number exceeds total available levels
+
+                    // Skip if the level group number exceeds total available groups
                     if (newLevelNumber > totalLevelsInResources)
                         continue;
-                    
+
                     Vector3 newPosition = originalPin.transform.position + new Vector3(0, verticalOffset, 0);
                     var newPin = Instantiate(levelPrefab, newPosition, Quaternion.identity, levelsGrid);
-                    
-                    // Assign proper level number
-                    newPin.name = $"Level_{newLevelNumber}";
+
+                    // Assign proper level group number and name
+                    int start = (newLevelNumber - 1) * 3 + 1;
+                    int end = start + 2;
+                    newPin.name = $"Level_{start}_{end}";
                     newPin.SetNumber(newLevelNumber);
-                    
+
                     // Set lock state based on current progress
                     if (newLevelNumber > lastLevel)
                     {
@@ -277,7 +282,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
 
         private Vector3 GetPositionOpenedLevel()
         {
-            var currentLevel = GameDataManager.GetLevelNum();
+            var currentLevel = Mathf.CeilToInt(GameDataManager.GetLevelNum() / 3f);
             var currentLevelPin = openedLevels.FirstOrDefault(pin => pin.number == currentLevel);
             return currentLevelPin != null ? currentLevelPin.transform.position : openedLevels[^1].transform.position;
         }
@@ -289,7 +294,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
         
         public void UpdateLevelPinsAfterWin()
         {
-            var lastLevel = GameDataManager.GetLevelNum();
+            var lastLevel = Mathf.CeilToInt(GameDataManager.GetLevelNum() / 3f);
             var allLevelPins = levelsGrid.GetComponentsInChildren<LevelPin>().OrderBy(x => x.number).ToArray();
             
             foreach (var levelPin in allLevelPins)
