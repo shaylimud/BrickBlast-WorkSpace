@@ -49,6 +49,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         public static void ClearPlayerProgress()
         {
             Database.UserData.SetLevel(1);
+            Database.UserData.SetGroupIndex(1);
         }
 
         public static void ClearALlData()
@@ -66,6 +67,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
             PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
             Database.UserData.SetLevel(1);
+            Database.UserData.SetGroupIndex(1);
             #endif
         }
 
@@ -79,9 +81,23 @@ namespace BlockPuzzleGameToolkit.Scripts.System
             }
         }
 
+        public static void UnlockGroup(int groupIndex)
+        {
+            int savedGroup = Database.UserData.GroupIndex;
+            if (savedGroup < groupIndex)
+            {
+                Database.UserData.SetGroupIndex(groupIndex);
+            }
+        }
+
         public static int GetLevelNum()
         {
             return Database.UserData.Level;
+        }
+
+        public static int GetGroupIndex()
+        {
+            return Database.UserData.GroupIndex;
         }
 
         public static Level GetLevel()
@@ -120,6 +136,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         {
             var levels = Resources.LoadAll<Level>("Levels").Length;
             Database.UserData.SetLevel(levels);
+            Database.UserData.SetGroupIndex(Mathf.CeilToInt(levels / 3f));
         }
 
         internal static bool HasMoreLevels()

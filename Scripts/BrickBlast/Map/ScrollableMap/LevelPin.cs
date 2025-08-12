@@ -20,7 +20,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
     public class LevelPin : MonoBehaviour
     {
         [SerializeField]
-        public int number = 1;
+        public int groupIndex = 1;
         [SerializeField]
         private GameObject lockObj;
         [SerializeField]
@@ -38,17 +38,17 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
 
         private void OnValidate()
         {
-            number = transform.GetSiblingIndex() + 1;
-            name = "LevelGroup_" + number;
-            var start = (number - 1) * 3 + 1;
+            groupIndex = transform.GetSiblingIndex() + 1;
+            name = "LevelGroup_" + groupIndex;
+            var start = (groupIndex - 1) * 3 + 1;
             var end = start + 2;
             numberLabel.text = start + "-" + end;
         }
 
-        public void SetNumber(int number)
+        public void SetNumber(int groupIndex)
         {
-            this.number = number;
-            var start = (number - 1) * 3 + 1;
+            this.groupIndex = groupIndex;
+            var start = (groupIndex - 1) * 3 + 1;
             var end = start + 2;
             numberLabel.text = start + "-" + end;
         }
@@ -85,7 +85,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
         {
             if (isLocked)
                 return;
-            var startLevel = (number - 1) * 3 + 1;
+            var startLevel = (groupIndex - 1) * 3 + 1;
             ScrollableMapManager.instance.OpenLevel(startLevel);
         }
     }

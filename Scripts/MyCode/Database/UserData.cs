@@ -16,7 +16,9 @@ public class UserData
 
     public event Action<int> TotalCurrencyChanged;
     public event Action<int> LevelChanged;
+    public event Action<int> GroupIndexChanged;
     private int level = 1;
+    private int groupIndex = 1;
 
     public int TotalCurrency
     {
@@ -42,6 +44,20 @@ public class UserData
                 level = value;
                 Stats.ReachLevel = value;
                 LevelChanged?.Invoke(value);
+            }
+        }
+    }
+
+    [FirestoreProperty]
+    public int GroupIndex
+    {
+        get => groupIndex;
+        set
+        {
+            if (groupIndex != value)
+            {
+                groupIndex = value;
+                GroupIndexChanged?.Invoke(value);
             }
         }
     }
@@ -132,6 +148,13 @@ public class UserData
     {
         var saveData = Database.UserData.Copy();
         saveData.Level = value;
+        Database.Instance?.Save(saveData);
+    }
+
+    public void SetGroupIndex(int value)
+    {
+        var saveData = Database.UserData.Copy();
+        saveData.GroupIndex = value;
         Database.Instance?.Save(saveData);
     }
 }
