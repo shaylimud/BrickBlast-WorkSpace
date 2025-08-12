@@ -189,7 +189,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                                     ChangeShapes();
                                     break;
                             }
-                            activeBooster = null;
+                            if (activeBooster.HasValue)
+                            {
+                                ResourceService.Instance?.ConsumeBooster(activeBooster.Value);
+                                activeBooster = null;
+                            }
                             lastHighlightedCell = null;
                             return;
                         }
