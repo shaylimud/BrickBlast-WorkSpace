@@ -241,6 +241,7 @@ namespace Ray.Services
             var handler = FindObjectsOfType<BaseModeHandler>().FirstOrDefault(h => h.isActiveAndEnabled);
             int total = LevelCurrency.Value + (handler?.score ?? 0);
 
+            LevelCurrency.Value = total;
             await Database.UserData.AddScoreAsCurrency(total);
             handler?.ResetScore();
 
