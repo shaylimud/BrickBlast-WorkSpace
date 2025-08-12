@@ -181,6 +181,8 @@ namespace Ray.Services
             await Database.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
+
+            
         }
 
         public async void RewardNoEnemies(Component c)
