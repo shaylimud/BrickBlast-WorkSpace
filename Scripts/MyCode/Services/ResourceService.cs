@@ -181,7 +181,8 @@ namespace Ray.Services
             await Database.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
-            RayBrickMediator.Instance?.RefreshShop(this);
+
+            
         }
 
         public async void RewardNoEnemies(Component c)
