@@ -1,4 +1,4 @@
-using BlockPuzzleGameToolkit.Scripts.Gameplay;
+
 using Firebase.Firestore;
 using System;
 using System.Linq;
@@ -14,6 +14,10 @@ namespace Ray.Services
         [SerializeField, RequireReference] private ResourceEvaluationConfig _resourceEvaluationConfig;
 
         [HideInInspector] public EncryptedField<int> LevelCurrency = new EncryptedField<int>(0);
+
+        // Transient score submitted by gameplay handlers, merged with currency at level end
+
+
         [HideInInspector] public EncryptedField<int> LevelScore = new EncryptedField<int>(0);
         [HideInInspector] public EncryptedField<int> LevelSpace = new EncryptedField<int>(0);
         [HideInInspector] public EncryptedField<int> LevelsPlayed = new EncryptedField<int>(0);
@@ -257,6 +261,12 @@ namespace Ray.Services
             LevelScore.Value = 0;
 
 
+
+            LevelCurrency.Value = total;
+            await Database.UserData.AddScoreAsCurrency(total);
+            LevelScore.Value = 0;
+
+
             int total = LevelCurrency.Value + LevelScore.Value;
 
             LevelCurrency.Value = total;
@@ -269,6 +279,7 @@ namespace Ray.Services
             LevelCurrency.Value = total;
             await Database.UserData.AddScoreAsCurrency(total);
             handler?.ResetScore();
+
 
 
 

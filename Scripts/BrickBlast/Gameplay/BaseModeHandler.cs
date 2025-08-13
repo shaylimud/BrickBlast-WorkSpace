@@ -41,6 +41,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
             EventService.Resource.OnEndCurrencyChanged += HandleEndCurrencyChanged;
 
+
+            EventService.Resource.OnEndCurrencyChanged += HandleEndCurrencyChanged;
+
+
             LoadScores();
         }
 
