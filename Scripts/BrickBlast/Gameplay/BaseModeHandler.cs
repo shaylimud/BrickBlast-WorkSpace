@@ -4,6 +4,7 @@ using BlockPuzzleGameToolkit.Scripts.Enums;
 using TMPro;
 using UnityEngine;
 using System.Collections;
+using Ray.Services;
 
 namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 {
@@ -37,7 +38,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             _levelManager.OnLose += OnLose;
             _levelManager.OnScored += OnScored;
 
-            // ResetScore();
+            EventService.Resource.OnEndCurrencyChanged += HandleEndCurrencyChanged;
+
             LoadScores();
         }
 
@@ -48,6 +50,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 _levelManager.OnLose -= OnLose;
                 _levelManager.OnScored -= OnScored;
             }
+
+            EventService.Resource.OnEndCurrencyChanged -= HandleEndCurrencyChanged;
         }
 
         protected virtual void OnApplicationPause(bool pauseStatus)
@@ -104,7 +108,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         public virtual void OnLose()
         {
+            ResourceService.Instance?.SubmitLevelScore(score);
             DeleteGameState();
+        }
+
+        private void HandleEndCurrencyChanged(Component c)
+        {
+            ResetScore();
         }
 
         public virtual void UpdateScore(int newScore)
