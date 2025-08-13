@@ -13,6 +13,7 @@ namespace Ray.Services
         [SerializeField, RequireReference] private ResourceEvaluationConfig _resourceEvaluationConfig;
 
         [HideInInspector] public EncryptedField<int> LevelCurrency = new EncryptedField<int>(0);
+        [HideInInspector] public EncryptedField<int> LevelScore = new EncryptedField<int>(0);
         [HideInInspector] public EncryptedField<int> LevelSpace = new EncryptedField<int>(0);
         [HideInInspector] public EncryptedField<int> LevelsPlayed = new EncryptedField<int>(0);
         [HideInInspector] public EncryptedField<bool> NoEnemies = new EncryptedField<bool>(false);
@@ -197,12 +198,17 @@ namespace Ray.Services
             EventService.Resource.OnNoEnemiesReceived.Invoke(this);
         }
 
+        public void SubmitLevelScore(int score)
+        {
+            LevelScore.Value = score;
+        }
+
         private void ResetLevelResources(Component c)
         {
             _rayDebug.Event("ResetLevelResources", c, this);
 
             LevelCurrency.Value = 0;
-
+            LevelScore.Value = 0;
             LevelSpace.Value = Database.UserData.Stats.SpaceLevel;
 
             EventService.Resource.OnLevelResourceChanged.Invoke(this);
@@ -236,12 +242,11 @@ namespace Ray.Services
         private async void RewardEndCurrency(Component c)
         {
             _rayDebug.Event("RewardEndCurrency", c, this);
+            int total = LevelCurrency.Value + LevelScore.Value;
 
-            var saveData = Database.UserData.Copy();
-            saveData.Stats.TotalCurrency += LevelCurrency.Value;
-            saveData.Stats.TotalSessions++;
-
-            await Database.Instance.Save(saveData);
+            LevelCurrency.Value = total;
+            await Database.UserData.AddScoreAsCurrency(total);
+            LevelScore.Value = 0;
 
             EventService.Resource.OnEndCurrencyChanged(this);
         }

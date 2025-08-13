@@ -133,6 +133,14 @@ public class UserData
         await Database.Instance?.Save(saveData);
     }
 
+    public async Task AddScoreAsCurrency(int score)
+    {
+        var saveData = Database.UserData.Copy();
+        saveData.Stats.TotalCurrency += score;
+        saveData.Stats.TotalSessions++;
+        await Database.Instance?.Save(saveData);
+    }
+
     public async Task<bool> SpendCurrency(int amount)
     {
         if (TotalCurrency >= amount)
