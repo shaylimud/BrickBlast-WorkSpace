@@ -208,11 +208,6 @@ namespace Ray.Services
             EventService.Resource.OnNoEnemiesReceived.Invoke(this);
         }
 
-        public void SubmitLevelScore(int score)
-        {
-            LevelScore.Value = score;
-        }
-
         private void ResetLevelResources(Component c)
         {
             _rayDebug.Event("ResetLevelResources", c, this);
