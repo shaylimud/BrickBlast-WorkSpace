@@ -39,7 +39,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             _levelManager.OnScored += OnScored;
             EventService.Resource.OnEndCurrencyChanged += HandleEndCurrencyChanged;
 
-            // ResetScore();
+            EventService.Resource.OnEndCurrencyChanged += HandleEndCurrencyChanged;
+
             LoadScores();
         }
 
@@ -50,6 +51,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 _levelManager.OnLose -= OnLose;
                 _levelManager.OnScored -= OnScored;
             }
+
             EventService.Resource.OnEndCurrencyChanged -= HandleEndCurrencyChanged;
         }
 

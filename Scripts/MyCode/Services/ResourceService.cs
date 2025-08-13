@@ -204,6 +204,11 @@ namespace Ray.Services
             EventService.Resource.OnNoEnemiesReceived.Invoke(this);
         }
 
+        public void SubmitLevelScore(int score)
+        {
+            LevelScore.Value = score;
+        }
+
         private void ResetLevelResources(Component c)
         {
             _rayDebug.Event("ResetLevelResources", c, this);
@@ -244,6 +249,12 @@ namespace Ray.Services
         private async void RewardEndCurrency(Component c)
         {
             _rayDebug.Event("RewardEndCurrency", c, this);
+            int total = LevelCurrency.Value + LevelScore.Value;
+
+
+            LevelCurrency.Value = total;
+            await Database.UserData.AddScoreAsCurrency(total);
+            LevelScore.Value = 0;
 
 
             int total = LevelCurrency.Value + LevelScore.Value;
@@ -258,6 +269,7 @@ namespace Ray.Services
             LevelCurrency.Value = total;
             await Database.UserData.AddScoreAsCurrency(total);
             handler?.ResetScore();
+
 
 
             EventService.Resource.OnEndCurrencyChanged(this);
