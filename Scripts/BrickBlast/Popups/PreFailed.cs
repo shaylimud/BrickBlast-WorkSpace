@@ -38,8 +38,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             price = GameManager.instance.GameSettings.continuePrice;
             continuePrice.text = price.ToString();
             continueButton.onClick.AddListener(Continue);
-            RayBrickMediator.Instance.reviveButton = reviveButton;
-            //RayBrickMediator.Instance?.SetReviveButton(reviveButton);
+            RayBrickMediator.Instance?.SetReviveButton(reviveButton);
             
             InitializeTimer();
             

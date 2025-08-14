@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using BlockPuzzleGameToolkit.Scripts.Gameplay;
-using BlockPuzzleGameToolkit.Scripts.GUI;
 
     public class RayBrickMediator : MonoBehaviour
     {
@@ -48,7 +47,7 @@ using BlockPuzzleGameToolkit.Scripts.GUI;
                 Shop.Panel.SetActive(false);
         }
 
-        public void SetReviveButton(CustomButton button)
+        public void SetReviveButton(Button button)
         {
             if (reviveButton != null)
             {
