@@ -169,7 +169,7 @@ namespace Ray.Services
                     EventService.Ad.OnNoEnemiesWatched?.Invoke(this);
                     break;
                 case RewardedType.Revive:
-                    EventService.Ad.OnReviveWatched?.Invoke(this);
+                    
                     break;
                 case RewardedType.Triple:
                     EventService.Ad.OnTripleWatched?.Invoke(this);
