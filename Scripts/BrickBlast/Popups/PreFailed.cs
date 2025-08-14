@@ -47,7 +47,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
                 reviveButton.onClick.AddListener(() =>
                 {
                     Close();
-                    RewardedService.Instance.ShowRewarded(RewardedType.Revive, levelManager.ReviveCurrentStage);
+                    RewardedService.Instance.ShowRewarded(RewardedType.Revive);
                 });
             }
             
