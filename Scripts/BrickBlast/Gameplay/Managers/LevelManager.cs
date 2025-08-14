@@ -30,6 +30,7 @@ using UnityEngine.Events;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
 using UnityEngine.InputSystem;
+using Ray.Services;
 
 namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 {
@@ -511,6 +512,14 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         private void SetWin()
         {
+            var modeHandler = FindObjectOfType<BaseModeHandler>();
+            if (modeHandler != null)
+            {
+                ResourceService.Instance?.SubmitLevelScore(modeHandler.score);
+            }
+
+            EventService.Player.OnParked?.Invoke(this);
+
             GameDataManager.UnlockLevel(currentLevel + 1);
             int subLevel = GameDataManager.GetSubLevelIndex();
             if (subLevel < 3)

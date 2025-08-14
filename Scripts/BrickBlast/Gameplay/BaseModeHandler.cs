@@ -114,6 +114,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         public virtual void OnLose()
         {
             ResourceService.Instance?.SubmitLevelScore(score);
+            EventService.Player.OnParked?.Invoke(this);
             DeleteGameState();
         }
 
