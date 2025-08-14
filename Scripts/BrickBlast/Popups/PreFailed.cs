@@ -46,7 +46,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             timerText.text = timer.ToString();
             SoundBase.instance.PlaySound(SoundBase.instance.warningTime);
             InvokeRepeating(nameof(UpdateTimer), 1, 1);
-            rewardButton.gameObject.SetActive(GameManager.instance.GameSettings.enableAds);
+            //rewardButton.gameObject.SetActive(GameManager.instance.GameSettings.enableAds);
             if(GameDataManager.GetLevel().enableTimer && timeLeftText != null)
             {
                 timeLeftText.gameObject.SetActive(true);
@@ -74,7 +74,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             if (timer <= 0)
             {
                 continueButton.interactable = false;
-                rewardButton.interactable = false;
                 hasContinued = true;
 
                 CancelInvoke(nameof(UpdateTimer));
