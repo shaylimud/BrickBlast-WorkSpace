@@ -23,6 +23,7 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay.Pool;
 using BlockPuzzleGameToolkit.Scripts.LevelsData;
 using BlockPuzzleGameToolkit.Scripts.System;
 using BlockPuzzleGameToolkit.Scripts.Utils;
+using BlockPuzzleGameToolkit.Scripts.Popups;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -84,9 +85,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         private TimedModeHandler timedModeHandler;
         public TimerManager timerManager;
         private int timerDuration;
-        
+
         private Vector3 cachedFieldCenter;
         private bool isFieldCenterCached;
+
+        private int failedLevel;
+        private int failedSubLevelIndex;
 
         private void OnEnable()
         {
@@ -571,6 +575,19 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             {
                 cell.ClearCell();
             }
+        }
+
+        public void ReviveCurrentStage()
+        {
+            ClearEmptyCells();
+            cellDeck.UpdateCellDeckAfterFail();
+
+            currentLevel = failedLevel;
+            GameDataManager.SetLevelNum(failedLevel);
+            GameDataManager.SetSubLevelIndex(failedSubLevelIndex);
+
+            EventManager.GameStatus = EGameState.Playing;
+            MenuManager.instance.popupStack.OfType<PreFailed>().FirstOrDefault()?.Close();
         }
 
         public IEnumerator DestroyLines(List<List<Cell>> lines, Shape shape)

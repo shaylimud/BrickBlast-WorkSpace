@@ -29,6 +29,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
             if (newState == EGameState.Failed)
             {
+                failedLevel = this.currentLevel;
+                failedSubLevelIndex = GameDataManager.GetSubLevelIndex();
                 HandleLevelFail();
             }
         }
