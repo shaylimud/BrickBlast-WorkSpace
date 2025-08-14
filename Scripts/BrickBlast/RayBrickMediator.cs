@@ -3,7 +3,6 @@ using Ray.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using BlockPuzzleGameToolkit.Scripts.Gameplay;
 
     public class RayBrickMediator : MonoBehaviour
     {
@@ -65,9 +64,7 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay;
 
         private void OnReviveButtonClicked()
         {
-            var levelManager = FindObjectOfType<LevelManager>();
-            RewardedService.Instance.ShowRewarded(RewardedType.Revive,
-                levelManager != null ? (System.Action)levelManager.ReviveCurrentStage : null);
+            RewardedService.Instance.ShowRewarded(RewardedType.Revive);
         }
 
 

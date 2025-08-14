@@ -98,6 +98,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             EventManager.GetEvent(EGameEvent.RestartLevel).Subscribe(RestartLevel);
             EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Subscribe(CheckLines);
             EventManager.OnGameStateChanged += HandleGameStateChange;
+            EventService.Ad.OnReviveWatched += OnReviveWatched;
             targetManager = FindObjectOfType<TargetManager>();
             itemFactory = FindObjectOfType<ItemFactory>();
             cellDeck = FindObjectOfType<CellDeckManager>();
@@ -258,6 +259,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             EventManager.GetEvent(EGameEvent.RestartLevel).Unsubscribe(RestartLevel);
             EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Unsubscribe(CheckLines);
             EventManager.OnGameStateChanged -= HandleGameStateChange;
+            EventService.Ad.OnReviveWatched -= OnReviveWatched;
 
             // Unsubscribe from timer events
             if (timerManager != null)
@@ -588,6 +590,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
             EventManager.GameStatus = EGameState.Playing;
             MenuManager.instance.popupStack.OfType<PreFailed>().FirstOrDefault()?.Close();
+        }
+
+        private void OnReviveWatched(Component c)
+        {
+            ReviveCurrentStage();
         }
 
         public IEnumerator DestroyLines(List<List<Cell>> lines, Shape shape)
