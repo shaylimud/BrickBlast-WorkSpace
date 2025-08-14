@@ -110,7 +110,7 @@ namespace Ray.Services
         {
             public UnityAction<Component> OnApplovinInitialized;
 
-            public UnityAction<Component> OnWatchAdBtn;
+            public UnityAction<Component> OnWatchAdBtn = delegate { };
 
             public UnityAction<Component> OnNoEnemiesWatched;
             public UnityAction<Component> OnReviveWatched;

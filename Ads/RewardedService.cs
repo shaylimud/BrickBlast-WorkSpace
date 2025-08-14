@@ -129,7 +129,7 @@ namespace Ray.Services
         private void PlayRewardedAd(Component c, RewardedType type)
         {
             _rayDebug.Event("PlayRewardedAd", c, this);
-            EventService.Ad.OnWatchAdBtn.Invoke(this);
+            EventService.Ad.OnWatchAdBtn(this);
 
             _currentRewarededType = type;
 
