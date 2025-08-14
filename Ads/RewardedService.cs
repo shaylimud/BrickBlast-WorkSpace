@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Ray.Services
 
         private Dictionary<string, string> _adUnits;
         private RewardedType _currentRewarededType;
+        private Action _onRewarded;
 
         public static RewardedService Instance;
 
@@ -118,6 +120,12 @@ namespace Ray.Services
             }
         }
 
+        public void ShowRewarded(RewardedType type, Action onRewarded = null)
+        {
+            _onRewarded = onRewarded;
+            PlayRewardedAd(this, type);
+        }
+
         private void PlayRewardedAd(Component c, RewardedType type)
         {
             _rayDebug.Event("PlayRewardedAd", c, this);
@@ -176,6 +184,9 @@ namespace Ray.Services
                     _rayDebug.LogWarning($"Unknown reward type: {_currentRewarededType}", this);
                     break;
             }
+
+            _onRewarded?.Invoke();
+            _onRewarded = null;
         }
 
         private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
