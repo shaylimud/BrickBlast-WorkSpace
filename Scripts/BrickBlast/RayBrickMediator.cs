@@ -10,7 +10,7 @@ using BlockPuzzleGameToolkit.Scripts.GUI;
     {
 
         public static RayBrickMediator Instance { get; private set; }
-        private CustomButton reviveButton;
+        public Button reviveButton;
 
         private void Awake()
         {

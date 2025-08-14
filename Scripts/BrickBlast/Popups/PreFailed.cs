@@ -16,6 +16,8 @@ using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.System;
 using DG.Tweening;
 using TMPro;
+using UnityEngine.InputSystem.HID;
+using UnityEngine.UI;
 
 namespace BlockPuzzleGameToolkit.Scripts.Popups
 {
@@ -25,7 +27,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         public TextMeshProUGUI timerText;
         public CustomButton continueButton;
         public CustomButton rewardButton;
-        public CustomButton reviveButton;
+        public Button reviveButton;
         public TextMeshProUGUI timeLeftText;
         protected int timer;
         protected int price;
@@ -36,8 +38,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             price = GameManager.instance.GameSettings.continuePrice;
             continuePrice.text = price.ToString();
             continueButton.onClick.AddListener(Continue);
-
-            RayBrickMediator.Instance?.SetReviveButton(reviveButton);
+            RayBrickMediator.Instance.reviveButton = reviveButton;
+            //RayBrickMediator.Instance?.SetReviveButton(reviveButton);
             
             InitializeTimer();
             
