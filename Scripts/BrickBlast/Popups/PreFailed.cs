@@ -16,8 +16,6 @@ using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.System;
 using DG.Tweening;
 using TMPro;
-using BlockPuzzleGameToolkit.Scripts.Gameplay;
-using Ray.Services;
 
 namespace BlockPuzzleGameToolkit.Scripts.Popups
 {
@@ -33,23 +31,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         protected int price;
         protected bool hasContinued = false;
 
-        private LevelManager levelManager;
-
         protected virtual void OnEnable()
         {
             price = GameManager.instance.GameSettings.continuePrice;
             continuePrice.text = price.ToString();
             continueButton.onClick.AddListener(Continue);
 
-            levelManager = FindObjectOfType<LevelManager>();
-            if (reviveButton != null)
-            {
-                reviveButton.onClick.AddListener(() =>
-                {
-                    Close();
-                    RewardedService.Instance.ShowRewarded(RewardedType.Revive);
-                });
-            }
+            RayBrickMediator.Instance?.SetReviveButton(reviveButton);
             
             InitializeTimer();
             
