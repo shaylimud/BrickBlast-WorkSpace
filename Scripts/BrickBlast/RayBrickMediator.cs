@@ -3,6 +3,7 @@ using Ray.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using BlockPuzzleGameToolkit.Scripts.Gameplay;
 
     public class RayBrickMediator : MonoBehaviour
     {
