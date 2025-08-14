@@ -41,6 +41,25 @@ namespace Ray.Controllers
             //_playerView.OutOfLevel += PlayerOutOfLevel;
         }
 
+        private void OnDisable()
+        {
+            EventService.Level.OnStart -= InitialPath;
+            EventService.Level.OnEnd -= EndPath;
+
+            EventService.Resource.OnLevelResourceChanged -= RefreshBobberSpace;
+
+            EventService.Item.OnItemCollected -= PulseBobber;
+            EventService.Item.OnObstacleCollected -= PlayerHit;
+
+            EventService.Ad.OnReviveWatched -= RevivePlayer;
+
+            EventService.UI.OnShowExtraSpace -= PauseTravel;
+            EventService.Ad.OnExtraSpaceWatched -= ResumeTravel;
+
+            //_playerView.NewTrackedReach -= HandleNewTrackedReach;
+            //_playerView.OutOfLevel -= PlayerOutOfLevel;
+        }
+
         private async void InitialPath(Component c)
         {
             _rayDebug.Event("InitialPath", c, this);
@@ -100,6 +119,11 @@ namespace Ray.Controllers
         private void RevivePlayer(Component c)
         {
             _rayDebug.Event("RevivePlayer", c, this);
+            if (_playerView == null)
+            {
+                _rayDebug.LogWarning("PlayerView is null. Cannot revive player.", this);
+                return;
+            }
 
             _playerView.StartTravel();
         }
