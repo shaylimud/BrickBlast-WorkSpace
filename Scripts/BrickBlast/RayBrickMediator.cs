@@ -4,11 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using BlockPuzzleGameToolkit.Scripts.Gameplay;
+using BlockPuzzleGameToolkit.Scripts.GUI;
 
-public class RayBrickMediator : MonoBehaviour
-{
+    public class RayBrickMediator : MonoBehaviour
+    {
 
         public static RayBrickMediator Instance { get; private set; }
+        private CustomButton reviveButton;
 
         private void Awake()
         {
@@ -44,6 +46,29 @@ public class RayBrickMediator : MonoBehaviour
 
             if (Shop.Panel != null)
                 Shop.Panel.SetActive(false);
+        }
+
+        public void SetReviveButton(CustomButton button)
+        {
+            if (reviveButton != null)
+            {
+                reviveButton.onClick.RemoveListener(OnReviveButtonClicked);
+            }
+
+            reviveButton = button;
+
+            if (reviveButton != null)
+            {
+                reviveButton.onClick.RemoveListener(OnReviveButtonClicked);
+                reviveButton.onClick.AddListener(OnReviveButtonClicked);
+            }
+        }
+
+        private void OnReviveButtonClicked()
+        {
+            var levelManager = FindObjectOfType<LevelManager>();
+            RewardedService.Instance.ShowRewarded(RewardedType.Revive,
+                levelManager != null ? (System.Action)levelManager.ReviveCurrentStage : null);
         }
 
 
