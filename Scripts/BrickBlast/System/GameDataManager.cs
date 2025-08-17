@@ -112,7 +112,26 @@ namespace BlockPuzzleGameToolkit.Scripts.System
                 return _level;
             }
 
-            _level = GetGameMode() == EGameMode.Classic ? Resources.Load<Level>("Misc/ClassicLevel") : Resources.Load<Level>("Levels/Level_" + GetLevelNum());
+            var gameMode = GetGameMode();
+            if (gameMode == EGameMode.Classic)
+            {
+                _level = Resources.Load<Level>("Misc/ClassicLevel");
+            }
+            else if (gameMode == EGameMode.Timed)
+            {
+                _level = Resources.Load<Level>("Misc/TimeLevel");
+
+                if (_level == null)
+                {
+                    Debug.LogError("Timed level not found.");
+                    return null;
+                }
+            }
+            else
+            {
+                _level = Resources.Load<Level>("Levels/Level_" + GetLevelNum());
+            }
+
             return _level;
         }
 
