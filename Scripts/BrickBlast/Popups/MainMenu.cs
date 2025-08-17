@@ -22,11 +22,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 {
     public class MainMenu : Popup
     {
-        public CustomButton timedMode;
-        public CustomButton classicMode;
-        public CustomButton adventureMode;
-        public CustomButton settingsButton;
-        public CustomButton luckySpin;
+        public Button timedMode;
+        public Button classicMode;
+        public Button adventureMode;
+        public Button settingsButton;
+        public Button luckySpin;
         public GameObject playObject;
 
         [SerializeField]

@@ -25,8 +25,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
     {
         public TextMeshProUGUI continuePrice;
         public TextMeshProUGUI timerText;
-        public CustomButton continueButton;
-        public CustomButton rewardButton;
+        public Button continueButton;
+        public Button rewardButton;
         public Button reviveButton;
         public TextMeshProUGUI timeLeftText;
         protected int timer;
