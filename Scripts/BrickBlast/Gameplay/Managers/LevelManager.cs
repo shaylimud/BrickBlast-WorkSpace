@@ -306,12 +306,20 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             else
             {
                 gameMode = GameDataManager.GetGameMode();
-                _levelData = GameDataManager.GetLevel();
-                currentLevel = _levelData.Number;
+                if (gameMode == EGameMode.Classic)
+                {
+                    _levelData = Resources.Load<Level>("Misc/ClassicLevel");
+                    currentLevel = Database.UserData.Level;
+                }
+                else
+                {
+                    currentLevel = Database.UserData.Level;
+                    _levelData = Resources.Load<Level>("Levels/Level_" + currentLevel);
+                }
             }
-            if(_levelData == null)
+            if (_levelData == null)
             {
-                Debug.LogError("Level data is null");
+                Debug.LogError($"Level data is null for level {currentLevel}");
                 return;
             }
 
@@ -546,7 +554,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
             EventService.Player.OnParked?.Invoke(this);
 
-            GameDataManager.UnlockLevel(currentLevel + 1);
+            int nextLevel = Database.UserData.Level + 1;
+            Database.UserData.SetLevel(nextLevel);
+            GameDataManager.LevelNum = nextLevel;
+            GameDataManager.SetLevel(null);
+
             int subLevel = GameDataManager.GetSubLevelIndex();
             if (subLevel < 3)
             {
