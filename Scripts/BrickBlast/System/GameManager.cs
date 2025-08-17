@@ -12,14 +12,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Resources;
 using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.Gameplay;
 using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.Popups;
-using BlockPuzzleGameToolkit.Scripts.Popups.Daily;
 using BlockPuzzleGameToolkit.Scripts.Services;
 using BlockPuzzleGameToolkit.Scripts.Services.IAP;
 using BlockPuzzleGameToolkit.Scripts.Settings;
@@ -33,17 +30,14 @@ namespace BlockPuzzleGameToolkit.Scripts.System
     {
         public Action<string> purchaseSucceded;
         public DebugSettings debugSettings;
-        public DailyBonusSettings dailyBonusSettings;
         public GameSettings GameSettings;
         public SpinSettings luckySpinSettings;
         public CoinsShopSettings coinsShopSettings;
         private (string id, ProductTypeWrapper.ProductType productType)[] products;
         private int lastBackgroundIndex = -1;
         private bool isTutorialMode;
-        private MainMenu mainMenu;
         public Action<bool, List<string>> OnPurchasesRestored;
         public ProductID noAdsProduct;
-        private bool blockButtons;
 
         public int Score { get=> ResourceManager.instance.GetResource("Score").GetValue(); set => ResourceManager.instance.GetResource("Score").Set(value); }
 
@@ -53,24 +47,11 @@ namespace BlockPuzzleGameToolkit.Scripts.System
             DontDestroyOnLoad(this);
             Application.targetFrameRate = 60;
             DOTween.SetTweensCapacity(1250, 512);
-
-            mainMenu = FindObjectOfType<MainMenu>();
-            if (mainMenu != null)
-            {
-                mainMenu.OnAnimationEnded += OnMainMenuAnimationEnded;
-            }
         }
 
         private void OnEnable()
         {
             IAPManager.SubscribeToPurchaseEvent(PurchaseSucceeded);
-            if (StateManager.instance.CurrentState == EScreenStates.MainMenu)
-            {
-                if (!GameDataManager.isTestPlay && CheckDailyBonusConditions())
-                {
-                    blockButtons = true;
-                }
-            }
 
             if (!IsTutorialShown() && !GameDataManager.isTestPlay)
             {
@@ -81,10 +62,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         private void OnDisable()
         {
             IAPManager.UnsubscribeFromPurchaseEvent(PurchaseSucceeded);
-            if (mainMenu != null)
-            {
-                mainMenu.OnAnimationEnded -= OnMainMenuAnimationEnded;
-            }
             GameDataManager.isTestPlay = false; // Reset isTestPlay
         }
 
@@ -136,31 +113,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
             Debug.LogError($"Failed to initialize gaming services: {errorMessage}");
         }
 
-        private void HandleDailyBonus()
-        {
-            if (StateManager.instance.CurrentState != EScreenStates.MainMenu || !dailyBonusSettings.dailyBonusEnabled || !GameSettings.enableInApps)
-            {
-                return;
-            }
-
-            var shouldShowDailyBonus = CheckDailyBonusConditions();
-
-            if (shouldShowDailyBonus)
-            {
-                var daily = MenuManager.instance.ShowPopup<DailyBonus>(()=>
-                {
-                    blockButtons = false;
-                });
-            }
-        }
-
-        private bool CheckDailyBonusConditions()
-        {
-            var today = DateTime.Today;
-            var lastRewardDate = DateTime.Parse(PlayerPrefs.GetString("DailyBonusDay", today.Subtract(TimeSpan.FromDays(1)).ToString(CultureInfo.CurrentCulture)));
-            return today.Date > lastRewardDate.Date && dailyBonusSettings.dailyBonusEnabled;
-        }
-
         public void RestartLevel()
         {
             DOTween.KillAll();
@@ -202,8 +154,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public void OpenMap()
         {
-            if (blockButtons && StateManager.instance.CurrentState == EScreenStates.MainMenu)
-                return;
             if (GetGameMode() == EGameMode.Classic)
             {
                 SceneLoader.instance.StartGameSceneClassic();
@@ -270,15 +220,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         public bool IsTutorialMode()
         {
             return isTutorialMode;
-        }
-
-        private void OnMainMenuAnimationEnded()
-        {
-            if (StateManager.instance.CurrentState == EScreenStates.MainMenu)
-            {
-
-                HandleDailyBonus();
-            }
         }
 
         internal void RestorePurchases(Action<bool, List<string>> OnPurchasesRestored)
