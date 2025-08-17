@@ -13,24 +13,75 @@
 using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.System;
 using UnityEngine.UI;
+using TMPro;
+using Ray.Services;
+using static GameSettingsRay;
 
 namespace BlockPuzzleGameToolkit.Scripts.Popups
 {
     public class Failed : Popup
     {
         public Button retryButton;
+        public TextMeshProUGUI currencyText;
+        public Button tripleRewardButton;
+
+        private bool rewardGranted;
 
         protected virtual void OnEnable()
         {
             retryButton.onClick.AddListener(Retry);
-            closeButton.onClick.AddListener(() => GameManager.instance.MainMenu());
+            closeButton.onClick.AddListener(CollectAndExit);
+
+            if (currencyText != null)
+            {
+                currencyText.text = GameManager.instance.Score.ToString();
+            }
+
+            if (tripleRewardButton != null)
+            {
+                tripleRewardButton.onClick.AddListener(TripleReward);
+                tripleRewardButton.interactable = RewardedService.Instance.IsRewardedReady(RewardedType.Triple);
+            }
         }
 
-        private void Retry()
+        private async void Retry()
         {
+            if (rewardGranted) return;
+            rewardGranted = true;
             StopInteration();
 
+            await Database.UserData.AddScoreAsCurrency(GameManager.instance.Score);
             GameManager.instance.RestartLevel();
+            Close();
+        }
+
+        private async void CollectAndExit()
+        {
+            if (rewardGranted) return;
+            rewardGranted = true;
+            StopInteration();
+
+            await Database.UserData.AddScoreAsCurrency(GameManager.instance.Score);
+            GameManager.instance.MainMenu();
+            Close();
+        }
+
+        private void TripleReward()
+        {
+            if (rewardGranted) return;
+            if (!RewardedService.Instance.IsRewardedReady(RewardedType.Triple)) return;
+
+            tripleRewardButton.interactable = false;
+            RewardedService.Instance.ShowRewarded(RewardedType.Triple, OnTripleRewarded);
+        }
+
+        private async void OnTripleRewarded()
+        {
+            if (rewardGranted) return;
+            rewardGranted = true;
+
+            await Database.UserData.AddScoreAsCurrency(GameManager.instance.Score * 3);
+            GameManager.instance.MainMenu();
             Close();
         }
     }
