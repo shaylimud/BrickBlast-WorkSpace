@@ -100,7 +100,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             {
                 hasContinued = true;
                 continueButton.interactable = false;
-                rewardButton.interactable = false;
+                if (rewardButton != null)
+                {
+                    rewardButton.interactable = false;
+                }
 
                 CancelInvoke(nameof(UpdateTimer));
                 ShowCoinsSpendFX(continueButton.transform.position);
