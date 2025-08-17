@@ -23,7 +23,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Enums
         PreWin,
         Loaded,
         Failed,
-        WinWaiting,
         Paused
     }
 }
