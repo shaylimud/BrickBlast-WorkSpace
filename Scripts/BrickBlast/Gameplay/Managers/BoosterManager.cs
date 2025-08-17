@@ -79,6 +79,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 return;
             }
 
+            if (booster == BoosterType.ClearSquare)
+            {
+                ClearRandomSquare();
+                ResourceService.Instance?.ConsumeBooster(BoosterType.ClearSquare);
+                return;
+            }
+
             activeBooster = booster;
         }
 
@@ -219,9 +226,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                                 case BoosterType.ClearColumn:
                                     FillColumn(col);
                                     break;
-                                case BoosterType.ClearSquare:
-                                    FillSquare(row, col);
-                                    break;
                                 case BoosterType.ChangeShape:
                                     ChangeShapes();
                                     break;
@@ -286,15 +290,23 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Invoke(null);
         }
 
-        private void FillSquare(int rowIndex, int columnIndex)
+        private void ClearRandomSquare()
         {
-            var itemTemplate = Resources.Load<ItemTemplate>("Items/ItemTemplate 0");
-            if (itemTemplate == null)
-            {
-                Debug.Log("[BoosterManager] ItemTemplate 0 not found.");
+            if (fieldManager == null || fieldManager.cells == null)
                 return;
-            }
 
+            int rows = fieldManager.cells.GetLength(0);
+            int cols = fieldManager.cells.GetLength(1);
+            if (rows < 3 || cols < 3)
+                return;
+
+            int rowIndex = Random.Range(1, rows - 1);
+            int columnIndex = Random.Range(1, cols - 1);
+            ClearSquare(rowIndex, columnIndex);
+        }
+
+        private void ClearSquare(int rowIndex, int columnIndex)
+        {
             for (int row = rowIndex - 1; row <= rowIndex + 1; row++)
             {
                 for (int col = columnIndex - 1; col <= columnIndex + 1; col++)
@@ -303,9 +315,9 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                         continue;
 
                     var targetCell = fieldManager.cells[row, col];
-                    if (targetCell != null && targetCell.IsEmpty())
+                    if (targetCell != null)
                     {
-                        targetCell.FillCell(itemTemplate);
+                        targetCell.ClearCell();
                     }
                 }
             }
@@ -313,5 +325,5 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Invoke(null);
         }
     }
-    
+
 }
