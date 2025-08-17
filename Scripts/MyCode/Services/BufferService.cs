@@ -100,7 +100,8 @@ public class BufferService : MonoBehaviour
         if (_uiCanvasGroup != null)
         {
             _uiCanvasGroup.interactable = isInteractable;
-            _uiCanvasGroup.blocksRaycasts = isInteractable;
+            // When buffering, block raycasts so the UI beneath cannot be interacted with
+            _uiCanvasGroup.blocksRaycasts = !isInteractable;
         }
 
         if (_eventSystem != null)
