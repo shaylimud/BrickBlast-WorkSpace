@@ -12,12 +12,13 @@
 
 using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.System;
+using UnityEngine.UI;
 
 namespace BlockPuzzleGameToolkit.Scripts.Popups
 {
     public class Failed : Popup
     {
-        public CustomButton retryButton;
+        public Button retryButton;
 
         protected virtual void OnEnable()
         {

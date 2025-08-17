@@ -26,7 +26,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         public TextMeshProUGUI continuePrice;
         public TextMeshProUGUI timerText;
         public Button continueButton;
-        public Button rewardButton;
         public Button reviveButton;
         public TextMeshProUGUI timeLeftText;
         protected int timer;
@@ -113,10 +112,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             {
                 continueButton.interactable = false;
             }
-            if (rewardButton != null)
-            {
-                rewardButton.interactable = false;
-            }
+
 
             CancelInvoke(nameof(UpdateTimer));
             StopInteration();
