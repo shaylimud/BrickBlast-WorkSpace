@@ -11,6 +11,8 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay;
         public static RayBrickMediator Instance { get; private set; }
         public Button reviveButton;
 
+        [SerializeField] private Sprite boosterAdSprite;
+
         private void Awake()
         {
             Instance = this;
@@ -138,7 +140,10 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay;
             if (obj == null) return;
 
             var button = obj.GetComponent<Button>();
-            if (button == null) return;
+            var image = obj.GetComponent<Image>();
+            if (button == null || image == null) return;
+
+            var originalSprite = image.sprite;
 
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
@@ -162,7 +167,20 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay;
 
                 if (count <= 0)
                 {
-                    EventService.UI.OnToggleInsufficient?.Invoke(this);
+                    if (RewardedService.Instance.IsRewardedReady(RewardedType.ExtraSpace))
+                    {
+                        image.sprite = boosterAdSprite;
+                        RewardedService.Instance.ShowRewarded(RewardedType.ExtraSpace, () =>
+                        {
+                            image.sprite = originalSprite;
+                            ResourceService.Instance?.RewardBooster(type);
+                            RefreshShop(this);
+                        });
+                    }
+                    else
+                    {
+                        EventService.UI.OnToggleInsufficient?.Invoke(this);
+                    }
                     return;
                 }
 
@@ -204,7 +222,7 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay;
             {
                 var button = levelButton.GetComponent<Button>();
                 if (button != null)
-                    button.interactable = amount > 0;
+                    button.interactable = true; // keep usable so ad flow can trigger when empty
             }
 
             Shop.ClearRow.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_1);
