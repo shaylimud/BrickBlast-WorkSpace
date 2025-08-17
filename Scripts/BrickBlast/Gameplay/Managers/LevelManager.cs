@@ -492,6 +492,20 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             yield return new WaitForSeconds(0.5f); // Keep a small delay for game flow
             var lose = true;
             var availableShapes = cellDeck.GetShapes();
+
+            // If there are no shapes left in the deck, the stage is considered
+            // completed successfully. In the previous implementation this case
+            // fell through to the lose branch, causing a failed screen to be
+            // shown even though the player finished the stage. Treat an empty
+            // deck as a win and move to the next stage instead.
+            if (availableShapes.Length == 0)
+            {
+                EventManager.GameStatus = EGameState.WinWaiting;
+                yield return new WaitForSeconds(0.5f);
+                SetWin();
+                yield break;
+            }
+
             foreach (var shape in availableShapes)
             {
                 if (field.CanPlaceShape(shape))
