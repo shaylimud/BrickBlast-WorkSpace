@@ -48,7 +48,14 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
 
         private void Start()
         {
-            backButton.onClick.AddListener(SceneLoader.instance.GoMain);
+            if (backButton != null && SceneLoader.instance != null)
+            {
+                backButton.onClick.AddListener(SceneLoader.instance.GoMain);
+            }
+            else
+            {
+                Debug.LogError("BackButton or SceneLoader instance is not assigned.");
+            }
             var lvls = FindObjectsOfType<LevelPin>().OrderBy(x => x.groupIndex).ToArray();
             var lastGroup = GameDataManager.GetGroupIndex();
 
