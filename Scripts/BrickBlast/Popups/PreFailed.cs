@@ -36,13 +36,20 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         protected virtual void OnEnable()
         {
             price = GameManager.instance.GameSettings.continuePrice;
-            continuePrice.text = price.ToString();
-            continueButton.onClick.AddListener(Continue);
+            if (continuePrice != null)
+            {
+                continuePrice.text = price.ToString();
+            }
+
+            continueButton?.onClick.AddListener(Continue);
             RayBrickMediator.Instance?.SetReviveButton(reviveButton);
-            
+
             InitializeTimer();
-            
-            timerText.text = timer.ToString();
+
+            if (timerText != null)
+            {
+                timerText.text = timer.ToString();
+            }
             SoundBase.instance.PlaySound(SoundBase.instance.warningTime);
             InvokeRepeating(nameof(UpdateTimer), 1, 1);
             //rewardButton.gameObject.SetActive(GameManager.instance.GameSettings.enableAds);
@@ -69,10 +76,16 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
                 timer = GameManager.instance.GameSettings.failedTimerStart;
             }
 
-            timerText.text = timer.ToString();
+            if (timerText != null)
+            {
+                timerText.text = timer.ToString();
+            }
             if (timer <= 0)
             {
-                continueButton.interactable = false;
+                if (continueButton != null)
+                {
+                    continueButton.interactable = false;
+                }
                 hasContinued = true;
 
                 CancelInvoke(nameof(UpdateTimer));
@@ -96,7 +109,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             }
 
             hasContinued = true;
-            continueButton.interactable = false;
+            if (continueButton != null)
+            {
+                continueButton.interactable = false;
+            }
             if (rewardButton != null)
             {
                 rewardButton.interactable = false;
