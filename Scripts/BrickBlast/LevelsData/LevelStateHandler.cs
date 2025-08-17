@@ -77,14 +77,31 @@ namespace BlockPuzzleGameToolkit.Scripts.LevelsData
         private protected virtual void HandleWin(LevelManager levelManager)
         {
             var winPopup = levelManager.GetCurrentLevel().levelType.winPopup;
+
+            void HandleWinResult(EPopupResult _)
+            {
+                // Determine which sub-level we just completed based on the level index
+                var subLevel = (levelManager.currentLevel - 1) % 3 + 1;
+                if (subLevel < 3)
+                {
+                    EventManager.GameStatus = EGameState.Playing;
+                    GameManager.instance.OpenGame();
+                    GameManager.instance.RestartLevel();
+                }
+                else
+                {
+                    GameManager.instance.OpenMap();
+                }
+            }
+
             if (winPopup != null)
             {
-                MenuManager.instance.ShowPopup(winPopup);
+                MenuManager.instance.ShowPopup(winPopup, null, HandleWinResult);
             }
             else
             {
-                GameManager.instance.OpenMap();
+                HandleWinResult(EPopupResult.Yes);
             }
         }
     }
-} 
+}
