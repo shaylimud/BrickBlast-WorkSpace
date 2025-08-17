@@ -4,6 +4,7 @@ using BlockPuzzleGameToolkit.Scripts.LevelsData;
 using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.System;
 using Ray.Services;
+using static GameSettingsRay;
 
 namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 {
@@ -57,7 +58,18 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             // Prevent using boosters when the player has none available
             if (GetBoosterCount(booster) <= 0)
             {
-                EventService.UI.OnToggleInsufficient?.Invoke(this);
+                if (RewardedService.Instance != null && RewardedService.Instance.IsRewardedReady(RewardedType.ExtraSpace))
+                {
+                    RewardedService.Instance.ShowRewarded(RewardedType.ExtraSpace, () =>
+                    {
+                        ResourceService.Instance?.RewardBooster(booster);
+                        RayBrickMediator.Instance?.RefreshShop(this);
+                    });
+                }
+                else
+                {
+                    EventService.UI.OnToggleInsufficient?.Invoke(this);
+                }
                 return;
             }
 
