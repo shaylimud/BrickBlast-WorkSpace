@@ -545,6 +545,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             if (subLevel < 3)
             {
                 GameDataManager.SetSubLevelIndex(subLevel + 1);
+                EventManager.GameStatus = EGameState.Playing;
                 GameManager.instance.OpenGame();
                 GameManager.instance.RestartLevel();
             }
@@ -553,7 +554,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 int currentGroup = Mathf.CeilToInt(currentLevel / 3f);
                 GameDataManager.UnlockGroup(currentGroup + 1);
                 GameDataManager.ResetSubLevelIndex();
-                GameManager.instance.OpenMap();
+                EventManager.GameStatus = EGameState.PreWin;
             }
         }
 
