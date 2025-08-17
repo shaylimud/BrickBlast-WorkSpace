@@ -222,7 +222,11 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay;
             {
                 var button = levelButton.GetComponent<Button>();
                 if (button != null)
+
+                    button.interactable = true; // keep usable so ad flow can trigger when empty
+
                     button.interactable = amount > 0 || RewardedService.Instance.IsRewardedReady(RewardedType.ExtraSpace);
+
             }
 
             Shop.ClearRow.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_1);
