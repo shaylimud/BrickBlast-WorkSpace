@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using BlockPuzzleGameToolkit.Scripts.Gameplay;
+using System.Collections.Generic;
 
     public class RayBrickMediator : MonoBehaviour
     {
@@ -12,6 +13,9 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay;
         public Button reviveButton;
 
         [SerializeField] private Sprite boosterAdSprite;
+
+        private readonly Dictionary<GameObject, Sprite> boosterOriginalSprites = new();
+        private float boosterRefreshTimer;
 
         private void Awake()
         {
@@ -47,6 +51,16 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay;
 
             if (Shop.Panel != null)
                 Shop.Panel.SetActive(false);
+        }
+
+        private void Update()
+        {
+            boosterRefreshTimer -= Time.deltaTime;
+            if (boosterRefreshTimer <= 0f)
+            {
+                boosterRefreshTimer = 1f;
+                RefreshShop(this);
+            }
         }
 
         public void SetReviveButton(Button button)
@@ -143,7 +157,7 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay;
             var image = obj.GetComponent<Image>();
             if (button == null || image == null) return;
 
-            var originalSprite = image.sprite;
+            boosterOriginalSprites[obj] = image.sprite;
 
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
@@ -172,7 +186,7 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay;
                         image.sprite = boosterAdSprite;
                         RewardedService.Instance.ShowRewarded(RewardedType.ExtraSpace, () =>
                         {
-                            image.sprite = originalSprite;
+                            image.sprite = boosterOriginalSprites[obj];
                             ResourceService.Instance?.RewardBooster(type);
                             RefreshShop(this);
                         });
@@ -221,12 +235,14 @@ using BlockPuzzleGameToolkit.Scripts.Gameplay;
             if (levelButton != null)
             {
                 var button = levelButton.GetComponent<Button>();
+                var image = levelButton.GetComponent<Image>();
+                bool adReady = RewardedService.Instance.IsRewardedReady(RewardedType.ExtraSpace);
+
                 if (button != null)
+                    button.interactable = amount > 0 || adReady;
 
-                    button.interactable = true; // keep usable so ad flow can trigger when empty
-
-                    button.interactable = amount > 0 || RewardedService.Instance.IsRewardedReady(RewardedType.ExtraSpace);
-
+                if (image != null && boosterOriginalSprites.TryGetValue(levelButton, out var originalSprite))
+                    image.sprite = amount <= 0 && adReady ? boosterAdSprite : originalSprite;
             }
 
             Shop.ClearRow.Price = CalculateBoosterPrice(Database.UserData.Stats.Power_1);
