@@ -95,25 +95,16 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
                 return;
             }
 
-            var data = Ray.Services.Database.UserData;
-            if (await data.SpendCurrency(price))
+            hasContinued = true;
+            continueButton.interactable = false;
+            if (rewardButton != null)
             {
-                hasContinued = true;
-                continueButton.interactable = false;
-                if (rewardButton != null)
-                {
-                    rewardButton.interactable = false;
-                }
+                rewardButton.interactable = false;
+            }
 
-                CancelInvoke(nameof(UpdateTimer));
-                ShowCoinsSpendFX(continueButton.transform.position);
-                StopInteration();
-                OnContinue();
-            }
-            else
-            {
-                MenuManager.instance.ShowPopup<CoinsShop>();
-            }
+            CancelInvoke(nameof(UpdateTimer));
+            StopInteration();
+            OnContinue();
         }
 
         public void OnContinue()
@@ -122,10 +113,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             DOVirtual.DelayedCall(0.5f, ContinueGame);
         }
 
-        public void ContinueGame()
+        private async void ContinueGame()
         {
             result = EPopupResult.Continue;
-            EventManager.GameStatus = EGameState.Playing;
+            await Ray.Services.Database.UserData.AddScoreAsCurrency(GameManager.instance.Score);
+            GameManager.instance.MainMenu();
             Close();
         }
     }
