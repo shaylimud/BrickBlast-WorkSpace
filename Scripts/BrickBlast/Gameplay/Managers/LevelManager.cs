@@ -486,7 +486,9 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         {
             if (gameMode != EGameMode.Classic && targetManager != null && targetManager.WillLevelBeComplete())
             {
-                EventManager.GameStatus = EGameState.WinWaiting;
+                // Avoid entering an intermediate WinWaiting state that is not
+                // handled by the level state machine. The win will be processed
+                // normally through SetWin() below.
             }
 
             yield return new WaitForSeconds(0.5f); // Keep a small delay for game flow
@@ -500,7 +502,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             // deck as a win and move to the next stage instead.
             if (availableShapes.Length == 0)
             {
-                EventManager.GameStatus = EGameState.WinWaiting;
                 yield return new WaitForSeconds(0.5f);
                 SetWin();
                 yield break;
@@ -545,6 +546,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             if (subLevel < 3)
             {
                 GameDataManager.SetSubLevelIndex(subLevel + 1);
+                EventManager.GameStatus = EGameState.Playing;
                 GameManager.instance.OpenGame();
                 GameManager.instance.RestartLevel();
             }
@@ -553,7 +555,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 int currentGroup = Mathf.CeilToInt(currentLevel / 3f);
                 GameDataManager.UnlockGroup(currentGroup + 1);
                 GameDataManager.ResetSubLevelIndex();
-                GameManager.instance.OpenMap();
+                EventManager.GameStatus = EGameState.PreWin;
             }
         }
 
