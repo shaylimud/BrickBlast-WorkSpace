@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using TenjFix;
-using Tenjin;
+
 #if UNITY_IOS
 using UnityEngine.iOS;
 #endif
