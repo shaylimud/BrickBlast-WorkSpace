@@ -502,7 +502,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             // deck as a win and move to the next stage instead.
             if (availableShapes.Length == 0)
             {
-                yield return new WaitForSeconds(0.5f);
+                // Move immediately to the pre-win state so that no further
+                // actions (like deck refills) are triggered while we prepare to
+                // finish the level. A brief yield allows the state change to
+                // propagate before SetWin() executes.
+                EventManager.GameStatus = EGameState.PreWin;
+                yield return null;
                 SetWin();
                 yield break;
             }
