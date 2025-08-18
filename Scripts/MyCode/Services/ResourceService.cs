@@ -246,8 +246,8 @@ namespace Ray.Services
 
             LevelSpace.Value = Database.UserData.Stats.SpaceLevel;
 
-            EventService.Resource.OnLevelResourceChanged.Invoke(this);
-            EventService.Resource.OnEndCurrencyChanged.Invoke(this);
+            EventService.Resource.OnLevelResourceChanged?.Invoke(this);
+            EventService.Resource.OnEndCurrencyChanged?.Invoke(this);
         }
 
         private void ProcessItemValueUsingY(Component c, ItemType itemType, Vector2 itemPos)
@@ -285,7 +285,7 @@ namespace Ray.Services
             await Database.UserData.AddScoreAsCurrency(total);
             LevelScore.Value = 0;
 
-            EventService.Resource.OnEndCurrencyChanged(this);
+            EventService.Resource.OnEndCurrencyChanged?.Invoke(this);
         }
 
         private async void RewardEndTriple(Component c)
@@ -300,7 +300,7 @@ namespace Ray.Services
 
             await Database.Instance.Save(saveData);
 
-            EventService.Resource.OnEndCurrencyChanged(this);
+            EventService.Resource.OnEndCurrencyChanged?.Invoke(this);
         }
         private async void RewardBrightData(Component c)
         {
