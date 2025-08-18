@@ -80,17 +80,21 @@ namespace BlockPuzzleGameToolkit.Scripts.LevelsData
 
             void HandleWinResult(EPopupResult _)
             {
-                // Determine which sub-level we just completed based on the level index
-                var subLevel = (levelManager.currentLevel - 1) % 3 + 1;
-                if (subLevel < 3)
+                // GameDataManager.GetSubLevelIndex returns the index for the next
+                // level to play. A value of 1 means we've wrapped to the first
+                // sub-level of the next group, so the player should return to the
+                // map. Any other value means there are more sub-levels to play in
+                // the current group, so we continue the game.
+                var subLevelIndex = GameDataManager.GetSubLevelIndex();
+                if (subLevelIndex == 1)
+                {
+                    GameManager.instance.OpenMap();
+                }
+                else
                 {
                     EventManager.GameStatus = EGameState.Playing;
                     GameManager.instance.OpenGame();
                     GameManager.instance.RestartLevel();
-                }
-                else
-                {
-                    GameManager.instance.OpenMap();
                 }
             }
 
