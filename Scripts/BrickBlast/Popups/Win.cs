@@ -12,12 +12,17 @@
 
 using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.System;
+using UnityEngine.UI;
+using TMPro;
 
 namespace BlockPuzzleGameToolkit.Scripts.Popups
 {
     public class Win : Popup
     {
         public CustomButton nextLevelButton;
+        public Button collectCoinsButton;
+        public Button tripleCoinsButton;
+        public TextMeshProUGUI currencyText;
 
         protected override void Awake()
         {
@@ -37,6 +42,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
                 Close();
             });
             closeButton.onClick.AddListener(() => GameManager.instance.OpenMap());
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            RayBrickMediator.Instance?.SetWinButtons(collectCoinsButton, tripleCoinsButton, currencyText);
         }
     }
 }

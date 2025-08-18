@@ -156,6 +156,18 @@ public class UserData
     public void SetLevel(int value)
     {
         Level = value;
+
+        // Each group contains two sub-levels (1-2). When the level
+        // wraps past the last sub-level (reaching 3), reset the level to
+        // 1 and advance the group index. This ensures the in-memory
+        // instance reflects the new group before saving so the next stage
+        // loads correctly instead of restarting the current one.
+        if (Level >= 3)
+        {
+            Level = 1;
+            GroupIndex = GroupIndex + 1;
+        }
+
         var saveData = Database.UserData.Copy();
         Database.Instance?.Save(saveData);
     }

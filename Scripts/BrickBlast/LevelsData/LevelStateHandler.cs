@@ -104,7 +104,7 @@ namespace BlockPuzzleGameToolkit.Scripts.LevelsData
             }
             else
             {
-                HandleWinResult(EPopupResult.Yes);
+                MenuManager.instance.ShowPopup<Win>(null, HandleWinResult);
             }
         }
     }
