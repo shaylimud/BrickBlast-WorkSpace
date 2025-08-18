@@ -82,7 +82,7 @@ namespace BlockPuzzleGameToolkit.Scripts.LevelsData
             {
                 if (levelManager.gameMode == EGameMode.Adventure)
                 {
-                    GameManager.instance.OpenMap();
+                    SceneLoader.instance.GoMain();
                     return;
                 }
 

@@ -36,7 +36,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
                 }
                 Close();
             });
-            closeButton.onClick.AddListener(() => GameManager.instance.OpenMap());
+            closeButton.onClick.AddListener(() => SceneLoader.instance.GoMain());
         }
     }
 }
