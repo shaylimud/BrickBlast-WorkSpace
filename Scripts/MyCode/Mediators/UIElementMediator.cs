@@ -29,7 +29,7 @@ public class UIElementMediator : MonoBehaviour
     public class MenuElements
     {
         public TextMeshProUGUI MenuCurrency;
-        public TextMeshProUGUI ReachLevel;
+        public TextMeshProUGUI Level;
         public TextMeshProUGUI ReachCost;
         public TextMeshProUGUI SpaceLevel;
         public TextMeshProUGUI SpaceCost;

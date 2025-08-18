@@ -229,7 +229,6 @@ namespace Ray.Services
                 {
                     Dictionary<string, object> defaultData = defaultSnapshot.ToDictionary();
                     int defaultLevel = defaultData.ContainsKey("Level") ? Convert.ToInt32(defaultData["Level"]) : 1;
-                    int defaultReachLevel = defaultData.ContainsKey("ReachLevel") ? Convert.ToInt32(defaultData["ReachLevel"]) : defaultLevel;
                     int defaultSpaceLevel = defaultData.ContainsKey("SpaceLevel") ? Convert.ToInt32(defaultData["SpaceLevel"]) : 0;
                     int defaultPower1 = defaultData.ContainsKey("Power_1") ? Convert.ToInt32(defaultData["Power_1"]) : 0;
                     int defaultPower2 = defaultData.ContainsKey("Power_2") ? Convert.ToInt32(defaultData["Power_2"]) : 0;
@@ -249,7 +248,6 @@ namespace Ray.Services
 
                         Stats = new UserData.StatsData
                         {
-                            ReachLevel = defaultReachLevel,
                             SpaceLevel = defaultSpaceLevel,
                             Power_1 = defaultPower1,
                             Power_2 = defaultPower2,
@@ -328,10 +326,10 @@ namespace Ray.Services
                 UserData = saveData; // Transfer modifications to client after cheat check
 
                 // Check and update Highest Reach Event
-                if (UserData.Stats.ReachLevel > serverUserData.Stats.ReachLevel)
+                if (UserData.Level > serverUserData.Level)
                 {
                     List<int> sortedReachEvents = GameSettings.Events.SortedReachEvents();
-                    int highestValidEvent = sortedReachEvents.Where(e => e <= UserData.Stats.ReachLevel).DefaultIfEmpty(0).Max();
+                    int highestValidEvent = sortedReachEvents.Where(e => e <= UserData.Level).DefaultIfEmpty(0).Max();
                     if (highestValidEvent > UserData.Stats.HighestReachEvent)
                     {
                         UserData.Stats.HighestReachEvent = highestValidEvent;

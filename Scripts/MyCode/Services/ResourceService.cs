@@ -94,7 +94,7 @@ namespace Ray.Services
             var saveData = Database.UserData.Copy();
             saveData.Stats.TotalCurrency -= upgradeCost;
 
-            if (upgradeType == UpgradeType.Reach) saveData.Stats.ReachLevel += upgradeProp.LevelIncrement;
+            if (upgradeType == UpgradeType.Reach) saveData.Level += upgradeProp.LevelIncrement;
             else saveData.Stats.SpaceLevel += upgradeProp.LevelIncrement;
 
             await Database.Instance.Save(saveData);
@@ -105,7 +105,7 @@ namespace Ray.Services
         public int UpgradeCost(UpgradeType upgradeType)
         {
             var upgradeProp = upgradeType == UpgradeType.Reach ? _resourceEvaluationConfig.ReachUpgradeProperties : _resourceEvaluationConfig.SpaceUpgradeProperties;
-            int level = upgradeType == UpgradeType.Reach ? Database.UserData.Stats.ReachLevel : Database.UserData.Stats.SpaceLevel;
+            int level = upgradeType == UpgradeType.Reach ? Database.UserData.Level : Database.UserData.Stats.SpaceLevel;
             var multiplierDic = upgradeType == UpgradeType.Reach ? Database.GameSettings.Multipliers.Reach : Database.GameSettings.Multipliers.Space;
 
             // Sort multipliers by level breakpoint (ascending order)
