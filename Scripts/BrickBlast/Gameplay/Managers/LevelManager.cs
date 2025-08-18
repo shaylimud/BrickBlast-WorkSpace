@@ -563,9 +563,16 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             if (subLevel < 3)
             {
                 GameDataManager.SetSubLevelIndex(subLevel + 1);
-                EventManager.GameStatus = EGameState.Playing;
-                GameManager.instance.OpenGame();
-                GameManager.instance.RestartLevel();
+                if (gameMode == EGameMode.Adventure)
+                {
+                    EventManager.GameStatus = EGameState.PreWin;
+                }
+                else
+                {
+                    EventManager.GameStatus = EGameState.Playing;
+                    GameManager.instance.OpenGame();
+                    GameManager.instance.RestartLevel();
+                }
             }
             else
             {
