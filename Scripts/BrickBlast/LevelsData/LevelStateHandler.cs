@@ -80,6 +80,12 @@ namespace BlockPuzzleGameToolkit.Scripts.LevelsData
 
             void HandleWinResult(EPopupResult _)
             {
+                if (levelManager.gameMode == EGameMode.Adventure)
+                {
+                    GameManager.instance.OpenMap();
+                    return;
+                }
+
                 // Determine which sub-level we just completed based on the level index
                 var subLevel = (levelManager.currentLevel - 1) % 3 + 1;
                 if (subLevel < 3)

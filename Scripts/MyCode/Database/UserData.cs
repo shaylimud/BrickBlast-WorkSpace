@@ -43,6 +43,10 @@ public class UserData
             {
                 level = value;
                 Stats.ReachLevel = value;
+                if (level % 3 == 0)
+                {
+                    GroupIndex++;
+                }
                 LevelChanged?.Invoke(value);
             }
         }
