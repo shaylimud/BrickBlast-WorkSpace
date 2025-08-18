@@ -22,6 +22,7 @@ using BlockPuzzleGameToolkit.Scripts.Services.IAP;
 using BlockPuzzleGameToolkit.Scripts.Settings;
 using DG.Tweening;
 using UnityEngine;
+using Ray.Services;
 using ResourceManager = BlockPuzzleGameToolkit.Scripts.Data.ResourceManager;
 
 namespace BlockPuzzleGameToolkit.Scripts.System
@@ -207,6 +208,8 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         public void NextLevel()
         {
             GameDataManager.LevelNum++;
+            Database.UserData.SetLevel(GameDataManager.LevelNum);
+            GameDataManager.UnlockGroup(Mathf.CeilToInt(GameDataManager.LevelNum / 3f));
             OpenGame();
             RestartLevel();
         }
