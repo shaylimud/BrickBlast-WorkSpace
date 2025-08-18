@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using BlockPuzzleGameToolkit.Scripts.Gameplay;
+using BlockPuzzleGameToolkit.Scripts.System;
+using BlockPuzzleGameToolkit.Scripts.Popups;
 using System.Collections.Generic;
 
     public class RayBrickMediator : MonoBehaviour
@@ -11,6 +13,11 @@ using System.Collections.Generic;
 
         public static RayBrickMediator Instance { get; private set; }
         public Button reviveButton;
+
+        public Button winCollectButton;
+        public Button winTripleButton;
+        public TextMeshProUGUI winCurrencyText;
+        private bool winRewardGranted;
 
         [SerializeField] private Sprite boosterAdSprite;
 
@@ -82,6 +89,67 @@ using System.Collections.Generic;
         private void OnReviveButtonClicked()
         {
             RewardedService.Instance.ShowRewarded(RewardedType.Revive);
+        }
+
+        public void SetWinButtons(Button collectButton, Button tripleButton, TextMeshProUGUI currencyText)
+        {
+            // Remove previous listeners if any
+            if (winCollectButton != null)
+                winCollectButton.onClick.RemoveListener(OnWinCollectClicked);
+            if (winTripleButton != null)
+                winTripleButton.onClick.RemoveListener(OnWinTripleClicked);
+
+            winCollectButton = collectButton;
+            winTripleButton = tripleButton;
+            winCurrencyText = currencyText;
+            winRewardGranted = false;
+
+            if (winCurrencyText != null)
+                winCurrencyText.text = GameManager.instance.Score.ToString();
+
+            if (winCollectButton != null)
+                winCollectButton.onClick.AddListener(OnWinCollectClicked);
+
+            if (winTripleButton != null)
+            {
+                winTripleButton.onClick.AddListener(OnWinTripleClicked);
+                winTripleButton.interactable = RewardedService.Instance.IsRewardedReady(RewardedType.Triple);
+            }
+        }
+
+        private async void OnWinCollectClicked()
+        {
+            if (winRewardGranted) return;
+            winRewardGranted = true;
+
+            var popup = MenuManager.instance.GetLastPopup() as Popup;
+            popup?.StopInteration();
+
+            await Database.UserData.AddScoreAsCurrency(GameManager.instance.Score);
+            GameManager.instance.NextLevel();
+            popup?.Close();
+        }
+
+        private void OnWinTripleClicked()
+        {
+            if (winRewardGranted) return;
+            if (!RewardedService.Instance.IsRewardedReady(RewardedType.Triple)) return;
+
+            winTripleButton.interactable = false;
+            RewardedService.Instance.ShowRewarded(RewardedType.Triple, OnWinTripleRewarded);
+        }
+
+        private async void OnWinTripleRewarded()
+        {
+            if (winRewardGranted) return;
+            winRewardGranted = true;
+
+            var popup = MenuManager.instance.GetLastPopup() as Popup;
+            popup?.StopInteration();
+
+            await Database.UserData.AddScoreAsCurrency(GameManager.instance.Score * 3);
+            GameManager.instance.NextLevel();
+            popup?.Close();
         }
 
 
