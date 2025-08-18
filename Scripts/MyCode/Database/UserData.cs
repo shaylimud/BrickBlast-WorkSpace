@@ -155,15 +155,15 @@ public class UserData
 
     public void SetLevel(int value)
     {
+        Level = value;
         var saveData = Database.UserData.Copy();
-        saveData.Level = value;
         Database.Instance?.Save(saveData);
     }
 
     public void SetGroupIndex(int value)
     {
+        GroupIndex = value;
         var saveData = Database.UserData.Copy();
-        saveData.GroupIndex = value;
         Database.Instance?.Save(saveData);
     }
 }
