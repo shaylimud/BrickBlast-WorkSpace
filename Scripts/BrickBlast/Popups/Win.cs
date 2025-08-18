@@ -44,9 +44,9 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             closeButton.onClick.AddListener(() => GameManager.instance.OpenMap());
         }
 
-        protected override void OnEnable()
+        protected void OnEnable()
         {
-            base.OnEnable();
+            OnEnable();
             RayBrickMediator.Instance?.SetWinButtons(collectCoinsButton, tripleCoinsButton, currencyText);
         }
     }

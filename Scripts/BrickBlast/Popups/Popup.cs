@@ -197,7 +197,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             }
         }
 
-        protected void StopInteration()
+        public void StopInteration()
         {
             if (canvasGroup != null)
             {
