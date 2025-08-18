@@ -43,7 +43,7 @@ public class UserData
             {
                 level = value;
                 Stats.ReachLevel = value;
-                if (level % 3 == 0)
+                if (level % 4 == 0)
                 {
                     GroupIndex++;
                 }
