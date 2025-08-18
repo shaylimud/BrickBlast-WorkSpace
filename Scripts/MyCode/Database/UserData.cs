@@ -42,12 +42,12 @@ public class UserData
             if (level != value)
             {
                 level = value;
-                Stats.ReachLevel = value;
                 if (level % 4 == 0)
                 {
                     GroupIndex++;
+                    level = 1;
                 }
-                LevelChanged?.Invoke(value);
+                LevelChanged?.Invoke(level);
             }
         }
     }
@@ -86,7 +86,6 @@ public class UserData
     public class StatsData
     {
         [FirestoreProperty] public int TotalCurrency { get; set; } = 0;
-        [FirestoreProperty] public int ReachLevel { get; set; } = 1;
         [FirestoreProperty] public int SpaceLevel { get; set; } = 0;
         [FirestoreProperty] public int RvCount { get; set; } = 0;
         [FirestoreProperty] public int HighestReachEvent { get; set; } = 0;

@@ -180,7 +180,7 @@ namespace Ray.Controllers
 
             _view.PulseCurrency(_element.Menu.MenuCurrency, Database.UserData.Stats.TotalCurrency);
 
-            _view.SetText(_element.Menu.ReachLevel, Database.UserData.Stats.ReachLevel);
+            _view.SetText(_element.Menu.Level, Database.UserData.Level);
             _view.SetText(_element.Menu.SpaceLevel, Database.UserData.Stats.SpaceLevel);
 
             string costIcon = ResourceService.Instance.PanalizedUser() ? "<sprite=2>" : "<sprite=0>";
