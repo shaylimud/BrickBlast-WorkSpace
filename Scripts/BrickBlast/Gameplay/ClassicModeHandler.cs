@@ -3,6 +3,7 @@ using BlockPuzzleGameToolkit.Scripts.System;
 using BlockPuzzleGameToolkit.Scripts.Enums;
 using UnityEngine;
 using UnityEngine.UI;
+using Ray.Services;
 
 namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 {
@@ -58,6 +59,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             if (score > bestScore)
             {
                 ResourceManager.instance.GetResource("Score").Set(score);
+                _ = Leaderboards.UpdateClassicLeaderboard(score, Database.UserData.Level);
             }
 
             base.OnLose();
