@@ -20,6 +20,7 @@ namespace Ray.Services
 
         private FirebaseFirestore _firestore;
         private string _userID;
+        public string UserId => _userID;
         private readonly SemaphoreSlim _saveSemaphore = new SemaphoreSlim(1, 1);
 
         private RayDebugService _rayDebug => ServiceAllocator.Instance.GetDebugService(ConfigType.Services);
