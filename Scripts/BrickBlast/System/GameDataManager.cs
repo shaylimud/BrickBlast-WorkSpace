@@ -73,11 +73,10 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public static void UnlockLevel(int currentLevel)
         {
-            int savedLevel = Database.UserData.Level;
+            int savedLevel = GetLevelNum();
             if (savedLevel < currentLevel)
             {
-                LevelNum = currentLevel;
-                Database.UserData.SetLevel(currentLevel);
+                SetLevelNum(currentLevel);
             }
         }
 
@@ -92,7 +91,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public static int GetLevelNum()
         {
-            return Database.UserData.Level;
+            return (Database.UserData.GroupIndex - 1) * 3 + Database.UserData.Level;
         }
 
         public static int GetGroupIndex()
@@ -154,8 +153,10 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         public static void SetAllLevelsCompleted()
         {
             var levels = Resources.LoadAll<Level>("Levels").Length;
-            Database.UserData.SetLevel(levels);
-            Database.UserData.SetGroupIndex(Mathf.CeilToInt(levels / 3f));
+            int groupIndex = Mathf.CeilToInt(levels / 3f);
+            int levelInGroup = levels - (groupIndex - 1) * 3;
+            Database.UserData.SetGroupIndex(groupIndex);
+            Database.UserData.SetLevel(levelInGroup);
         }
 
         internal static bool HasMoreLevels()
@@ -168,7 +169,10 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         public static void SetLevelNum(int stateCurrentLevel)
         {
             LevelNum = stateCurrentLevel;
-            Database.UserData.SetLevel(stateCurrentLevel);
+            int groupIndex = Mathf.CeilToInt(stateCurrentLevel / 3f);
+            int levelInGroup = stateCurrentLevel - (groupIndex - 1) * 3;
+            Database.UserData.SetGroupIndex(groupIndex);
+            Database.UserData.SetLevel(levelInGroup);
         }
     }
 }

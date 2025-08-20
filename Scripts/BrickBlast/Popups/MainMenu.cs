@@ -47,7 +47,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             settingsButton.onClick.AddListener(SettingsButtonClicked);
             luckySpin.onClick.AddListener(LuckySpinButtonClicked);
             UpdateFreeSpinMarker();
-            GameDataManager.LevelNum = Ray.Services.Database.UserData.Level;
+            GameDataManager.LevelNum = GameDataManager.GetLevelNum();
             var levelsCount = Resources.LoadAll<Level>("Levels").Length;
             luckySpin.gameObject.SetActive(GameManager.instance.GameSettings.enableLuckySpin);
             if(!GameManager.instance.GameSettings.enableTimedMode)

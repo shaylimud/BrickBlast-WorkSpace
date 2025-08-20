@@ -206,7 +206,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public void NextLevel()
         {
-            GameDataManager.LevelNum++;
+            GameDataManager.SetLevelNum(GameDataManager.GetLevelNum() + 1);
             OpenGame();
             RestartLevel();
         }
