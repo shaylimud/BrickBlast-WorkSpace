@@ -618,6 +618,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             currentLevel = failedLevel;
             GameDataManager.SetLevelNum(failedLevel);
             GameDataManager.SetSubLevelIndex(failedSubLevelIndex);
+            GameDataManager.SetLevel(null);
+            GameManager.instance.RestartLevel();
 
             EventManager.GameStatus = EGameState.Playing;
             MenuManager.instance.popupStack.OfType<PreFailed>().FirstOrDefault()?.Close();

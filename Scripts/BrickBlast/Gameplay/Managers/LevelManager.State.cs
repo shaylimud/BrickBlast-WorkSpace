@@ -37,6 +37,9 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         private void HandleLevelFail()
         {
+            if (gameMode != EGameMode.Adventure)
+                return;
+
             int subLevelIndex = GameDataManager.GetSubLevelIndex();
             if (subLevelIndex > 1)
             {
