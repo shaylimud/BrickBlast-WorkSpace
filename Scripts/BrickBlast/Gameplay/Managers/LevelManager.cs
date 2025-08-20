@@ -311,6 +311,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                     _levelData = Resources.Load<Level>("Misc/ClassicLevel");
                     currentLevel = Database.UserData.Level;
                 }
+                else if (gameMode == EGameMode.Timed)
+                {
+                    _levelData = Resources.Load<Level>("Misc/TimeLevel");
+                    currentLevel = 0;
+                }
                 else
                 {
                     currentLevel = Database.UserData.Level;
