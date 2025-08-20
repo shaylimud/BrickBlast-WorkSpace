@@ -20,7 +20,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         private void HandleGameStateChange(EGameState newState)
         {
             var currentLevel = GetCurrentLevel();
-            var stateHandler = currentLevel.levelType.stateHandler;
+            var stateHandler = currentLevel?.levelType?.stateHandler;
 
             if (stateHandler != null)
             {
