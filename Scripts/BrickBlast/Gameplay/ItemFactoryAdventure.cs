@@ -20,6 +20,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
     {
         public void OnLevelLoaded(Level level)
         {
+            if (level?.levelType == null)
+            {
+                _oneColorMode = false;
+                return;
+            }
+
             _oneColorMode = level.levelType.singleColorMode;
             if (_oneColorMode)
             {
