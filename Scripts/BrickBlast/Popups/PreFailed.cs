@@ -18,6 +18,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
+using Ray.Services;
 
 namespace BlockPuzzleGameToolkit.Scripts.Popups
 {
@@ -134,7 +135,24 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         private async void ContinueGame()
         {
             result = EPopupResult.Continue;
-            await Ray.Services.Database.UserData.AddScoreAsCurrency(GameManager.instance.Score);
+            await Database.UserData.AddScoreAsCurrency(GameManager.instance.Score);
+
+            if (GameDataManager.GetGameMode() == EGameMode.Adventure)
+            {
+                int currentLevel = Database.UserData.Level;
+                int groupStart = ((currentLevel - 1) / 3) * 3 + 1;
+                if (currentLevel != groupStart)
+                {
+                    GameDataManager.LevelNum = groupStart;
+                    Database.UserData.Level = groupStart;
+                    var saveData = Database.UserData.Copy();
+                    Database.Instance?.Save(saveData);
+                }
+
+                GameDataManager.ResetSubLevelIndex();
+                GameDataManager.SetLevel(null);
+            }
+
             GameManager.instance.MainMenu();
             Close();
         }

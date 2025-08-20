@@ -12,6 +12,7 @@
 
 using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.System;
+using Ray.Services;
 
 namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 {
@@ -46,7 +47,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 int groupIndex = (currentLevel - 1) / 3;
                 int newLevel = groupIndex * 3 + 1;
                 currentLevel = newLevel;
-                GameDataManager.SetLevelNum(newLevel);
+
+                GameDataManager.LevelNum = newLevel;
+                Database.UserData.Level = newLevel;
+                var saveData = Database.UserData.Copy();
+                Database.Instance?.Save(saveData);
+
                 GameDataManager.ResetSubLevelIndex();
                 GameDataManager.SetLevel(null);
                 GameManager.instance.RestartLevel();
