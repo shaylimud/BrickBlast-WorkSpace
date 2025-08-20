@@ -35,13 +35,14 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         public void Generate(Level level)
         {
-            var oneColorMode = level.levelType.singleColorMode;
-
             if (level == null)
             {
                 Debug.LogError("Attempted to generate field with null level");
                 return;
             }
+
+            // If levelType is not assigned, default to false to avoid null references
+            var oneColorMode = level.levelType != null && level.levelType.singleColorMode;
 
             GenerateField(level.rows, level.columns);
 
