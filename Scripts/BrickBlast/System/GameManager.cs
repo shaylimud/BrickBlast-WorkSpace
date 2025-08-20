@@ -154,11 +154,12 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public void OpenMap()
         {
-            if (GetGameMode() == EGameMode.Classic)
+            var gameMode = GetGameMode();
+            if (gameMode == EGameMode.Classic)
             {
                 SceneLoader.instance.StartGameSceneClassic();
             }
-            else if (GetGameMode() == EGameMode.Timed)
+            else if (gameMode == EGameMode.Timed)
             {
                 SceneLoader.instance.StartGameSceneTimed();
             }
