@@ -358,7 +358,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 }
             }
 
-            RayBrickMediator.Instance?.UpdateStageCounter();
         }
 
         private void StartGame()

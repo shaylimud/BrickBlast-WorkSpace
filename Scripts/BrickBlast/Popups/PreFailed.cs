@@ -28,6 +28,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         public Button continueButton;
         public Button reviveButton;
         public TextMeshProUGUI timeLeftText;
+        public TextMeshProUGUI stageCounterText;
         protected int timer;
         protected int price;
         protected bool hasContinued = false;
@@ -44,6 +45,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             RayBrickMediator.Instance?.SetReviveButton(reviveButton);
 
             InitializeTimer();
+
+            if (stageCounterText != null)
+            {
+                stageCounterText.text = $"{GameDataManager.GetSubLevelIndex()}/3";
+            }
 
             if (timerText != null)
             {

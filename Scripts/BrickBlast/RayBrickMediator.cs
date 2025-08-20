@@ -17,7 +17,6 @@ using System.Collections.Generic;
         public Button winCollectButton;
         public Button winTripleButton;
         public TextMeshProUGUI winCurrencyText;
-        public TextMeshProUGUI stageCounterText;
         private bool winRewardGranted;
 
         [SerializeField] private Sprite boosterAdSprite;
@@ -119,14 +118,6 @@ using System.Collections.Generic;
             {
                 winTripleButton.onClick.AddListener(OnWinTripleClicked);
                 winTripleButton.interactable = RewardedService.Instance.IsRewardedReady(RewardedType.Triple);
-            }
-        }
-
-        public void UpdateStageCounter()
-        {
-            if (stageCounterText != null)
-            {
-                stageCounterText.text = $"{GameDataManager.GetSubLevelIndex()}/3";
             }
         }
 
