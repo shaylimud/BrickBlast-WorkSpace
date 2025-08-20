@@ -88,8 +88,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
                 hasContinued = true;
 
                 CancelInvoke(nameof(UpdateTimer));
-                EventManager.GameStatus = EGameState.Failed;
-                Close();
+                StopInteration();
+                OnContinue();
             }
         }
 

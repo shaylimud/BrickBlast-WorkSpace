@@ -29,8 +29,15 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 
         protected virtual void OnEnable()
         {
-            retryButton.onClick.AddListener(Retry);
-            closeButton.onClick.AddListener(CollectAndExit);
+            if (retryButton != null)
+            {
+                retryButton.onClick.AddListener(Retry);
+            }
+
+            if (closeButton != null)
+            {
+                closeButton.onClick.AddListener(CollectAndExit);
+            }
 
             if (currencyText != null)
             {
