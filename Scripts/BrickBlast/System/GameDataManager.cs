@@ -148,6 +148,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         {
             PlayerPrefs.SetInt("GameMode", (int)gameMode);
             PlayerPrefs.Save();
+            _level = null;
         }
 
         public static void SetAllLevelsCompleted()
