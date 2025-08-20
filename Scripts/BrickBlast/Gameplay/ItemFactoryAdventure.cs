@@ -20,6 +20,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
     {
         public void OnLevelLoaded(Level level)
         {
+            // Guard against missing level or level type data to avoid null reference exceptions
+            if (level == null || level.levelType == null)
+            {
+                _oneColorMode = false;
+                return;
+            }
+
             _oneColorMode = level.levelType.singleColorMode;
             if (_oneColorMode)
             {
