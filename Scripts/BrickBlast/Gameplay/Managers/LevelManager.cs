@@ -64,6 +64,9 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         [SerializeField]
         private GameObject timerPanel;
 
+        [SerializeField]
+        private TextMeshProUGUI stageCounterText;
+
         public EGameMode gameMode;
         public Level _levelData;
 
@@ -147,6 +150,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 RestoreGameState();
             else if (gameMode == EGameMode.Timed)
                 RestoreTimedGameState();
+
+            UpdateStageCounter();
         }
 
         private void RestoreGameState()
@@ -364,6 +369,14 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         {
             EventManager.GameStatus = EGameState.PrepareGame;
             classicModeHandler = FindObjectOfType<ClassicModeHandler>();
+        }
+
+        private void UpdateStageCounter()
+        {
+            if (stageCounterText != null)
+            {
+                stageCounterText.text = $"{GameDataManager.GetSubLevelIndex()}/3";
+            }
         }
 
         private void LoadLevel(Level levelData)
