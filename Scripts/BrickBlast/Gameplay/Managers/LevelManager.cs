@@ -311,6 +311,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                     _levelData = Resources.Load<Level>("Misc/ClassicLevel");
                     currentLevel = GameDataManager.GetLevelNum();
                 }
+                else if (gameMode == EGameMode.Timed)
+                {
+                    _levelData = GameDataManager.GetLevel();
+                }
                 else
                 {
                     currentLevel = GameDataManager.GetLevelNum();
@@ -323,8 +327,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 return;
             }
 
-            // Apply global time settings if timed mode is enabled
-            if (GameManager.instance.GameSettings.enableTimedMode && _levelData.enableTimer)
+            // Apply global time settings if timed mode is enabled (non-timed modes only)
+            if (gameMode != EGameMode.Timed && GameManager.instance.GameSettings.enableTimedMode && _levelData.enableTimer)
             {
                 timerDuration = _levelData.timerDuration;
                 if(_levelData.timerDuration == 0)
@@ -334,6 +338,15 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             FindObjectsOfType<MonoBehaviour>().OfType<IBeforeLevelLoadable>().ToList().ForEach(x => x.OnLevelLoaded(_levelData));
             LoadLevel(_levelData);
             FindObjectsOfType<MonoBehaviour>().OfType<ILevelLoadable>().ToList().ForEach(x => x.OnLevelLoaded(_levelData));
+
+            if (gameMode == EGameMode.Timed)
+            {
+                timedModeHandler = FindObjectOfType<TimedModeHandler>();
+                EventManager.GameStatus = EGameState.Playing;
+                timedModeHandler?.ResumeGame();
+                return;
+            }
+
             Invoke(nameof(StartGame), 0.5f);
             if (GameManager.instance.IsTutorialMode())
             {
