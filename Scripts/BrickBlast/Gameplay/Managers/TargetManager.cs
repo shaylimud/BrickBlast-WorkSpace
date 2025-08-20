@@ -109,7 +109,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             if (!GameManager.instance.IsTutorialMode())
             {
                 var t = Instantiate(targetPanel, targetParent);
-                t.OnLevelLoaded(level.levelType.elevelType);
+                var levelType = level.levelType?.elevelType ?? ELevelType.Score;
+                t.OnLevelLoaded(levelType);
             }
         }
 
