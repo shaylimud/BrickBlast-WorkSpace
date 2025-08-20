@@ -630,7 +630,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             cellDeck.UpdateCellDeckAfterFail();
 
             currentLevel = failedLevel;
-            GameDataManager.SetLevelNum(failedLevel);
+
+            GameDataManager.LevelNum = failedLevel;
+            Database.UserData.Level = failedLevel;
+            var saveData = Database.UserData.Copy();
+            Database.Instance?.Save(saveData);
+
             GameDataManager.SetSubLevelIndex(failedSubLevelIndex);
             GameDataManager.SetLevel(null);
             GameManager.instance.RestartLevel();
