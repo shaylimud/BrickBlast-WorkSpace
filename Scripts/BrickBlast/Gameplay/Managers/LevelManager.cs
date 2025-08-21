@@ -366,7 +366,15 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         private void StartGame()
         {
-            EventManager.GameStatus = EGameState.PrepareGame;
+            if (gameMode == EGameMode.Timed)
+            {
+                EventManager.GameStatus = EGameState.Playing;
+            }
+            else
+            {
+                EventManager.GameStatus = EGameState.PrepareGame;
+            }
+
             classicModeHandler = FindObjectOfType<ClassicModeHandler>();
         }
 
