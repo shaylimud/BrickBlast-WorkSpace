@@ -20,11 +20,17 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         private void HandleGameStateChange(EGameState newState)
         {
             var currentLevel = GetCurrentLevel();
-            var stateHandler = currentLevel.levelType.stateHandler;
-
+            var levelType = currentLevel != null ? currentLevel.levelType : null;
+            var stateHandler = levelType != null ? levelType.stateHandler : null;
+            
             if (stateHandler != null)
             {
                 stateHandler.HandleState(newState, this);
+            }
+            else if (gameMode == EGameMode.Timed && newState == EGameState.PrepareGame)
+            {
+                EventManager.GameStatus = EGameState.Playing;
+                return;
             }
 
             if (newState == EGameState.Failed)
