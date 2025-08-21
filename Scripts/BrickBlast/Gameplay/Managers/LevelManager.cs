@@ -313,8 +313,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 }
                 else
                 {
-                    currentLevel = Database.UserData.Level;
-                    _levelData = Resources.Load<Level>("Levels/Level_" + currentLevel);
+                    currentLevel = GameDataManager.GetLevelNum();
+                    _levelData = GameDataManager.GetLevel();
                 }
             }
             if (_levelData == null)

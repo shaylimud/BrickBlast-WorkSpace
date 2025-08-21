@@ -92,7 +92,13 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public static int GetLevelNum()
         {
-            return Database.UserData.Level;
+            var level = Database.UserData.Level;
+            if (GetGameMode() == EGameMode.Adventure)
+            {
+                var groupIndex = Database.UserData.GroupIndex;
+                level += (groupIndex - 1) * 3;
+            }
+            return level;
         }
 
         public static int GetGroupIndex()
