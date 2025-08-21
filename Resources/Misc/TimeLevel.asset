@@ -15,7 +15,7 @@ MonoBehaviour:
   rows: 8
   columns: 8
   levelRows: []
-  levelType: {fileID: 0}
+  levelType: {fileID: 11400000, guid: 432a203465804500904d70249e96feaa, type: 2}
   enableTimer: 1
   timerDuration: 120
   bonusItemColors: {}
