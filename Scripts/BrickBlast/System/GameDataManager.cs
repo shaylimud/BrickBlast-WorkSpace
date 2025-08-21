@@ -155,6 +155,8 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         {
             PlayerPrefs.SetInt("GameMode", (int)gameMode);
             PlayerPrefs.Save();
+            // Clear cached level so the appropriate level for the new game mode is loaded
+            _level = null;
         }
 
         public static void SetAllLevelsCompleted()
