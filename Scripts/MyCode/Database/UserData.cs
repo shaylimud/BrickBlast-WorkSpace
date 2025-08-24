@@ -157,12 +157,14 @@ public class UserData
     {
         Level = value;
 
-        // Each group contains two sub-levels (1-2). When the level
-        // wraps past the last sub-level (reaching 3), reset the level to
-        // 1 and advance the group index. This ensures the in-memory
-        // instance reflects the new group before saving so the next stage
-        // loads correctly instead of restarting the current one.
-        if (Level >= 3)
+        // Each group consists of three sub-levels (1-3). Only after the
+        // third sub-level is completed and the level would advance past
+        // 3 do we reset the sub-level counter and move to the next group.
+        // Previously the check used ">= 3" which caused the group index
+        // to advance prematurely when starting the third level. Using
+        // "> 3" ensures the group changes only after finishing the third
+        // level.
+        if (Level > 3)
         {
             Level = 1;
             GroupIndex = GroupIndex + 1;
