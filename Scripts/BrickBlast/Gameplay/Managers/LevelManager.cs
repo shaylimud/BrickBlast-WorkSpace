@@ -569,7 +569,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
             int nextLevel = Database.UserData.Level + 1;
             Database.UserData.SetLevel(nextLevel);
-            GameDataManager.LevelNum = nextLevel;
             GameDataManager.SetLevel(null);
 
             int subLevel = GameDataManager.GetSubLevelIndex();
@@ -583,6 +582,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 GameDataManager.UnlockGroup(currentGroup + 1);
                 GameDataManager.ResetSubLevelIndex();
             }
+
+            // Ensure the global level number mirrors the persisted value. If the
+            // group advanced above resets the level back to 1, reflect that here
+            // so subsequent loads use the correct starting level.
+            GameDataManager.LevelNum = Database.UserData.Level;
 
             EventManager.GameStatus = EGameState.PreWin;
         }
