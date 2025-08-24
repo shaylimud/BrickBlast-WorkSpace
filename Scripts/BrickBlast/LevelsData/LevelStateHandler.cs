@@ -83,7 +83,8 @@ namespace BlockPuzzleGameToolkit.Scripts.LevelsData
 
         private protected virtual void HandleWin(LevelManager levelManager)
         {
-            var winPopup = levelManager.GetCurrentLevel().levelType.winPopup;
+            var winPopup = levelManager.GetCurrentLevel().levelType.winPopup
+                ?? RayBrickMediator.Instance?.WinPopup;
 
             void HandleWinResult(EPopupResult _)
             {

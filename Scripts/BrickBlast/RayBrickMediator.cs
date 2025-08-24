@@ -22,6 +22,9 @@ using System.Collections.Generic;
         [SerializeField] private FailedTimed failedTimedPopup;
         public FailedTimed FailedTimedPopup => failedTimedPopup;
 
+        [SerializeField] private Win winPopup;
+        public Win WinPopup => winPopup;
+
         [SerializeField] private Sprite boosterAdSprite;
 
         // Reference to an external mediation component assigned in the inspector
