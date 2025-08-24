@@ -59,6 +59,13 @@ namespace BlockPuzzleGameToolkit.Scripts.LevelsData
             {
                 MenuManager.instance.ShowPopup(failedPopup);
             }
+            else if (levelManager.gameMode == EGameMode.Timed)
+            {
+                // Timed levels sometimes lack a failed popup on the LevelType,
+                // leaving the game stuck on the gameplay screen. Fall back to
+                // the default timed failure popup in that case.
+                MenuManager.instance.ShowPopup<FailedTimed>();
+            }
         }
 
         private protected virtual void HandlePreWin(LevelManager levelManager)
