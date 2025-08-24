@@ -169,7 +169,7 @@ namespace Ray.Services
         {
             // Cheat Events
             SendCheatEvent("HighestReachEvent", "-1", "-1");
-            SendCheatEvent("ReachLevel", "-1", "-1");
+            SendCheatEvent("Level", "-1", "-1");
             SendCheatEvent("RvCount", "-1", "-1");
             SendCheatEvent("SpaceLevel", "-1", "-1");
             SendCheatEvent("TotalCurrency", "-1", "-1");
