@@ -564,7 +564,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
             int nextLevel = Database.UserData.Level + 1;
             Database.UserData.SetLevel(nextLevel);
-            GameDataManager.LevelNum = nextLevel;
             GameDataManager.SetLevel(null);
 
             int subLevel = GameDataManager.GetSubLevelIndex();
@@ -631,7 +630,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             cellDeck.UpdateCellDeckAfterFail();
 
             currentLevel = failedLevel;
-            GameDataManager.SetLevelNum(failedLevel);
+            Database.UserData.SetLevel(failedLevel);
             GameDataManager.SetSubLevelIndex(failedSubLevelIndex);
 
             EventManager.GameStatus = EGameState.Playing;

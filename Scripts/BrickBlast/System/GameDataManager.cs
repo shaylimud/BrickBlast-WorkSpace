@@ -22,8 +22,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 {
     public static class GameDataManager
     {
-        public static int LevelNum;
-
         private static Level _level;
 
         public static bool isTestPlay = false;
@@ -76,7 +74,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
             int savedLevel = Database.UserData.Level;
             if (savedLevel < currentLevel)
             {
-                LevelNum = currentLevel;
                 Database.UserData.SetLevel(currentLevel);
             }
         }
@@ -171,12 +168,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
             int currentLevel = GetLevelNum();
             int totalLevels = Resources.LoadAll<Level>("Levels").Length;
             return currentLevel < totalLevels;
-        }
-
-        public static void SetLevelNum(int stateCurrentLevel)
-        {
-            LevelNum = stateCurrentLevel;
-            Database.UserData.SetLevel(stateCurrentLevel);
         }
     }
 }
