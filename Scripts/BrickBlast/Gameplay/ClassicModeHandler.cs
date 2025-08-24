@@ -60,7 +60,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             {
                 ResourceManager.instance.GetResource("Score").Set(score);
                 int userLevel = Database.UserData.Level;
-                LeaderboardService.Instance.UpdateClassicLeaderboard(score, userLevel);
+                //LeaderboardService.Instance.UpdateClassicLeaderboard(score, userLevel);
             }
 
             base.OnLose();

@@ -45,11 +45,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             classicMode.onClick.AddListener(PlayClassicMode);
             adventureMode.onClick.AddListener(PlayAdventureMode);
             settingsButton.onClick.AddListener(SettingsButtonClicked);
-            luckySpin.onClick.AddListener(LuckySpinButtonClicked);
+          //  luckySpin.onClick.AddListener(LuckySpinButtonClicked);
             UpdateFreeSpinMarker();
             GameDataManager.LevelNum = Ray.Services.Database.UserData.Level;
             var levelsCount = Resources.LoadAll<Level>("Levels").Length;
-            luckySpin.gameObject.SetActive(GameManager.instance.GameSettings.enableLuckySpin);
+          //  luckySpin.gameObject.SetActive(GameManager.instance.GameSettings.enableLuckySpin);
             if(!GameManager.instance.GameSettings.enableTimedMode)
                 timedMode.gameObject.SetActive(false);
         }
@@ -68,7 +68,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         private void UpdateFreeSpinMarker()
         {
             var isFreeSpinAvailable = CanUseFreeSpinToday();
-            freeSpinMarker.SetActive(isFreeSpinAvailable);
+           // freeSpinMarker.SetActive(isFreeSpinAvailable);
         }
 
         private void PlayClassicMode()
