@@ -155,18 +155,10 @@ public class UserData
 
     public void SetLevel(int value)
     {
+        // Simply set the level value and persist it. Any logic related to
+        // progressing to a new group and resetting the level is handled in
+        // SetGroupIndex where the group transition actually occurs.
         Level = value;
-
-        // Each group contains two sub-levels (1-2). When the level
-        // wraps past the last sub-level (reaching 3), reset the level to
-        // 1 and advance the group index. This ensures the in-memory
-        // instance reflects the new group before saving so the next stage
-        // loads correctly instead of restarting the current one.
-        if (Level >= 3)
-        {
-            Level = 1;
-            GroupIndex = GroupIndex + 1;
-        }
 
         var saveData = Database.UserData.Copy();
         Database.Instance?.Save(saveData);
@@ -174,7 +166,16 @@ public class UserData
 
     public void SetGroupIndex(int value)
     {
-        GroupIndex = value;
+        // When the player progresses to a new group we want the level to
+        // start over from 1. This mirrors the stage progression behaviour
+        // in the game where each group contains a set of levels that reset
+        // back to the beginning when advancing to the next group.
+        if (GroupIndex != value)
+        {
+            GroupIndex = value;
+            Level = 1;
+        }
+
         var saveData = Database.UserData.Copy();
         Database.Instance?.Save(saveData);
     }
