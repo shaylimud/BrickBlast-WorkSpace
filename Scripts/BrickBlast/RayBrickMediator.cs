@@ -19,6 +19,9 @@ using System.Collections.Generic;
         public TextMeshProUGUI winCurrencyText;
         private bool winRewardGranted;
 
+        [SerializeField] private FailedTimed failedTimedPopup;
+        public FailedTimed FailedTimedPopup => failedTimedPopup;
+
         [SerializeField] private Sprite boosterAdSprite;
 
         // Reference to an external mediation component assigned in the inspector

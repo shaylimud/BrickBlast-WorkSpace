@@ -39,7 +39,15 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                         EventManager.GameStatus = EGameState.Failed;
                         return;
                     case EGameState.Failed:
-                        MenuManager.instance.ShowPopup<FailedTimed>();
+                        var failedTimedPrefab = RayBrickMediator.Instance?.FailedTimedPopup;
+                        if (failedTimedPrefab != null)
+                        {
+                            MenuManager.instance.ShowPopup(failedTimedPrefab);
+                        }
+                        else
+                        {
+                            MenuManager.instance.ShowPopup<FailedTimed>();
+                        }
                         break;
                 }
             }
