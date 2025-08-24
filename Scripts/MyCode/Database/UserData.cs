@@ -154,19 +154,7 @@ public class UserData
     public void SetLevel(int value)
     {
         Level = value;
-
-        // Each group consists of three sub-levels (1-3). Only after the
-        // third sub-level is completed and the level would advance past
-        // 3 do we reset the sub-level counter and move to the next group.
-        // Previously the check used ">= 3" which caused the group index
-        // to advance prematurely when starting the third level. Using
-        // "> 3" ensures the group changes only after finishing the third
-        // level.
-        if (Level > 3)
-        {
-            Level = 1;
-            GroupIndex = GroupIndex + 1;
-        }
+        GroupIndex = ((value - 1) / 3) + 1;
 
         var saveData = Database.UserData.Copy();
         Database.Instance?.Save(saveData);

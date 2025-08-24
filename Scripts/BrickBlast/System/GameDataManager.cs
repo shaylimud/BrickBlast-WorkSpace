@@ -47,7 +47,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         public static void ClearPlayerProgress()
         {
             Database.UserData.SetLevel(1);
-            Database.UserData.SetGroupIndex(1);
         }
 
         public static void ClearALlData()
@@ -65,7 +64,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
             PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
             Database.UserData.SetLevel(1);
-            Database.UserData.SetGroupIndex(1);
             #endif
         }
 
@@ -89,13 +87,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public static int GetLevelNum()
         {
-            var level = Database.UserData.Level;
-            if (GetGameMode() == EGameMode.Adventure)
-            {
-                var groupIndex = Database.UserData.GroupIndex;
-                level += (groupIndex - 1) * 3;
-            }
-            return level;
+            return Database.UserData.Level;
         }
 
         public static int GetGroupIndex()

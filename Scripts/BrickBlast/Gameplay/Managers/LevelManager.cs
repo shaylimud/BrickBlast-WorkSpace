@@ -306,14 +306,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             else
             {
                 gameMode = GameDataManager.GetGameMode();
+                currentLevel = Database.UserData.Level;
                 if (gameMode == EGameMode.Classic)
                 {
                     _levelData = Resources.Load<Level>("Misc/ClassicLevel");
-                    currentLevel = Database.UserData.Level;
                 }
                 else
                 {
-                    currentLevel = GameDataManager.GetLevelNum();
                     _levelData = GameDataManager.GetLevel();
                 }
             }
