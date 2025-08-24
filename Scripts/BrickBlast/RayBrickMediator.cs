@@ -12,14 +12,14 @@ using System.Collections.Generic;
     {
 
         public static RayBrickMediator Instance { get; private set; }
-        public Button reviveButton;
+        Button reviveButton;
 
-        public Button winCollectButton;
-        public Button winTripleButton;
-        public TextMeshProUGUI winCurrencyText;
+        Button winCollectButton;
+        Button winTripleButton;
+        TextMeshProUGUI winCurrencyText;
         private bool winRewardGranted;
 
-        [SerializeField] private FailedTimed failedTimedPopup;
+        public FailedTimed failedTimedPopup;
         public FailedTimed FailedTimedPopup => failedTimedPopup;
 
         [SerializeField] private Win winPopup;
