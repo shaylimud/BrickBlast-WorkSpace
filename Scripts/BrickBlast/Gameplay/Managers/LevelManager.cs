@@ -568,18 +568,25 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             GameDataManager.SetLevel(null);
 
             int subLevel = GameDataManager.GetSubLevelIndex();
+
             if (subLevel < 3)
             {
                 GameDataManager.SetSubLevelIndex(subLevel + 1);
+
+                // Move directly to the next level without showing the win screen
+                EventManager.GameStatus = EGameState.Playing;
+                GameManager.instance.OpenGame();
+                GameManager.instance.RestartLevel();
             }
             else
             {
                 int currentGroup = Mathf.CeilToInt(currentLevel / 3f);
                 GameDataManager.UnlockGroup(currentGroup + 1);
                 GameDataManager.ResetSubLevelIndex();
-            }
 
-            EventManager.GameStatus = EGameState.PreWin;
+                // Show end screen at the end of the stage
+                EventManager.GameStatus = EGameState.PreWin;
+            }
         }
 
         private void SetLose()
