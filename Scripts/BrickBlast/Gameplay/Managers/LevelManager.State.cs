@@ -12,6 +12,7 @@
 
 using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.System;
+using BlockPuzzleGameToolkit.Scripts.Popups;
 
 namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 {
@@ -27,10 +28,20 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             {
                 stateHandler.HandleState(newState, this);
             }
-            else if (gameMode == EGameMode.Timed && newState == EGameState.PrepareGame)
+            else if (gameMode == EGameMode.Timed)
             {
-                EventManager.GameStatus = EGameState.Playing;
-                return;
+                switch (newState)
+                {
+                    case EGameState.PrepareGame:
+                        EventManager.GameStatus = EGameState.Playing;
+                        return;
+                    case EGameState.PreFailed:
+                        EventManager.GameStatus = EGameState.Failed;
+                        return;
+                    case EGameState.Failed:
+                        MenuManager.instance.ShowPopup<FailedTimed>();
+                        break;
+                }
             }
 
             if (newState == EGameState.Failed)
