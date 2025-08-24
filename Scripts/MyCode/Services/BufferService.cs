@@ -112,6 +112,21 @@ public class BufferService : MonoBehaviour
         }
     }
 
+    private void OnApplicationPause(bool paused)
+    {
+        if (paused)
+        {
+            bufferRequests = 0;
+            UpdateBufferState();
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        bufferRequests = 0;
+        UpdateBufferState();
+    }
+
     private void Update()
     {
         if (_bufferCanvas != null && _bufferCanvas.activeSelf && _bufferIcon != null)
