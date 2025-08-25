@@ -27,26 +27,32 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         protected override void Awake()
         {
             base.Awake();
-            nextLevelButton.onClick.AddListener(() =>
+            if (nextLevelButton != null)
             {
-                StopInteration();
+                nextLevelButton.onClick.AddListener(() =>
+                {
+                    StopInteration();
 
-                if (GameDataManager.HasMoreLevels())
-                {
-                    GameManager.instance.NextLevel();
-                }
-                else
-                {
-                    GameManager.instance.MainMenu();
-                }
-                Close();
-            });
-            closeButton.onClick.AddListener(() => GameManager.instance.OpenMap());
+                    if (GameDataManager.HasMoreLevels())
+                    {
+                        GameManager.instance.NextLevel();
+                    }
+                    else
+                    {
+                        GameManager.instance.MainMenu();
+                    }
+                    Close();
+                });
+            }
+
+            if (closeButton != null)
+            {
+                closeButton.onClick.AddListener(() => GameManager.instance.OpenMap());
+            }
         }
 
         protected void OnEnable()
         {
-            OnEnable();
             RayBrickMediator.Instance?.SetWinButtons(collectCoinsButton, tripleCoinsButton, currencyText);
         }
     }
