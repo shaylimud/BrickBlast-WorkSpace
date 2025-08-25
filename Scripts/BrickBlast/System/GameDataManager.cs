@@ -69,7 +69,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public static void UnlockLevel(int currentLevel)
         {
-            int savedLevel = Database.UserData.Level;
+            int savedLevel = Database.UserData.Stats.Level;
             if (savedLevel < currentLevel)
             {
                 Database.UserData.SetLevel(currentLevel);
@@ -78,7 +78,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public static void UnlockGroup(int groupIndex)
         {
-            int savedGroup = Database.UserData.GroupIndex;
+            int savedGroup = Database.UserData.Stats.GroupIndex;
             if (savedGroup < groupIndex)
             {
                 Database.UserData.SetGroupIndex(groupIndex);
@@ -87,12 +87,12 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public static int GetLevelNum()
         {
-            return Database.UserData.Level;
+            return Database.UserData.Stats.Level;
         }
 
         public static int GetGroupIndex()
         {
-            return Database.UserData.GroupIndex;
+            return Database.UserData.Stats.GroupIndex;
         }
 
         public static Level GetLevel()

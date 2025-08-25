@@ -59,7 +59,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             if (score > bestScore)
             {
                 ResourceManager.instance.GetResource("Score").Set(score);
-                int userLevel = Database.UserData.Level;
+                int userLevel = Database.UserData.Stats.Level;
                 //LeaderboardService.Instance.UpdateClassicLeaderboard(score, userLevel);
             }
 

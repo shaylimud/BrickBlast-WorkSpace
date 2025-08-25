@@ -15,10 +15,6 @@ public class UserData
     [FirestoreProperty] public brdData bightdData { get; set; } = new brdData();
 
     public event Action<int> TotalCurrencyChanged;
-    public event Action<int> LevelChanged;
-    public event Action<int> GroupIndexChanged;
-    private int level = 1;
-    private int groupIndex = 1;
 
     public int TotalCurrency
     {
@@ -29,34 +25,6 @@ public class UserData
             {
                 Stats.TotalCurrency = value;
                 TotalCurrencyChanged?.Invoke(value);
-            }
-        }
-    }
-
-    [FirestoreProperty]
-    public int Level
-    {
-        get => level;
-        set
-        {
-            if (level != value)
-            {
-                level = value;
-                LevelChanged?.Invoke(value);
-            }
-        }
-    }
-
-    [FirestoreProperty]
-    public int GroupIndex
-    {
-        get => groupIndex;
-        set
-        {
-            if (groupIndex != value)
-            {
-                groupIndex = value;
-                GroupIndexChanged?.Invoke(value);
             }
         }
     }
@@ -81,7 +49,8 @@ public class UserData
     public class StatsData
     {
         [FirestoreProperty] public int TotalCurrency { get; set; } = 0;
-        [FirestoreProperty] public int SpaceLevel { get; set; } = 0;
+        [FirestoreProperty] public int Level { get; set; } = 1;
+        [FirestoreProperty] public int GroupIndex { get; set; } = 1;
         [FirestoreProperty] public int RvCount { get; set; } = 0;
         [FirestoreProperty] public int HighestReachEvent { get; set; } = 0;
         [FirestoreProperty] public int TotalSessions { get; set; } = 0;
@@ -155,12 +124,12 @@ public class UserData
     {
         if (value > 3)
         {
-            GroupIndex = ((value - 1) / 3) + 1;
-            Level = ((value - 1) % 3) + 1;
+            Stats.GroupIndex = ((value - 1) / 3) + 1;
+            Stats.Level = ((value - 1) % 3) + 1;
         }
         else
         {
-            Level = value;
+            Stats.Level = value;
         }
 
         var saveData = Database.UserData.Copy();
@@ -169,7 +138,7 @@ public class UserData
 
     public void SetGroupIndex(int value)
     {
-        GroupIndex = value;
+        Stats.GroupIndex = value;
         var saveData = Database.UserData.Copy();
         Database.Instance?.Save(saveData);
     }

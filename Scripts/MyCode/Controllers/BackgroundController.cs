@@ -31,7 +31,7 @@ namespace Ray.Controllers
             var bgSpawnProp = _bgSpawnConfig.BgSpawnProp;
             var bgElementSpawnProp = _bgSpawnConfig.BgElementSpawnProp;
 
-            int bgCount = Mathf.CeilToInt(Database.UserData.Level / 10f);
+            int bgCount = Mathf.CeilToInt(Database.UserData.Stats.Level / 10f);
             for (int i = 0; i < bgCount; i++)
             {
                 int targetY = bgSpawnProp.FirstSpawnY + (bgSpawnProp.IncrementSpawnY * i);
@@ -39,7 +39,7 @@ namespace Ray.Controllers
                 SpawnBg(c, targetY);
             }
 
-            int bgElementCount = Mathf.CeilToInt(Database.UserData.Level / 5);
+            int bgElementCount = Mathf.CeilToInt(Database.UserData.Stats.Level / 5);
             for (int i = 0; i < bgElementCount; i++)
             {
                 int targetY = bgElementSpawnProp.FirstSpawnY + (bgElementSpawnProp.IncrementSpawnY * i);

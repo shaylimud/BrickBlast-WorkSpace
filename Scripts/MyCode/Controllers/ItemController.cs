@@ -33,7 +33,7 @@ namespace Ray.Controllers
         {
             _rayDebug.Event("SpawnAllItemsAtOnce", c, this);
 
-            for (int y = _itemSpawnConfig.FirstSpawnY; y > -Database.UserData.Level; y -= _itemSpawnConfig.IncrementSpawnY)
+            for (int y = _itemSpawnConfig.FirstSpawnY; y > -Database.UserData.Stats.Level; y -= _itemSpawnConfig.IncrementSpawnY)
             {
                 SpawnItem(c, y);
             }
