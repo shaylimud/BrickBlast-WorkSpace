@@ -52,18 +52,28 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         private ShapeTemplate GetNonRepeatedShapeTemplate(HashSet<ShapeTemplate> usedShapeTemplates)
         {
-            ShapeTemplate shapeTemplate = null;
             if (usedShapeTemplates == null)
             {
                 return GetRandomShape();
             }
 
+            ShapeTemplate shapeTemplate;
+            var attempts = 0;
             do
             {
                 shapeTemplate = GetRandomShape();
-            } while (usedShapeTemplates.Contains(shapeTemplate));
+                attempts++;
+                if (attempts > 100)
+                {
+                    break;
+                }
+            } while (shapeTemplate != null && usedShapeTemplates.Contains(shapeTemplate));
 
-            usedShapeTemplates.Add(shapeTemplate);
+            if (shapeTemplate != null)
+            {
+                usedShapeTemplates.Add(shapeTemplate);
+            }
+
             return shapeTemplate;
         }
 
@@ -74,7 +84,19 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 ? shapes.Where(shape => shape.spawnFromLevel <= levelManager.currentLevel).ToArray()
                 : shapes.Where(shape => shape.scoreForSpawn <= GetClassicScore()).ToArray();
 
+            if (shapesToConsider.Length == 0)
+            {
+                shapesToConsider = shapes;
+            }
+
             var totalWeight = shapesToConsider.Sum(shape => shape.chanceForSpawn);
+            if (totalWeight <= 0)
+            {
+                return shapesToConsider.Length > 0
+                    ? shapesToConsider[Random.Range(0, shapesToConsider.Length)]
+                    : null;
+            }
+
             var randomWeight = Random.Range(0, totalWeight);
 
             foreach (var shape in shapesToConsider)

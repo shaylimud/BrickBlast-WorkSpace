@@ -82,6 +82,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                         randomShape = itemFactory.CreateRandomShape(usedShapeTemplates, shapeObject);
                     }
 
+                    if (randomShape == null)
+                    {
+                        continue;
+                    }
+
                     if (field.CanPlaceShape(randomShape))
                     {
                         fitShapesCount++;
