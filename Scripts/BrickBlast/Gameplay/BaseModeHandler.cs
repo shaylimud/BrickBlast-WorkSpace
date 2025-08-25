@@ -116,6 +116,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             ResourceService.Instance?.SubmitLevelScore(score);
             EventService.Player.OnParked?.Invoke(this);
             DeleteGameState();
+            Database.UserData.SetLevel(1);
         }
 
         private void HandleEndCurrencyChanged(Component c)
