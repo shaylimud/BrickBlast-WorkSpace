@@ -274,10 +274,14 @@ namespace Ray.Services
             int total = LevelCurrency.Value + LevelScore.Value;
 
             LevelCurrency.Value = total;
-            await Database.UserData.AddScoreAsCurrency(total);
+
+            if (Database.UserData != null)
+            {
+                await Database.UserData.AddScoreAsCurrency(total);
+            }
             LevelScore.Value = 0;
 
-            EventService.Resource.OnEndCurrencyChanged(this);
+            EventService.Resource.OnEndCurrencyChanged?.Invoke(this);
         }
 
         private async void RewardEndTriple(Component c)
@@ -292,7 +296,7 @@ namespace Ray.Services
 
             await Database.Instance.Save(saveData);
 
-            EventService.Resource.OnEndCurrencyChanged(this);
+            EventService.Resource.OnEndCurrencyChanged?.Invoke(this);
         }
         private async void RewardBrightData(Component c)
         {
