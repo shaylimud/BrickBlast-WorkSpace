@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using Ray.Features;
+
 
 namespace Ray.Controllers
 {
@@ -383,7 +383,6 @@ namespace Ray.Controllers
 
             _view.Show(_element.Canvas.ExtraSpace);
 
-            _view.SetText(_element.Feature.ExtraSpaceReward, $"Get {ExtraSpaceFeature.Instance.ExtraSpaceReward.Value} More!");
 
             StartCoroutine(_view.DepleteMeter(_element.Feature.ExtraSpaceMeter, 3f, () =>
             {

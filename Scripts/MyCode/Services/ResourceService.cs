@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using Ray.Features;
 
 namespace Ray.Services
 {
@@ -363,15 +362,6 @@ namespace Ray.Services
             return (Database.UserData.Security.Cheater && Database.GameSettings.Security.AllowPenalties);
         }
 
-        private void RewardExtraSpace(Component c)
-        {
-            _rayDebug.Event("RewardExtraSpace", c, this);
-
-            LevelSpace.Value += ExtraSpaceFeature.Instance.ExtraSpaceReward.Value;
-
-            EventService.Resource.OnExtraSpaceReceived.Invoke(this);
-
-            EventService.Resource.OnLevelResourceChanged.Invoke(this);
-        }
+      
     }
 }
