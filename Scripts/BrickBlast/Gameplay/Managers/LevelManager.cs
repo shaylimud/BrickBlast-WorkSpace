@@ -306,7 +306,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             else
             {
                 gameMode = GameDataManager.GetGameMode();
-                currentLevel = Database.UserData.Level;
+                currentLevel = Database.UserData.Stats.Level;
                 if (gameMode == EGameMode.Classic)
                 {
                     _levelData = Resources.Load<Level>("Misc/ClassicLevel");
@@ -561,7 +561,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
             EventService.Player.OnParked?.Invoke(this);
 
-            int nextLevel = Database.UserData.Level + 1;
+            int nextLevel = Database.UserData.Stats.Level + 1;
             Database.UserData.SetLevel(nextLevel);
             GameDataManager.SetLevel(null);
 

@@ -186,7 +186,7 @@ namespace Ray.Services
 
             if (PlayerPrefs.HasKey("Level"))
             {
-                UserData.Level = PlayerPrefs.GetInt("Level");
+                UserData.Stats.Level = PlayerPrefs.GetInt("Level");
                 changed = true;
             }
 
@@ -230,7 +230,7 @@ namespace Ray.Services
                 {
                     Dictionary<string, object> defaultData = defaultSnapshot.ToDictionary();
                     int defaultLevel = defaultData.ContainsKey("Level") ? Convert.ToInt32(defaultData["Level"]) : 1;
-                    int defaultSpaceLevel = defaultData.ContainsKey("SpaceLevel") ? Convert.ToInt32(defaultData["SpaceLevel"]) : 0;
+                    int defaultGroupIndex = defaultData.ContainsKey("GroupIndex") ? Convert.ToInt32(defaultData["GroupIndex"]) : 1;
                     int defaultPower1 = defaultData.ContainsKey("Power_1") ? Convert.ToInt32(defaultData["Power_1"]) : 0;
                     int defaultPower2 = defaultData.ContainsKey("Power_2") ? Convert.ToInt32(defaultData["Power_2"]) : 0;
                     int defaultPower3 = defaultData.ContainsKey("Power_3") ? Convert.ToInt32(defaultData["Power_3"]) : 0;
@@ -249,14 +249,13 @@ namespace Ray.Services
 
                         Stats = new UserData.StatsData
                         {
-                            SpaceLevel = defaultSpaceLevel,
+                            Level = defaultLevel,
+                            GroupIndex = defaultGroupIndex,
                             Power_1 = defaultPower1,
                             Power_2 = defaultPower2,
                             Power_3 = defaultPower3,
                             Power_4 = defaultPower4
-                        },
-
-                        Level = defaultLevel
+                        }
                     };
 
                     // Save new user data to Firestore
@@ -327,10 +326,10 @@ namespace Ray.Services
                 UserData = saveData; // Transfer modifications to client after cheat check
 
                 // Check and update Highest Reach Event
-                if (UserData.Level > serverUserData.Level)
+                if (UserData.Stats.Level > serverUserData.Stats.Level)
                 {
                     List<int> sortedReachEvents = GameSettings.Events.SortedReachEvents();
-                    int highestValidEvent = sortedReachEvents.Where(e => e <= UserData.Level).DefaultIfEmpty(0).Max();
+                    int highestValidEvent = sortedReachEvents.Where(e => e <= UserData.Stats.Level).DefaultIfEmpty(0).Max();
                     if (highestValidEvent > UserData.Stats.HighestReachEvent)
                     {
                         UserData.Stats.HighestReachEvent = highestValidEvent;

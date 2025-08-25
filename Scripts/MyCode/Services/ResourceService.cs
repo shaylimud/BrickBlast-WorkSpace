@@ -82,8 +82,7 @@ namespace Ray.Services
             var saveData = Database.UserData.Copy();
             saveData.Stats.TotalCurrency -= upgradeCost;
 
-            if (upgradeType == UpgradeType.Reach) saveData.Level += upgradeProp.LevelIncrement;
-            else saveData.Stats.SpaceLevel += upgradeProp.LevelIncrement;
+            saveData.Stats.Level += upgradeProp.LevelIncrement;
 
             await Database.Instance.Save(saveData);
 
@@ -93,7 +92,7 @@ namespace Ray.Services
         public int UpgradeCost(UpgradeType upgradeType)
         {
             var upgradeProp = upgradeType == UpgradeType.Reach ? _resourceEvaluationConfig.ReachUpgradeProperties : _resourceEvaluationConfig.SpaceUpgradeProperties;
-            int level = upgradeType == UpgradeType.Reach ? Database.UserData.Level : Database.UserData.Stats.SpaceLevel;
+            int level = Database.UserData.Stats.Level;
             var multiplierDic = upgradeType == UpgradeType.Reach ? Database.GameSettings.Multipliers.Reach : Database.GameSettings.Multipliers.Space;
 
             // Sort multipliers by level breakpoint (ascending order)
@@ -230,7 +229,7 @@ namespace Ray.Services
             LevelCurrency.Value = 0;
             LevelScore.Value = 0;
 
-            LevelSpace.Value = Database.UserData.Stats.SpaceLevel;
+            LevelSpace.Value = Database.UserData.Stats.Level;
 
             EventService.Resource.OnLevelResourceChanged.Invoke(this);
             EventService.Resource.OnEndCurrencyChanged.Invoke(this);
