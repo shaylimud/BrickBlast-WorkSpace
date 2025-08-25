@@ -153,8 +153,15 @@ public class UserData
 
     public void SetLevel(int value)
     {
-        Level = value;
-        GroupIndex = ((value - 1) / 3) + 1;
+        if (value > 3)
+        {
+            GroupIndex = ((value - 1) / 3) + 1;
+            Level = ((value - 1) % 3) + 1;
+        }
+        else
+        {
+            Level = value;
+        }
 
         var saveData = Database.UserData.Copy();
         Database.Instance?.Save(saveData);

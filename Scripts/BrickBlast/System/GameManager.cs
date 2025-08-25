@@ -207,9 +207,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public void NextLevel()
         {
-            int nextLevel = Database.UserData.Level + 1;
-            Database.UserData.SetLevel(nextLevel);
-            GameDataManager.UnlockGroup(Mathf.CeilToInt(nextLevel / 3f));
             OpenGame();
             RestartLevel();
         }
