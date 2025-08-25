@@ -251,6 +251,7 @@ namespace Ray.Services
                         {
                             Level = defaultLevel,
                             GroupIndex = defaultGroupIndex,
+                            HighestLevelReached = ((defaultGroupIndex - 1) * 3) + defaultLevel,
                             Power_1 = defaultPower1,
                             Power_2 = defaultPower2,
                             Power_3 = defaultPower3,
@@ -324,6 +325,12 @@ namespace Ray.Services
                 }
 
                 UserData = saveData; // Transfer modifications to client after cheat check
+
+                int absoluteLevel = (UserData.Stats.GroupIndex - 1) * 3 + UserData.Stats.Level;
+                if (absoluteLevel > UserData.Stats.HighestLevelReached)
+                {
+                    UserData.Stats.HighestLevelReached = absoluteLevel;
+                }
 
                 // Check and update Highest Reach Event
                 if (UserData.Stats.Level > serverUserData.Stats.Level)

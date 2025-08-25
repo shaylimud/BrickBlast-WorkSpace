@@ -51,6 +51,7 @@ public class UserData
         [FirestoreProperty] public int TotalCurrency { get; set; } = 0;
         [FirestoreProperty] public int Level { get; set; } = 1;
         [FirestoreProperty] public int GroupIndex { get; set; } = 1;
+        [FirestoreProperty] public int HighestLevelReached { get; set; } = 1;
         [FirestoreProperty] public int RvCount { get; set; } = 0;
         [FirestoreProperty] public int HighestReachEvent { get; set; } = 0;
         [FirestoreProperty] public int TotalSessions { get; set; } = 0;
@@ -131,7 +132,11 @@ public class UserData
         {
             Stats.Level = value;
         }
-
+        int absoluteLevel = ((Stats.GroupIndex - 1) * 3) + Stats.Level;
+        if (absoluteLevel > Stats.HighestLevelReached)
+        {
+            Stats.HighestLevelReached = absoluteLevel;
+        }
         var saveData = Database.UserData.Copy();
         Database.Instance?.Save(saveData);
     }
@@ -139,6 +144,11 @@ public class UserData
     public void SetGroupIndex(int value)
     {
         Stats.GroupIndex = value;
+        int absoluteLevel = ((Stats.GroupIndex - 1) * 3) + Stats.Level;
+        if (absoluteLevel > Stats.HighestLevelReached)
+        {
+            Stats.HighestLevelReached = absoluteLevel;
+        }
         var saveData = Database.UserData.Copy();
         Database.Instance?.Save(saveData);
     }
