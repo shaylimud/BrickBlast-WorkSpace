@@ -594,9 +594,18 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         private void SetLose()
         {
             if (gameMode == EGameMode.Classic)
+            {
                 GameState.Delete(EGameMode.Classic);
+                // Arcade modes shouldn't carry level progression. When the player
+                // fails, reset their level so the next run starts from level 1.
+                GameDataManager.SetLevelNum(1);
+            }
             else if (gameMode == EGameMode.Timed)
+            {
                 GameState.Delete(EGameMode.Timed);
+                // Timed mode behaves like an arcade run; ensure level resets on fail.
+                GameDataManager.SetLevelNum(1);
+            }
             OnLose?.Invoke();
             EventManager.GameStatus = EGameState.PreFailed;
         }
