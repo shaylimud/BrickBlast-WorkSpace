@@ -66,10 +66,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             int subLevelIndex = GameDataManager.GetSubLevelIndex();
             if (subLevelIndex > 1)
             {
-                int groupIndex = (currentLevel - 1) / 3;
-                int newLevel = groupIndex * 3 + 1;
-                currentLevel = newLevel;
-                Database.UserData.SetLevel(newLevel);
+                currentLevel = 1;
+                Database.UserData.SetLevel(1);
                 GameDataManager.ResetSubLevelIndex();
                 GameDataManager.SetLevel(null);
                 GameManager.instance.RestartLevel();
