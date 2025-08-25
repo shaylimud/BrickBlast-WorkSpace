@@ -242,6 +242,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 return false;
             }
 
+            if (shape == null)
+            {
+                return false;
+            }
+
             var activeItems = shape.GetActiveItems();
             int minX = int.MaxValue, minY = int.MaxValue;
             int maxX = int.MinValue, maxY = int.MinValue;
