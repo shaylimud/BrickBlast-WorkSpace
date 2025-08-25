@@ -23,6 +23,9 @@ namespace Ray.Services
         [HideInInspector] public EncryptedField<int> LevelsPlayed = new EncryptedField<int>(0);
         [HideInInspector] public EncryptedField<bool> NoEnemies = new EncryptedField<bool>(false);
         [HideInInspector] public EncryptedField<bool> IncreaseRvCount = new EncryptedField<bool>(false);
+
+        private UserData _pendingSaveData;
+        private UserData SaveData => _pendingSaveData ??= Database.UserData.Copy();
         
         private RayDebugService _rayDebug => ServiceAllocator.Instance.GetDebugService(ConfigType.Services);
 
@@ -64,7 +67,14 @@ namespace Ray.Services
             LevelScore.Value = score;
         }
 
-        private async void ProcessUpgrade(Component c, UpgradeType upgradeType)
+        private async Task CommitEndGameChanges()
+        {
+            if (_pendingSaveData == null) return;
+            await Database.Instance.Save(_pendingSaveData);
+            _pendingSaveData = null;
+        }
+
+        private void ProcessUpgrade(Component c, UpgradeType upgradeType)
         {
             _rayDebug.Event($"ProcessUpgrade - {upgradeType}", c, this);
 
@@ -79,13 +89,20 @@ namespace Ray.Services
                 return;
             }
 
-            var saveData = Database.UserData.Copy();
+            var saveData = SaveData;
             saveData.Stats.TotalCurrency -= upgradeCost;
+            Database.UserData.TotalCurrency = Database.UserData.TotalCurrency - upgradeCost;
 
-            if (upgradeType == UpgradeType.Reach) saveData.Level += upgradeProp.LevelIncrement;
-            else saveData.Stats.SpaceLevel += upgradeProp.LevelIncrement;
-
-            await Database.Instance.Save(saveData);
+            if (upgradeType == UpgradeType.Reach)
+            {
+                saveData.Level += upgradeProp.LevelIncrement;
+                Database.UserData.Level += upgradeProp.LevelIncrement;
+            }
+            else
+            {
+                saveData.Stats.SpaceLevel += upgradeProp.LevelIncrement;
+                Database.UserData.Stats.SpaceLevel += upgradeProp.LevelIncrement;
+            }
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }
@@ -130,7 +147,7 @@ namespace Ray.Services
             return Mathf.FloorToInt(currentCost);
         }
 
-        private async void ProcessBoosterPurchase(Component c, BoosterType boosterType, int cost)
+        private void ProcessBoosterPurchase(Component c, BoosterType boosterType, int cost)
         {
             _rayDebug.Event($"ProcessBoosterPurchase - {boosterType}", c, this);
 
@@ -140,31 +157,34 @@ namespace Ray.Services
                 return;
             }
 
-            var saveData = Database.UserData.Copy();
+            var saveData = SaveData;
 
             switch (boosterType)
             {
                 case BoosterType.ClearRow:
                     if (saveData.Stats.Power_1 >= 99) return;
                     saveData.Stats.Power_1 = Mathf.Clamp(saveData.Stats.Power_1 + 1, 0, 99);
+                    Database.UserData.Stats.Power_1 = saveData.Stats.Power_1;
                     break;
                 case BoosterType.ClearColumn:
                     if (saveData.Stats.Power_2 >= 99) return;
                     saveData.Stats.Power_2 = Mathf.Clamp(saveData.Stats.Power_2 + 1, 0, 99);
+                    Database.UserData.Stats.Power_2 = saveData.Stats.Power_2;
                     break;
                 case BoosterType.ClearSquare:
                     if (saveData.Stats.Power_3 >= 99) return;
                     saveData.Stats.Power_3 = Mathf.Clamp(saveData.Stats.Power_3 + 1, 0, 99);
+                    Database.UserData.Stats.Power_3 = saveData.Stats.Power_3;
                     break;
                 case BoosterType.ChangeShape:
                     if (saveData.Stats.Power_4 >= 99) return;
                     saveData.Stats.Power_4 = Mathf.Clamp(saveData.Stats.Power_4 + 1, 0, 99);
+                    Database.UserData.Stats.Power_4 = saveData.Stats.Power_4;
                     break;
             }
 
             saveData.Stats.TotalCurrency -= cost;
-
-            await Database.Instance.Save(saveData);
+            Database.UserData.TotalCurrency = Database.UserData.TotalCurrency - cost;
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }
@@ -211,12 +231,11 @@ namespace Ray.Services
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }
 
-        public async void RewardNoEnemies(Component c)
+        public void RewardNoEnemies(Component c)
         {
             _rayDebug.Event("RewardNoEnemies", c, this);
 
-            var saveData = Database.UserData.Copy();
-            await Database.Instance.Save(saveData);
+            var saveData = SaveData;
 
             NoEnemies.Value = true;
 
@@ -260,53 +279,57 @@ namespace Ray.Services
             }
         }
 
-        private async void RewardEndCurrency(Component c)
+        private void RewardEndCurrency(Component c)
         {
             _rayDebug.Event("RewardEndCurrency", c, this);
 
-            // Combine any transient level earnings with collected currency
             int total = LevelCurrency.Value + LevelScore.Value;
 
             LevelCurrency.Value = total;
-            await Database.UserData.AddScoreAsCurrency(total);
+
+            var saveData = SaveData;
+            saveData.Stats.TotalCurrency += total;
+            saveData.Stats.TotalSessions++;
+            Database.UserData.TotalCurrency = Database.UserData.TotalCurrency + total;
+            Database.UserData.Stats.TotalSessions++;
             LevelScore.Value = 0;
 
             EventService.Resource.OnEndCurrencyChanged(this);
         }
 
-        private async void RewardEndTriple(Component c)
+        private void RewardEndTriple(Component c)
         {
             _rayDebug.Event("RewardEndTriple", c, this);
 
             int DoubleAmount = LevelCurrency.Value * 2;
 
-            var saveData = Database.UserData.Copy();
+            var saveData = SaveData;
             saveData.Stats.TotalCurrency += DoubleAmount;
+            Database.UserData.TotalCurrency = Database.UserData.TotalCurrency + DoubleAmount;
             LevelCurrency.Value *= 3;
-
-            await Database.Instance.Save(saveData);
 
             EventService.Resource.OnEndCurrencyChanged(this);
         }
-        private async void RewardBrightData(Component c)
+        private void RewardBrightData(Component c)
         {
             _rayDebug.Event("RewardBrightData", c, this);
 
             int Amount = Database.GameSettings.BrightData.Reward;
 
-            var saveData = Database.UserData.Copy();
+            var saveData = SaveData;
             saveData.bightdData.RewardClaimed = true;
             saveData.Stats.TotalCurrency += Amount;
-
-            await Database.Instance.Save(saveData);
+            Database.UserData.bightdData.RewardClaimed = true;
+            Database.UserData.TotalCurrency = Database.UserData.TotalCurrency + Amount;
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }
 
-        private void HandleBackToMenu(Component c)
+        private async void HandleBackToMenu(Component c)
         {
             LevelsPlayed.Value++;
             NoEnemies.Value = false;
+            await CommitEndGameChanges();
         }
 
         public async Task<(bool canClaim, string cooldownTime)> CanClaimFreeGift()
