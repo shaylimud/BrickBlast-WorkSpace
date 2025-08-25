@@ -78,6 +78,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         public void UpdateShape(ShapeTemplate shapeTemplate)
         {
+            this.shapeTemplate = shapeTemplate;
+            if (shapeTemplate == null)
+            {
+                Debug.LogWarning("UpdateShape called with null template");
+                return;
+            }
+
             activeItems.Clear();
             for (var i = 0; i < row.Length; i++)
             {
