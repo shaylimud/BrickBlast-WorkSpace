@@ -167,44 +167,52 @@ namespace Ray.Services
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }
 
-        public void RewardBooster(BoosterType type)
+        public async void RewardBooster(BoosterType type)
         {
+            var saveData = Database.UserData.Copy();
+
             switch (type)
             {
                 case BoosterType.ClearRow:
-                    Database.UserData.Stats.Power_1 = Mathf.Clamp(Database.UserData.Stats.Power_1 + 1, 0, 99);
+                    saveData.Stats.Power_1 = Mathf.Clamp(saveData.Stats.Power_1 + 1, 0, 99);
                     break;
                 case BoosterType.ClearColumn:
-                    Database.UserData.Stats.Power_2 = Mathf.Clamp(Database.UserData.Stats.Power_2 + 1, 0, 99);
+                    saveData.Stats.Power_2 = Mathf.Clamp(saveData.Stats.Power_2 + 1, 0, 99);
                     break;
                 case BoosterType.ClearSquare:
-                    Database.UserData.Stats.Power_3 = Mathf.Clamp(Database.UserData.Stats.Power_3 + 1, 0, 99);
+                    saveData.Stats.Power_3 = Mathf.Clamp(saveData.Stats.Power_3 + 1, 0, 99);
                     break;
                 case BoosterType.ChangeShape:
-                    Database.UserData.Stats.Power_4 = Mathf.Clamp(Database.UserData.Stats.Power_4 + 1, 0, 99);
+                    saveData.Stats.Power_4 = Mathf.Clamp(saveData.Stats.Power_4 + 1, 0, 99);
                     break;
             }
+
+            await Database.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }
 
-        public void ConsumeBooster(BoosterType type)
+        public async void ConsumeBooster(BoosterType type)
         {
+            var saveData = Database.UserData.Copy();
+
             switch (type)
             {
                 case BoosterType.ClearRow:
-                    Database.UserData.Stats.Power_1 = Mathf.Clamp(Database.UserData.Stats.Power_1 - 1, 0, 99);
+                    saveData.Stats.Power_1 = Mathf.Clamp(saveData.Stats.Power_1 - 1, 0, 99);
                     break;
                 case BoosterType.ClearColumn:
-                    Database.UserData.Stats.Power_2 = Mathf.Clamp(Database.UserData.Stats.Power_2 - 1, 0, 99);
+                    saveData.Stats.Power_2 = Mathf.Clamp(saveData.Stats.Power_2 - 1, 0, 99);
                     break;
                 case BoosterType.ClearSquare:
-                    Database.UserData.Stats.Power_3 = Mathf.Clamp(Database.UserData.Stats.Power_3 - 1, 0, 99);
+                    saveData.Stats.Power_3 = Mathf.Clamp(saveData.Stats.Power_3 - 1, 0, 99);
                     break;
                 case BoosterType.ChangeShape:
-                    Database.UserData.Stats.Power_4 = Mathf.Clamp(Database.UserData.Stats.Power_4 - 1, 0, 99);
+                    saveData.Stats.Power_4 = Mathf.Clamp(saveData.Stats.Power_4 - 1, 0, 99);
                     break;
             }
+
+            await Database.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }

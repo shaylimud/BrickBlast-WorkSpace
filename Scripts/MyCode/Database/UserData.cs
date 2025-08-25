@@ -123,33 +123,38 @@ public class UserData
 
     public void SetLevel(int value)
     {
+        var saveData = Database.UserData.Copy();
+
         if (value > 3)
         {
-            Stats.GroupIndex = ((value - 1) / 3) + 1;
-            Stats.Level = ((value - 1) % 3) + 1;
+            saveData.Stats.GroupIndex = ((value - 1) / 3) + 1;
+            saveData.Stats.Level = ((value - 1) % 3) + 1;
         }
         else
         {
-            Stats.Level = value;
+            saveData.Stats.Level = value;
         }
-        int absoluteLevel = ((Stats.GroupIndex - 1) * 3) + Stats.Level;
-        if (absoluteLevel > Stats.HighestLevelReached)
+
+        int absoluteLevel = ((saveData.Stats.GroupIndex - 1) * 3) + saveData.Stats.Level;
+        if (absoluteLevel > saveData.Stats.HighestLevelReached)
         {
-            Stats.HighestLevelReached = absoluteLevel;
+            saveData.Stats.HighestLevelReached = absoluteLevel;
         }
-        var saveData = Database.UserData.Copy();
+
         Database.Instance?.Save(saveData);
     }
 
     public void SetGroupIndex(int value)
     {
-        Stats.GroupIndex = value;
-        int absoluteLevel = ((Stats.GroupIndex - 1) * 3) + Stats.Level;
-        if (absoluteLevel > Stats.HighestLevelReached)
-        {
-            Stats.HighestLevelReached = absoluteLevel;
-        }
         var saveData = Database.UserData.Copy();
+        saveData.Stats.GroupIndex = value;
+
+        int absoluteLevel = ((saveData.Stats.GroupIndex - 1) * 3) + saveData.Stats.Level;
+        if (absoluteLevel > saveData.Stats.HighestLevelReached)
+        {
+            saveData.Stats.HighestLevelReached = absoluteLevel;
+        }
+
         Database.Instance?.Save(saveData);
     }
 }
