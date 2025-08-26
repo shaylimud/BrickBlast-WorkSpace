@@ -29,8 +29,15 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 
         protected virtual void OnEnable()
         {
-            retryButton.onClick.AddListener(Retry);
-            closeButton.onClick.AddListener(CollectAndExit);
+            if (retryButton != null)
+            {
+                retryButton.onClick.AddListener(Retry);
+            }
+
+            if (closeButton != null)
+            {
+                closeButton.onClick.AddListener(CollectAndExit);
+            }
 
             if (currencyText != null)
             {
@@ -41,6 +48,24 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             {
                 tripleRewardButton.onClick.AddListener(TripleReward);
                 tripleRewardButton.interactable = RewardedService.Instance.IsRewardedReady(RewardedType.Triple);
+            }
+        }
+
+        protected virtual void OnDisable()
+        {
+            if (retryButton != null)
+            {
+                retryButton.onClick.RemoveListener(Retry);
+            }
+
+            if (closeButton != null)
+            {
+                closeButton.onClick.RemoveListener(CollectAndExit);
+            }
+
+            if (tripleRewardButton != null)
+            {
+                tripleRewardButton.onClick.RemoveListener(TripleReward);
             }
         }
 
