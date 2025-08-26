@@ -307,6 +307,15 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             {
                 gameMode = GameDataManager.GetGameMode();
                 currentLevel = Database.UserData.Stats.Level;
+
+                if (currentLevel <= 0)
+                {
+                    Debug.LogWarning($"Invalid level {currentLevel}. Resetting to level 1.");
+                    currentLevel = 1;
+                    Database.UserData.SetLevel(currentLevel);
+                    GameDataManager.SetLevel(null);
+                }
+
                 if (gameMode == EGameMode.Classic)
                 {
                     _levelData = Resources.Load<Level>("Misc/ClassicLevel");
