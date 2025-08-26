@@ -26,19 +26,31 @@ public class RayDebugService : ScriptableObject
     public void Log(object message, Object sender)
     {
         if (!_showThisLog || !_rayDebugConfig.IncludeNormalLogs) return;
-        Debug.Log($"<color=white>{_prefix}: {message}</color>", sender);
+
+        // Guard against destroyed objects which evaluate to null in Unity
+        var context = sender != null ? sender : null;
+
+        Debug.Log($"<color=white>{_prefix}: {message}</color>", context);
     }
 
     public void LogWarning(object message, Object sender)
     {
         if (!_showThisLog || !_rayDebugConfig.IncludeWarningLogs) return;
-        Debug.LogWarning($"WARNING: {GetColorHex(_prefixColor)}{_prefix}: {message}</color>", sender);
+
+        // Guard against destroyed objects which evaluate to null in Unity
+        var context = sender != null ? sender : null;
+
+        Debug.LogWarning($"WARNING: {GetColorHex(_prefixColor)}{_prefix}: {message}</color>", context);
     }
 
     public void LogError(object message, Object sender)
     {
         if (!_showThisLog || !_rayDebugConfig.IncludeErrorLogs) return;
-        Debug.LogError($"ERROR:{GetColorHex(_prefixColor)}{_prefix}: {message}</color>", sender);
+
+        // Guard against destroyed objects which evaluate to null in Unity
+        var context = sender != null ? sender : null;
+
+        Debug.LogError($"ERROR:{GetColorHex(_prefixColor)}{_prefix}: {message}</color>", context);
     }
 
     private string GetColorHex(Color color)
