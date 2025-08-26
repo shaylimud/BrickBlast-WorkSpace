@@ -34,7 +34,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
 
         [SerializeField] private ScrollMap scrollMap;
         [SerializeField] private Button backButton;
-        [SerializeField, Tooltip("Spacing between repeated level segments"), Range(0f, 100f)] private float levelSegmentGap = 0f;
+        [SerializeField, Tooltip("Spacing between repeated level segments"), Range(0f, 100f)] private float levelSegmentGap = 1f;
         [SerializeField, Tooltip("Number of times to repeat the level segment"), Range(1, 10)] private int levelSegmentRepetitions = 3;
         private List<LevelPin> openedLevels = new List<LevelPin>();
         private Vector3[] debugPath;

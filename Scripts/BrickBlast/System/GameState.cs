@@ -10,7 +10,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
     public abstract class GameState
     {
         public EGameState gameStatus;
-        public int currentLevel;
+        public int currentLevel = 1;
         public EGameMode gameMode;
         public int score;
         public LevelRow[] levelRows;
@@ -186,7 +186,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
     {
         // For backwards compatibility when loading old saved states
         public EGameState gameStatus;
-        public int currentLevel;
+        public int currentLevel = 1;
         public EGameMode gameMode;
         public int score;
         public int remainingTime;

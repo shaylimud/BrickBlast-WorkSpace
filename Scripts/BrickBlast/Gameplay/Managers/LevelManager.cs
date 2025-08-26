@@ -37,7 +37,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 {
     public partial class LevelManager : MonoBehaviour
     {
-        public int currentLevel;
+        public int currentLevel = 1;
         public LineExplosion lineExplosionPrefab;
         public ComboText comboTextPrefab;
         public Transform pool;
@@ -89,7 +89,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         private Vector3 cachedFieldCenter;
         private bool isFieldCenterCached;
 
-        private int failedLevel;
+        private int failedLevel = 1;
         private int failedSubLevelIndex;
 
         private void OnEnable()

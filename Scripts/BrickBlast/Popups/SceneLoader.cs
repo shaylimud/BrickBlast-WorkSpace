@@ -45,7 +45,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             StateManager.instance.CurrentState = EScreenStates.Game;
         }
 
-        public void StartGameScene(int levelNumber = 0)
+        public void StartGameScene(int levelNumber = 1)
         {
             GameDataManager.SetGameMode(EGameMode.Adventure);
             GameDataManager.SetLevel(Resources.Load<Level>("Levels/Level_" + (levelNumber > 0 ? levelNumber : GameDataManager.GetLevelNum())));

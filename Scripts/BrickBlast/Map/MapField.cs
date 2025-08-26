@@ -78,7 +78,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Map
             var segmentEndLevel = Mathf.Min(segmentStartLevel + segmentSize - 1, levels);
             var rows = Mathf.Min(Mathf.CeilToInt((float)(segmentEndLevel - segmentStartLevel + 1) / maxLevelsInRow), maxRows);
             lastRow = rows - 1;
-            var levelsCreated = 0;
+            var levelsCreated = 1;
 
             for (var i = 0; i < rows; i++)
             {

@@ -297,7 +297,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Unity_Reorderable_List_master.List.Edit
         public void DoList(Rect rect, GUIContent label)
         {
             var indent = EditorGUI.indentLevel;
-            EditorGUI.indentLevel = 0;
+            EditorGUI.indentLevel = 1;
 
             var headerRect = rect;
             headerRect.height = headerHeight;
