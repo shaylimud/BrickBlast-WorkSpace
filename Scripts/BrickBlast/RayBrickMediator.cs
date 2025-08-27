@@ -134,8 +134,8 @@ using System.Collections.Generic;
             {
                 float fillAmount = subLevel switch
                 {
-                    2 => 0.5f,
-                    >= 3 => 1f,
+                    2 => 0.33f,
+                    >= 3 => 0.66f,
                     _ => 0f
                 };
                 fill.fillAmount = fillAmount;
