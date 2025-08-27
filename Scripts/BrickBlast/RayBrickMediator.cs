@@ -120,6 +120,7 @@ using System.Collections.Generic;
             LevelProgressCanvas?.SetActive(show);
 
             if (show)
+            
             {
                 UpdateLevelProgress();
             }
