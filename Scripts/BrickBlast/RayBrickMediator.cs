@@ -36,16 +36,17 @@ using System.Collections.Generic;
 
         
         [Header("Canvas")]
-        [SerializeField] GameObject LevelProgressCanvas;
+        [SerializeField] private GameObject LevelProgressCanvas;
 
         [SerializeField] private GameObject BoosterCanvas;
 
-        [Header("LevelProgress")] 
+        [Header("LevelProgress")]
         [SerializeField] private Image fill;
 
         [SerializeField] private GameObject progStar_full;
-        [SerializeField] private GameObject proStar_Empty;
-        [SerializeField] private GameObject star1, star2;
+        [SerializeField] private GameObject progStar_empty;
+        [SerializeField] private RectTransform star1;
+        [SerializeField] private RectTransform star2;
 
         private void Awake()
         {
@@ -107,7 +108,51 @@ using System.Collections.Generic;
 
         private void HandleGameStateChange(EGameState state)
         {
-            BoosterCanvas?.SetActive(state == EGameState.Playing);
+            bool playing = state == EGameState.Playing;
+
+            BoosterCanvas?.SetActive(playing);
+            LevelProgressCanvas?.SetActive(playing);
+
+            if (playing)
+            {
+                UpdateLevelProgress();
+            }
+        }
+
+        private void UpdateLevelProgress()
+        {
+            int subLevel = GameDataManager.GetSubLevelIndex();
+
+            if (fill != null)
+            {
+                float fillAmount = subLevel switch
+                {
+                    2 => 0.5f,
+                    >= 3 => 1f,
+                    _ => 0f
+                };
+                fill.fillAmount = fillAmount;
+            }
+
+            UpdateStar(star1, subLevel >= 2);
+            UpdateStar(star2, subLevel >= 3);
+        }
+
+        private void UpdateStar(RectTransform parent, bool isFull)
+        {
+            if (parent == null)
+                return;
+
+            foreach (Transform child in parent)
+            {
+                Destroy(child.gameObject);
+            }
+
+            GameObject prefab = isFull ? progStar_full : progStar_empty;
+            if (prefab != null)
+            {
+                Instantiate(prefab, parent, false);
+            }
         }
 
         public void SetReviveButton(Button button)
