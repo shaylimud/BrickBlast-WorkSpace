@@ -117,14 +117,6 @@ using System.Collections.Generic;
             LevelProgressCanvas?.SetActive(playing);
 
             if (playing)
-
-            BoosterCanvas?.SetActive(state == EGameState.Playing);
-
-            bool showProgress = state == EGameState.Playing && GameDataManager.GetGameMode() == EGameMode.Classic;
-            LevelProgressCanvas?.SetActive(showProgress);
-
-            if (showProgress)
-
             {
                 UpdateLevelProgress();
             }
