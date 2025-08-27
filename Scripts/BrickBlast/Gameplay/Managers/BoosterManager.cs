@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using BlockPuzzleGameToolkit.Scripts.LevelsData;
 using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.System;
@@ -17,6 +18,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         [SerializeField] private Button columnButton;
         [SerializeField] private Button squareButton;
         [SerializeField] private Button changeShapeButton;
+
+        [SerializeField] private TextMeshProUGUI rowUsesText;
+        [SerializeField] private TextMeshProUGUI columnUsesText;
+        [SerializeField] private TextMeshProUGUI squareUsesText;
+        [SerializeField] private TextMeshProUGUI changeShapeUsesText;
 
         private Cell lastHighlightedCell;
         private Camera mainCamera;
@@ -46,6 +52,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 squareButton.onClick.AddListener(() => SelectBooster(BoosterType.ClearSquare));
             if (changeShapeButton != null)
                 changeShapeButton.onClick.AddListener(() => SelectBooster(BoosterType.ChangeShape));
+
+            UpdateBoosterTexts();
         }
 
         private void OnDestroy()
@@ -63,6 +71,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                     RewardedService.Instance.ShowRewarded(RewardedType.ExtraSpace, () =>
                     {
                         ResourceService.Instance?.RewardBooster(booster);
+                        UpdateBoosterTexts();
                         RayBrickMediator.Instance?.RefreshShop(this);
                     });
                 }
@@ -83,6 +92,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             {
                 ClearRandomSquare();
                 ResourceService.Instance?.ConsumeBooster(BoosterType.ClearSquare);
+                UpdateBoosterTexts();
                 return;
             }
 
@@ -106,6 +116,14 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             }
         }
 
+        private void UpdateBoosterTexts()
+        {
+            rowUsesText?.SetText(GetBoosterCount(BoosterType.ClearRow).ToString());
+            columnUsesText?.SetText(GetBoosterCount(BoosterType.ClearColumn).ToString());
+            squareUsesText?.SetText(GetBoosterCount(BoosterType.ClearSquare).ToString());
+            changeShapeUsesText?.SetText(GetBoosterCount(BoosterType.ChangeShape).ToString());
+        }
+
         private void ChangeShapes()
         {
             var deckManager = FindObjectOfType<CellDeckManager>();
@@ -114,6 +132,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 deckManager.UpdateCellDeckAfterFail();
             }
             ResourceService.Instance?.ConsumeBooster(BoosterType.ChangeShape);
+            UpdateBoosterTexts();
             activeBooster = null;
         }
 
@@ -233,6 +252,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                             if (activeBooster.HasValue)
                             {
                                 ResourceService.Instance?.ConsumeBooster(activeBooster.Value);
+                                UpdateBoosterTexts();
                                 activeBooster = null;
                             }
                             lastHighlightedCell = null;
