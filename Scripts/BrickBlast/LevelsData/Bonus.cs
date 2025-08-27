@@ -34,7 +34,7 @@ namespace BlockPuzzleGameToolkit.Scripts.LevelsData
         {
             this.bonusItemTemplate = bonusItemTemplate;
             image.sprite = bonusItemTemplate.sprite;
-            image.SetNativeSize();
+            //image.SetNativeSize();
             if (image.rectTransform.sizeDelta.x > _side || image.rectTransform.sizeDelta.y > _side)
             {
                 if (image.rectTransform.sizeDelta.x > image.rectTransform.sizeDelta.y)
