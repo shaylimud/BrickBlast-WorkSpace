@@ -23,6 +23,7 @@ namespace BlockPuzzleGameToolkit.Scripts.GUI
     {
         private Popup _popup;
         [SerializeField] private bool animate = true;
+        [SerializeField] private float targetScale = 1.5f;
 
         protected override void OnEnableInternal()
         {
@@ -48,7 +49,7 @@ namespace BlockPuzzleGameToolkit.Scripts.GUI
             foreach (var target in targets)
             {
                 var targetElement = Instantiate(target.Value, transform);
-                targetElement.transform.localScale = animate ? Vector3.zero : Vector3.one * 1.5f;
+                targetElement.transform.localScale = animate ? Vector3.zero : Vector3.one * targetScale;
                 if (EventManager.GameStatus == EGameState.PreWin || EventManager.GameStatus == EGameState.Win)
                 {
                     targetElement.GetComponent<TargetBonusGUIElement>().TargetCheck();
@@ -68,7 +69,7 @@ namespace BlockPuzzleGameToolkit.Scripts.GUI
             {
                 currentChild++;
                 var sequence = DOTween.Sequence();
-                sequence.Append(child.DOScale(Vector3.one * 1.5f, 0.1f).SetEase(Ease.OutBack).SetDelay(delay));
+                sequence.Append(child.DOScale(Vector3.one * targetScale, 0.1f).SetEase(Ease.OutBack).SetDelay(delay));
                 
                 if (currentChild == childCount)
                 {
