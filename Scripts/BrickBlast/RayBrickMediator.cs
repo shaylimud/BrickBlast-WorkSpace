@@ -41,11 +41,11 @@ using System.Collections.Generic;
         [SerializeField] private GameObject BoosterCanvas;
 
         [Header("LevelProgress")] 
-        [SerializeField] private GameObject fill;
+        [SerializeField] private Image fill;
 
-        [SerializeField] private GameObject progressStarFilled;
-        [SerializeField] private GameObject progressStarFilled2;
-        [SerializeField] private GameObject holder1, holder2;
+        [SerializeField] private GameObject progStar_full;
+        [SerializeField] private GameObject proStar_Empty;
+        [SerializeField] private GameObject star1, star2;
 
         private void Awake()
         {
