@@ -28,12 +28,18 @@ using System.Collections.Generic;
         [SerializeField] private Sprite boosterAdSprite;
 
         // Reference to an external mediation component assigned in the inspector
-        [SerializeField] private MonoBehaviour meditation;
-        public MonoBehaviour Meditation => meditation;
+
 
         private readonly Dictionary<GameObject, Sprite> boosterOriginalSprites = new();
         private float boosterRefreshTimer;
 
+        
+        [Header("Canvas")]
+        [SerializeField] GameObject LevelProgressCanvas;
+
+        [SerializeField] private GameObject BoosterCanvas;
+        
+        
         private void Awake()
         {
             Instance = this;
