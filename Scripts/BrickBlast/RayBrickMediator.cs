@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using BlockPuzzleGameToolkit.Scripts.Gameplay;
 using BlockPuzzleGameToolkit.Scripts.System;
 using BlockPuzzleGameToolkit.Scripts.Popups;
+using BlockPuzzleGameToolkit.Scripts.Enums;
 using System.Collections.Generic;
 
     public class RayBrickMediator : MonoBehaviour
@@ -38,11 +39,21 @@ using System.Collections.Generic;
         [SerializeField] GameObject LevelProgressCanvas;
 
         [SerializeField] private GameObject BoosterCanvas;
-        
-        
+
+
         private void Awake()
         {
             Instance = this;
+        }
+
+        private void OnEnable()
+        {
+            EventManager.OnGameStateChanged += HandleGameStateChange;
+        }
+
+        private void OnDisable()
+        {
+            EventManager.OnGameStateChanged -= HandleGameStateChange;
         }
 
         private void OnDestroy()
@@ -74,6 +85,8 @@ using System.Collections.Generic;
 
             if (Shop.Panel != null)
                 Shop.Panel.SetActive(false);
+
+            HandleGameStateChange(EventManager.GameStatus);
         }
 
         private void Update()
@@ -84,6 +97,11 @@ using System.Collections.Generic;
                 boosterRefreshTimer = 1f;
                 RefreshShop(this);
             }
+        }
+
+        private void HandleGameStateChange(EGameState state)
+        {
+            BoosterCanvas?.SetActive(state == EGameState.Playing);
         }
 
         public void SetReviveButton(Button button)
