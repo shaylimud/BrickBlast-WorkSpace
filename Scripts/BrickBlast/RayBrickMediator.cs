@@ -44,7 +44,7 @@ using System.Collections.Generic;
         [SerializeField] private GameObject fill;
 
         [SerializeField] private GameObject progressStarFilled;
-        [SerializeField] private GameObject progressStarFilled;
+        [SerializeField] private GameObject progressStarFilled2;
         [SerializeField] private GameObject holder1, holder2;
 
         private void Awake()
