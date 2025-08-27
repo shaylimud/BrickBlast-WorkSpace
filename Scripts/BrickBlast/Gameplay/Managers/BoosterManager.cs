@@ -249,6 +249,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                                     ChangeShapes();
                                     break;
                             }
+                            UpdateBoosterTexts();
+
                             if (activeBooster.HasValue)
                             {
                                 ResourceService.Instance?.ConsumeBooster(activeBooster.Value);
