@@ -112,19 +112,14 @@ using System.Collections.Generic;
         {
 
             bool playing = state == EGameState.Playing;
+            bool inAdventure = GameDataManager.GetGameMode() == EGameMode.Adventure;
 
-            BoosterCanvas?.SetActive(playing);
-            LevelProgressCanvas?.SetActive(playing);
+            bool show = playing && inAdventure;
 
-            if (playing)
+            BoosterCanvas?.SetActive(show);
+            LevelProgressCanvas?.SetActive(show);
 
-            BoosterCanvas?.SetActive(state == EGameState.Playing);
-
-            bool showProgress = state == EGameState.Playing && GameDataManager.GetGameMode() == EGameMode.Classic;
-            LevelProgressCanvas?.SetActive(showProgress);
-
-            if (showProgress)
-
+            if (show)
             {
                 UpdateLevelProgress();
             }
