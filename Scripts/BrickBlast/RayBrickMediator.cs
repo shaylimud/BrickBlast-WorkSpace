@@ -45,8 +45,10 @@ using System.Collections.Generic;
 
         [SerializeField] private GameObject progStar_full;
         [SerializeField] private GameObject progStar_empty;
-        [SerializeField] private Transform star1;
-        [SerializeField] private Transform star2;
+
+        [SerializeField] private RectTransform star1;
+        [SerializeField] private RectTransform star2;
+
 
         private void Awake()
         {
@@ -108,12 +110,21 @@ using System.Collections.Generic;
 
         private void HandleGameStateChange(EGameState state)
         {
+
+            bool playing = state == EGameState.Playing;
+
+            BoosterCanvas?.SetActive(playing);
+            LevelProgressCanvas?.SetActive(playing);
+
+            if (playing)
+
             BoosterCanvas?.SetActive(state == EGameState.Playing);
 
             bool showProgress = state == EGameState.Playing && GameDataManager.GetGameMode() == EGameMode.Classic;
             LevelProgressCanvas?.SetActive(showProgress);
 
             if (showProgress)
+
             {
                 UpdateLevelProgress();
             }
@@ -138,7 +149,9 @@ using System.Collections.Generic;
             UpdateStar(star2, subLevel >= 3);
         }
 
+
         private void UpdateStar(Transform parent, bool isFull)
+
         {
             if (parent == null)
                 return;
@@ -151,7 +164,9 @@ using System.Collections.Generic;
             GameObject prefab = isFull ? progStar_full : progStar_empty;
             if (prefab != null)
             {
-                Instantiate(prefab, parent);
+
+                Instantiate(prefab, parent, false);
+
             }
         }
 
