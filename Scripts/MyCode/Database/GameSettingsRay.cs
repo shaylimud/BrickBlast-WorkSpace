@@ -112,6 +112,7 @@ public class GameSettingsRay
     {
         [FirestoreProperty] public Dictionary<string, int> Consumables { get; set; }
         [FirestoreProperty] public string SubscriptionNoAds { get; set; }
+        [FirestoreProperty] public BundleData Bundle_1 { get; set; }
 
         public int ConsumableRewardById(string productId)
         {
@@ -121,6 +122,16 @@ public class GameSettingsRay
             }
             return 0;
         }
+    }
+
+    [FirestoreData]
+    public class BundleData
+    {
+        [FirestoreProperty] public int Booster_Col { get; set; }
+        [FirestoreProperty] public int Booster_Row { get; set; }
+        [FirestoreProperty] public int Booster_Shape { get; set; }
+        [FirestoreProperty] public int Booster_Square { get; set; }
+        [FirestoreProperty] public string ID { get; set; }
     }
 
     [FirestoreData]
