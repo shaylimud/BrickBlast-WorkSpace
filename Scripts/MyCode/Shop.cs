@@ -77,7 +77,8 @@ public class Shop : MonoBehaviour
         {
             Debug.Log("Shay : Bulding UI");
             GameObject basicItem = Instantiate(itemPrefab, itemHolder.transform);
-            basicItem.transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text = GetLocalizedPrice(productId);
+            basicItem.transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
+                Database.GameSettings.InAppPurchases.ConsumableRewardById(productId).ToString();
         }
     }
     
