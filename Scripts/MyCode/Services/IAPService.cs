@@ -102,7 +102,8 @@ namespace Ray.Services
             }
 
             builder.AddProduct(Database.GameSettings.InAppPurchases.SubscriptionNoAds, ProductType.Subscription);
-
+            builder.AddProduct(Database.GameSettings.InAppPurchases.Bundle_1.ID , ProductType.Consumable);
+            Debug.Log($"Shay : {Database.GameSettings.InAppPurchases.Bundle_1.ID}");
             UnityPurchasing.Initialize(this, builder);
 
             

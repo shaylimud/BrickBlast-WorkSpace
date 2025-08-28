@@ -1,14 +1,20 @@
 using System.Reflection;
 using Ray.Services;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
 public class Shop : MonoBehaviour
 {
     [Header("Shop-Items")]
-    [SerializeField] public GameObject bundlePrefab;
+    
+    [SerializeField] public GameObject bundle_1;
+    [SerializeField] public GameObject bundle_2;
     public GameObject itemPrefab;
-    public GameObject SpecialPrefab;
+    public GameObject Special;
+
+    [Header("Holders")] 
+    [SerializeField] private GameObject itemHolder;
 
     private IStoreController StoreController
     {
@@ -47,7 +53,12 @@ public class Shop : MonoBehaviour
         return GetProduct(productId)?.metadata;
     }
 
-    public void RefreshShopUI()
+    public void BuildBasicItems()
     {
+        
+        GameObject basicItem = Instantiate(itemPrefab , itemHolder.transform);
+        itemPrefab.transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text = GetLocalizedPrice("ProductID");
     }
+    
+    
 }
