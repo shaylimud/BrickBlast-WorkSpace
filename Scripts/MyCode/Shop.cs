@@ -57,7 +57,12 @@ public class Shop : MonoBehaviour
 
     public int GetProductValue(string productId)
     {
-        return 0;
+        if (Database.GameSettings?.InAppPurchases?.Consumables == null)
+            return 0;
+
+        return Database.GameSettings.InAppPurchases.Consumables.TryGetValue(productId, out var value)
+            ? value
+            : 0;
     }
     public ProductMetadata GetProductMetadata(string productId)
     {
