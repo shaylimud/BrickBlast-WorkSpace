@@ -64,15 +64,6 @@ public class Shop : MonoBehaviour
 
     public async void BuildBasicItems()
     {
-        Debug.Log("Shay : Bulding UI 1");
-
-        while (Database.GameSettings == null ||
-               Database.GameSettings.InAppPurchases == null ||
-               Database.GameSettings.InAppPurchases.Consumables == null)
-        {
-            await Task.Yield();
-        }
-
         foreach (var productId in Database.GameSettings.InAppPurchases.Consumables.Keys)
         {
             Debug.Log("Shay : Bulding UI");
