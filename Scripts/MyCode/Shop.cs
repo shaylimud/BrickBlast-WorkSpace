@@ -55,15 +55,7 @@ public class Shop : MonoBehaviour
         return product?.metadata.localizedDescription ?? string.Empty;
     }
 
-    public int GetProductValue(string productId)
-    {
-        if (Database.GameSettings?.InAppPurchases?.Consumables == null)
-            return 0;
 
-        return Database.GameSettings.InAppPurchases.Consumables.TryGetValue(productId, out var value)
-            ? value
-            : 0;
-    }
     public ProductMetadata GetProductMetadata(string productId)
     {
         return GetProduct(productId)?.metadata;
