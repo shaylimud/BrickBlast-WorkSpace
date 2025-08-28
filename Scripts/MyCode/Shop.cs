@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Ray.Services;
 using TMPro;
@@ -6,6 +7,7 @@ using UnityEngine.Purchasing;
 
 public class Shop : MonoBehaviour
 {
+    public static Shop instance;
     [Header("Shop-Items")]
     
     [SerializeField] public GameObject bundle_1;
@@ -15,6 +17,11 @@ public class Shop : MonoBehaviour
 
     [Header("Holders")] 
     [SerializeField] private GameObject itemHolder;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private IStoreController StoreController
     {
@@ -48,6 +55,10 @@ public class Shop : MonoBehaviour
         return product?.metadata.localizedDescription ?? string.Empty;
     }
 
+    public int GetProductValue(string productId)
+    {
+        return 0;
+    }
     public ProductMetadata GetProductMetadata(string productId)
     {
         return GetProduct(productId)?.metadata;
@@ -55,8 +66,11 @@ public class Shop : MonoBehaviour
 
     public void BuildBasicItems()
     {
+        Debug.Log("Shay : Bulding UI 1");
+
         foreach (var productId in Database.GameSettings.InAppPurchases.Consumables.Keys)
         {
+            Debug.Log("Shay : Bulding UI");
             GameObject basicItem = Instantiate(itemPrefab, itemHolder.transform);
             basicItem.transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text = GetLocalizedPrice(productId);
         }

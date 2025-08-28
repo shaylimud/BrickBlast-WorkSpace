@@ -129,6 +129,8 @@ namespace Ray.Services
             EventService.IAP.OnIAPInitialized.Invoke(this);
 
             _iapInitializationTCS?.TrySetResult(true); // Complete the Task
+            
+            
         }
 
         void InitializeValidator()
