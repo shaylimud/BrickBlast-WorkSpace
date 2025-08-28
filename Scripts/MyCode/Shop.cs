@@ -5,12 +5,12 @@ using Ray.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Purchasing;
+using UnityEngine.UI;
 
 public class Shop : MonoBehaviour
 {
     public static Shop instance;
     [Header("Shop-Items")]
-    
     [SerializeField] public GameObject bundle_1;
     [SerializeField] public GameObject bundle_2;
     public GameObject itemPrefab;
@@ -18,6 +18,14 @@ public class Shop : MonoBehaviour
 
     [Header("Holders")] 
     [SerializeField] private GameObject itemHolder;
+
+    [Header("Image")] 
+    [SerializeField] private Image coinIcon;
+    [SerializeField] private Image rowIcon;
+    [SerializeField] private Image colIcon; 
+    [SerializeField] private Image shapeIcon;
+    [SerializeField] private Image squareIcon;
+    
 
     private void Awake()
     {
@@ -70,8 +78,13 @@ public class Shop : MonoBehaviour
             Debug.Log($"Consumable: {productId} -> Reward: {reward}");
 
             GameObject basicItem = Instantiate(itemPrefab, itemHolder.transform);
-            basicItem.transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text = reward.ToString();
+            basicItem.transform.Find("Offer").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text = reward.ToString();
         }
+    }
+
+    public void BuildBundleItem()
+    {
+        
     }
     
     
