@@ -114,6 +114,7 @@ public class GameSettingsRay
         [FirestoreProperty] public string SubscriptionNoAds { get; set; }
         [FirestoreProperty] public BundleData Bundle_1 { get; set; }
         [FirestoreProperty] public BundleData Bundle_2 { get; set; }
+
         public int ConsumableRewardById(string productId)
         {
             if (Consumables != null && Consumables.TryGetValue(productId, out int reward))

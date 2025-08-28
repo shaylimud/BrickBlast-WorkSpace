@@ -130,6 +130,13 @@ public class Shop : MonoBehaviour
         SetText(bundle_1, bundle.Booster_Square.ToString(), "2nd-offer-panel", "2ndOffer_2", "text-offer");
         SetText(bundle_1, bundle.Booster_Shape.ToString(), "2nd-offer-panel", "2ndOffer_3", "text-offer");
 
+        var bundle2 = Database.GameSettings.InAppPurchases.Bundle_2;
+        SetText(bundle_2, GetLocalizedPrice(bundle2.ID), "purchase-button", "text-price");
+        SetText(bundle_2, bundle2.Coins.ToString(), "mainOffer", "text-offer");
+        SetText(bundle_2, bundle2.Booster_Row.ToString(), "2nd-offer-panel", "2ndOffer", "text-offer");
+        SetText(bundle_2, bundle2.Booster_Col.ToString(), "2nd-offer-panel", "2ndOffer_1", "text-offer");
+        SetText(bundle_2, bundle2.Booster_Square.ToString(), "2nd-offer-panel", "2ndOffer_2", "text-offer");
+        SetText(bundle_2, bundle2.Booster_Shape.ToString(), "2nd-offer-panel", "2ndOffer_3", "text-offer");
     }
     
 }
