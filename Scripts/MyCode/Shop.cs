@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using Ray.Services;
 using TMPro;
 using UnityEngine;
@@ -61,9 +62,16 @@ public class Shop : MonoBehaviour
         return GetProduct(productId)?.metadata;
     }
 
-    public void BuildBasicItems()
+    public async void BuildBasicItems()
     {
         Debug.Log("Shay : Bulding UI 1");
+
+        while (Database.GameSettings == null ||
+               Database.GameSettings.InAppPurchases == null ||
+               Database.GameSettings.InAppPurchases.Consumables == null)
+        {
+            await Task.Yield();
+        }
 
         foreach (var productId in Database.GameSettings.InAppPurchases.Consumables.Keys)
         {
