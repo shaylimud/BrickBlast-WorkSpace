@@ -115,6 +115,27 @@ public class Shop : MonoBehaviour
         RefreshBundleItem();
     }
 
+    /// <summary>
+    /// Initiates a purchase for the specified product id by invoking the same
+    /// event used by <see cref="IAPService"/>. This mirrors the behaviour used
+    /// throughout the project for other in-app purchases.
+    /// </summary>
+    /// <param name="productId">The id of the product to purchase.</param>
+    public void PurchaseItem(string productId)
+    {
+        EventService.UI.OnIAPPurchaseBtn?.Invoke(this, productId);
+    }
+
+    /// <summary>
+    /// Convenience wrapper to purchase the first bundle.
+    /// </summary>
+    public void PurchaseBundle1() => PurchaseItem(Database.GameSettings.InAppPurchases.Bundle_1.ID);
+
+    /// <summary>
+    /// Convenience wrapper to purchase the second bundle.
+    /// </summary>
+    public void PurchaseBundle2() => PurchaseItem(Database.GameSettings.InAppPurchases.Bundle_2.ID);
+
 // While I generally prefer to avoid using Find(), in this case it helps reduce
 // excessive inspector references caused by the current prefab design.
 // Using Find() within smaller objects should not have a significant performance impact.
