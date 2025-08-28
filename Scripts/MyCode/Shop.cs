@@ -72,6 +72,30 @@ public class Shop : MonoBehaviour
         return GetProduct(productId)?.metadata;
     }
 
+    private void SetText(GameObject root, string value, params string[] path)
+    {
+        Transform current = root.transform;
+        foreach (var segment in path)
+        {
+            current = current?.Find(segment);
+            if (current == null)
+            {
+                Debug.LogWarning($"Transform path not found: {string.Join("/", path)}");
+                return;
+            }
+        }
+
+        var textComponent = current.GetComponent<TextMeshProUGUI>();
+        if (textComponent != null)
+        {
+            textComponent.text = value;
+        }
+        else
+        {
+            Debug.LogWarning($"TextMeshProUGUI not found at path {string.Join("/", path)}");
+        }
+    }
+
     public async void BuildBasicItems()
     {
         var sortedConsumables = Database.GameSettings.InAppPurchases.Consumables
@@ -84,10 +108,8 @@ public class Shop : MonoBehaviour
             Debug.Log($"Consumable: {productId} -> Reward: {reward}");
 
             GameObject basicItem = Instantiate(itemPrefab, itemHolder.transform);
-            basicItem.transform.Find("Offer").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text = reward.ToString();
-            basicItem.transform.Find("purchase-button").transform.Find("text-price").GetComponent<TextMeshProUGUI>()
-                    .text =
-                GetLocalizedPrice(productId);
+            SetText(basicItem, reward.ToString(), "Offer", "text-offer");
+            SetText(basicItem, GetLocalizedPrice(productId), "purchase-button", "text-price");
         }
 
         RefreshBundleItem();
@@ -96,20 +118,12 @@ public class Shop : MonoBehaviour
     public void RefreshBundleItem()
     {
         var bundle = Database.GameSettings.InAppPurchases.Bundle_1;
-        bundle_1.transform.Find("purchase-button").transform.Find("text-price").GetComponent<TextMeshProUGUI>()
-                .text =
-            GetLocalizedPrice(bundle.ID);
-        bundle_1.transform.Find("mainOffer").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
-            bundle.Coins.ToString();
-        var bundleOffer = bundle_1.transform.Find("2nd-offer-panel").transform;
-        bundleOffer.Find("2ndOffer").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
-            bundle.Booster_Row.ToString();
-        bundleOffer.Find("2ndOffer_1").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
-            bundle.Booster_Col.ToString();
-        bundleOffer.Find("2ndOffer_2").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
-            bundle.Booster_Square.ToString();
-        bundleOffer.Find("2ndOffer_3").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
-            bundle.Booster_Shape.ToString();
+        SetText(bundle_1, GetLocalizedPrice(bundle.ID), "purchase-button", "text-price");
+        SetText(bundle_1, bundle.Coins.ToString(), "mainOffer", "text-offer");
+        SetText(bundle_1, bundle.Booster_Row.ToString(), "2nd-offer-panel", "2ndOffer", "text-offer");
+        SetText(bundle_1, bundle.Booster_Col.ToString(), "2nd-offer-panel", "2ndOffer_1", "text-offer");
+        SetText(bundle_1, bundle.Booster_Square.ToString(), "2nd-offer-panel", "2ndOffer_2", "text-offer");
+        SetText(bundle_1, bundle.Booster_Shape.ToString(), "2nd-offer-panel", "2ndOffer_3", "text-offer");
 
     }
     
