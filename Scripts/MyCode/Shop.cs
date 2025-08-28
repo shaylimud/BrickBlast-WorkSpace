@@ -115,6 +115,11 @@ public class Shop : MonoBehaviour
         RefreshBundleItem();
     }
 
+// While I generally prefer to avoid using Find(), in this case it helps reduce
+// excessive inspector references caused by the current prefab design.
+// Using Find() within smaller objects should not have a significant performance impact.
+// TODO: Redesign the prefab structure to improve maintainability and eliminate the need for Find().
+
     public void RefreshBundleItem()
     {
         var bundle = Database.GameSettings.InAppPurchases.Bundle_1;
