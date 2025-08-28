@@ -131,6 +131,7 @@ public class GameSettingsRay
         [FirestoreProperty] public int Booster_Row { get; set; }
         [FirestoreProperty] public int Booster_Shape { get; set; }
         [FirestoreProperty] public int Booster_Square { get; set; }
+        [FirestoreProperty] public int Coins { get; set; }
         [FirestoreProperty] public string ID { get; set; }
     }
 

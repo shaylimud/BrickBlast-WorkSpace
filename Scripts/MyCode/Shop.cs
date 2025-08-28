@@ -11,7 +11,8 @@ using UnityEngine.UI;
 public class Shop : MonoBehaviour
 {
     public static Shop instance;
-    [Header("Shop-Items")]
+
+    [Header("Shop-Items")] 
     [SerializeField] public GameObject bundle_1;
     [SerializeField] public GameObject bundle_2;
     public GameObject itemPrefab;
@@ -84,13 +85,35 @@ public class Shop : MonoBehaviour
 
             GameObject basicItem = Instantiate(itemPrefab, itemHolder.transform);
             basicItem.transform.Find("Offer").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text = reward.ToString();
+            basicItem.transform.Find("purchase-button").transform.Find("text-price").GetComponent<TextMeshProUGUI>()
+                    .text =
+                GetLocalizedPrice(productId);
         }
+
+        RefreshBundleItem();
     }
 
-    public void BuildBundleItem()
+    public void RefreshBundleItem()
     {
-        
+        var bundle = Database.GameSettings.InAppPurchases.Bundle_1;
+        bundle_1.transform.Find("purchase-button").transform.Find("text-price").GetComponent<TextMeshProUGUI>()
+                .text =
+            GetLocalizedPrice(bundle.ID);
+        bundle_1.transform.Find("mainOffer").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
+            bundle.Coins.ToString();
+        var bundleOffer = bundle_1.transform.Find("2nd-offer-panel").transform;
+        bundleOffer.Find("2ndOffer").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
+            bundle.Booster_Row.ToString();
+        bundleOffer.Find("2ndOffer_1").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
+            bundle.Booster_Col.ToString();
+        bundleOffer.Find("2ndOffer_2").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
+            bundle.Booster_Square.ToString();
+        bundleOffer.Find("2ndOffer_3").transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
+            bundle.Booster_Shape.ToString();
+
     }
     
-    
 }
+
+
+
