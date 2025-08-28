@@ -55,9 +55,11 @@ public class Shop : MonoBehaviour
 
     public void BuildBasicItems()
     {
-        
-        GameObject basicItem = Instantiate(itemPrefab , itemHolder.transform);
-        itemPrefab.transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text = GetLocalizedPrice("ProductID");
+        foreach (var productId in Database.GameSettings.InAppPurchases.Consumables.Keys)
+        {
+            GameObject basicItem = Instantiate(itemPrefab, itemHolder.transform);
+            basicItem.transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text = GetLocalizedPrice(productId);
+        }
     }
     
     
