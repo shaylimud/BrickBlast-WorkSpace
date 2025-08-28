@@ -113,6 +113,7 @@ public class GameSettingsRay
         [FirestoreProperty] public Dictionary<string, int> Consumables { get; set; }
         [FirestoreProperty] public string SubscriptionNoAds { get; set; }
         [FirestoreProperty] public BundleData Bundle_1 { get; set; }
+        [FirestoreProperty] public BundleData Bundle_2 { get; set; }
 
         public int ConsumableRewardById(string productId)
         {
