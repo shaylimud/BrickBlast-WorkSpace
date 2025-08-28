@@ -66,10 +66,11 @@ public class Shop : MonoBehaviour
     {
         foreach (var productId in Database.GameSettings.InAppPurchases.Consumables.Keys)
         {
-            Debug.Log("Shay : Bulding UI");
+            int reward = Database.GameSettings.InAppPurchases.ConsumableRewardById(productId);
+            Debug.Log($"Consumable: {productId} -> Reward: {reward}");
+
             GameObject basicItem = Instantiate(itemPrefab, itemHolder.transform);
-            basicItem.transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text =
-                Database.GameSettings.InAppPurchases.ConsumableRewardById(productId).ToString();
+            basicItem.transform.Find("text-offer").GetComponent<TextMeshProUGUI>().text = reward.ToString();
         }
     }
     
