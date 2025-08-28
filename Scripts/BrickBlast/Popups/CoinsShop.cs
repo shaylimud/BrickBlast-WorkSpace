@@ -93,8 +93,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             // StopInteration();
 #if UNITY_WEBGL
             GameManager.instance.PurchaseSucceeded(id);
-#else
-            IAPManager.instance.BuyProduct(id);
+
 #endif
         }
 

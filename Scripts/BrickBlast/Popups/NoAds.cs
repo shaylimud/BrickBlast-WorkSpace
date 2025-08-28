@@ -31,11 +31,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             
             if (priceText != null)
             {
-                string price = IAPManager.instance.GetProductLocalizedPriceString(productID.ID);
-                if (!string.IsNullOrEmpty(price))
-                {
-                    priceText.text = price;
-                }
+  
             }
         }
 
@@ -55,7 +51,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 
         private void RemoveAds()
         {
-            IAPManager.instance.BuyProduct(productID.ID);
         }
     }
 }

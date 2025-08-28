@@ -52,7 +52,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         private void OnEnable()
         {
-            IAPManager.SubscribeToPurchaseEvent(PurchaseSucceeded);
 
             if (!IsTutorialShown() && !GameDataManager.isTestPlay)
             {
@@ -62,7 +61,6 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         private void OnDisable()
         {
-            IAPManager.UnsubscribeFromPurchaseEvent(PurchaseSucceeded);
             GameDataManager.isTestPlay = false; // Reset isTestPlay
         }
 
@@ -90,13 +88,8 @@ namespace BlockPuzzleGameToolkit.Scripts.System
                     OnInitializeError
                 );
                 // Initialize IAP directly if InitializeGamingServices is not used
-                await IAPManager.instance?.InitializePurchasing(products);
             }
-
-            if (GameSettings.enableAds && IsNoAdsPurchased())
-            {
-                AdsManager.instance.RemoveAds();
-            }
+            
 
             if (GameDataManager.isTestPlay)
             {
@@ -180,10 +173,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
             purchaseSucceded?.Invoke(id);
         }
 
-        public bool IsNoAdsPurchased()
-        {
-            return !GameSettings.enableAds || IsPurchased(noAdsProduct.ID);
-        }
+
 
         public void SetGameMode(EGameMode gameMode)
         {
@@ -227,13 +217,8 @@ namespace BlockPuzzleGameToolkit.Scripts.System
             if (!GameSettings.enableInApps) return;
             
             this.OnPurchasesRestored = OnPurchasesRestored;
-            IAPManager.instance?.RestorePurchases(OnPurchasesRestored);
         }
 
-        public bool IsPurchased(string id)
-        {
-            if (!GameSettings.enableInApps) return false;
-            return IAPManager.instance?.IsProductPurchased(id) ?? false;
-        }
+
     }
 }

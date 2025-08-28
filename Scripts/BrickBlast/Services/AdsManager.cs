@@ -53,7 +53,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Services
                         var adUnit = new AdUnit { PlacementId = adElement.placementId, AdReference = adElement.adReference, AdsHandler = t.adsHandler };
                         adUnit.OnInitialized = placementId => adUnit.Load();
                         adUnits.Add(adUnit);
-                        if (adUnit.AdReference.adType == EAdType.Banner && !GameManager.instance.IsNoAdsPurchased())
                         {
                             adUnit.Show();
                         }
@@ -101,10 +100,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Services
 
         private void OnPopupTrigger(Popup popup, bool open)
         {
-            if (GameManager.instance.IsNoAdsPurchased())
-            {
-                return;
-            }
+
 
             foreach (var ad in adList)
             {

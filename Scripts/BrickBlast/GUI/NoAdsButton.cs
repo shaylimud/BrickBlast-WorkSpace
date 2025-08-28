@@ -20,10 +20,7 @@ namespace BlockPuzzleGameToolkit.Scripts.GUI
     {
         protected override void OnEnable()
         {
-            if (GameManager.instance.IsNoAdsPurchased())
-            {
-                gameObject.SetActive(false);
-            }
+
 
             base.OnEnable();
             onClick.AddListener(() =>

@@ -39,11 +39,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             BuyItemButton?.onClick.AddListener(BuyCoins);
             if (productID != null)
             {
-                var priceValue = IAPManager.instance.GetProductLocalizedPrice(productID.ID);
-                if (priceValue > 0.01m)
-                {
-                    price.text = IAPManager.instance.GetProductLocalizedPriceString(productID.ID);
-                }
+     
             }
         }
 
