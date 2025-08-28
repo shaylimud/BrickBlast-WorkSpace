@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Ray.Services;
@@ -72,9 +73,13 @@ public class Shop : MonoBehaviour
 
     public async void BuildBasicItems()
     {
-        foreach (var productId in Database.GameSettings.InAppPurchases.Consumables.Keys)
+        var sortedConsumables = Database.GameSettings.InAppPurchases.Consumables
+            .OrderBy(consumable => consumable.Value);
+
+        foreach (var consumable in sortedConsumables)
         {
-            int reward = Database.GameSettings.InAppPurchases.ConsumableRewardById(productId);
+            string productId = consumable.Key;
+            int reward = consumable.Value;
             Debug.Log($"Consumable: {productId} -> Reward: {reward}");
 
             GameObject basicItem = Instantiate(itemPrefab, itemHolder.transform);
