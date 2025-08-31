@@ -208,6 +208,26 @@ public class Shop : MonoBehaviour
             GameObject basicItem = Instantiate(itemPrefab, itemHolder.transform);
             SetText(basicItem, reward.ToString(), "Offer", "text-offer");
             SetText(basicItem, GetLocalizedPrice(productId), "purchase-button", "text-price");
+
+            // Hook up the purchase button so the correct product is bought
+            var buttonTransform = basicItem.transform.Find("purchase-button");
+            if (buttonTransform != null)
+            {
+                var button = buttonTransform.GetComponent<Button>();
+                if (button != null)
+                {
+                    string id = productId;
+                    button.onClick.AddListener(() => PurchaseProduct(id));
+                }
+                else
+                {
+                    Debug.LogWarning("Button component missing on purchase-button");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("purchase-button transform not found on basic item");
+            }
         }
 
         RefreshBundleItem();
