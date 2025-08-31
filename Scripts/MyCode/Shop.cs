@@ -33,6 +33,13 @@ public class Shop : MonoBehaviour
     [SerializeField] private Image colIcon; 
     [SerializeField] private Image shapeIcon;
     [SerializeField] private Image squareIcon;
+    
+    
+    [Header("Shop Screens")]
+    [SerializeField] private RectTransform shopScreen;
+    [SerializeField] private RectTransform shopScreen2;
+    [SerializeField] private RectTransform shopScreen3;
+
 
     private void Awake()
     {
