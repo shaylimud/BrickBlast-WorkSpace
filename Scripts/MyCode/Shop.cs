@@ -24,6 +24,11 @@ public class Shop : MonoBehaviour
     [SerializeField] private GameObject shopScreen1;
     [SerializeField] private GameObject shopScreen2;
     [SerializeField] private GameObject shopScreen3;
+
+    private RectTransform screensContent;
+    private RectTransform[] screenRects;
+    private Vector2[] screenOffsets;
+    private int currentScreenIndex = 1; // shopScreen2 starts in view
     
     [Header("Image")] 
     [SerializeField] private Image coinIcon;
@@ -31,11 +36,65 @@ public class Shop : MonoBehaviour
     [SerializeField] private Image colIcon; 
     [SerializeField] private Image shapeIcon;
     [SerializeField] private Image squareIcon;
-    
 
     private void Awake()
     {
         instance = this;
+    }
+
+    private void Start()
+    {
+        screensContent = shopScreen1.transform.parent as RectTransform;
+        screenRects = new[]
+        {
+            shopScreen1.GetComponent<RectTransform>(),
+            shopScreen2.GetComponent<RectTransform>(),
+            shopScreen3.GetComponent<RectTransform>()
+        };
+
+        // capture the initial local positions of the screens relative to the
+        // middle screen (which starts in view) so we know how far the content
+        // needs to move to bring each into view later.
+        var midPos = (Vector2)screenRects[currentScreenIndex].localPosition;
+        screenOffsets = screenRects
+            .Select(rect => (Vector2)rect.localPosition - midPos)
+            .ToArray();
+
+        MoveToScreen(currentScreenIndex);
+    }
+
+    public void MoveRight()
+    {
+        if (currentScreenIndex >= screenRects.Length - 1)
+        {
+            return;
+        }
+
+        currentScreenIndex++;
+        MoveToScreen(currentScreenIndex);
+    }
+
+    public void MoveLeft()
+    {
+        if (currentScreenIndex <= 0)
+        {
+            return;
+        }
+
+        currentScreenIndex--;
+        MoveToScreen(currentScreenIndex);
+    }
+
+    private void MoveToScreen(int index)
+    {
+        if (screensContent == null || screenOffsets == null || index < 0 || index >= screenOffsets.Length)
+        {
+            return;
+        }
+
+        var targetOffset = screenOffsets[index];
+        var current = screensContent.localPosition;
+        screensContent.localPosition = new Vector3(-targetOffset.x, -targetOffset.y, current.z);
     }
 
     private IStoreController StoreController
