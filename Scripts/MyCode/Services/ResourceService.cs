@@ -86,6 +86,7 @@ namespace Ray.Services
             await Database.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
+            RayBrickMediator.Instance?.RefreshShop(this);
         }
 
         public int UpgradeCost(UpgradeType upgradeType)
@@ -165,6 +166,7 @@ namespace Ray.Services
             await Database.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
+            RayBrickMediator.Instance?.RefreshShop(this);
         }
 
         public async void RewardBooster(BoosterType type)
@@ -190,6 +192,7 @@ namespace Ray.Services
             await Database.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
+            RayBrickMediator.Instance?.RefreshShop(this);
         }
 
         public void ConsumeBooster(BoosterType type)
@@ -211,6 +214,7 @@ namespace Ray.Services
             }
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
+            RayBrickMediator.Instance?.RefreshShop(this);
         }
 
         public async void RewardNoEnemies(Component c)
