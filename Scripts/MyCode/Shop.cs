@@ -21,15 +21,11 @@ public class Shop : MonoBehaviour
     [Header("Holders")] 
     [SerializeField] private GameObject itemHolder;
 
-    [SerializeField] private GameObject shopScreen1;
-    [SerializeField] private GameObject shopScreen2;
-    [SerializeField] private GameObject shopScreen3;
-
-    private RectTransform screensContent;
+    [SerializeField] private RectTransform screensContent;
     private RectTransform[] screenRects;
     private Vector2[] screenPositions;
-
-    private int currentScreenIndex = 1; // shopScreen2 starts in view
+    
+    private int currentScreenIndex = 0; // start on first screen
     
     [Header("Image")] 
     [SerializeField] private Image coinIcon;
@@ -45,14 +41,15 @@ public class Shop : MonoBehaviour
 
     private void Start()
     {
-        screensContent = shopScreen1.transform.parent as RectTransform;
-        screenRects = new[]
+        if (screensContent == null)
         {
-            shopScreen1.GetComponent<RectTransform>(),
-            shopScreen2.GetComponent<RectTransform>(),
-            shopScreen3.GetComponent<RectTransform>()
-        };
+            Debug.LogWarning("screensContent is not assigned.");
+            return;
+        }
 
+        screenRects = Enumerable.Range(0, screensContent.childCount)
+            .Select(i => screensContent.GetChild(i) as RectTransform)
+            .ToArray();
 
         // Cache the anchored positions of each screen so we can snap the
         // content to the correct spot when navigating between pages.
@@ -60,17 +57,6 @@ public class Shop : MonoBehaviour
             .Select(rect => rect.anchoredPosition)
             .ToArray();
 
-        MoveToScreen(currentScreenIndex);
-    }
-
-    public void MoveRight()
-    {
-        if (currentScreenIndex >= screenRects.Length - 1)
-        {
-            return;
-        }
-
-        currentScreenIndex++;
         MoveToScreen(currentScreenIndex);
     }
 
