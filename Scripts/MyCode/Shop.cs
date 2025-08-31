@@ -118,23 +118,33 @@ public class Shop : MonoBehaviour
     /// <summary>
     /// Initiates a purchase for the specified product id by invoking the same
     /// event used by <see cref="IAPService"/>. This mirrors the behaviour used
-    /// throughout the project for other in-app purchases.
+    /// throughout the project for other in-app purchases. The method is public
+    /// and accepts a string parameter so it can be hooked up to a button in the
+    /// Unity inspector.
     /// </summary>
     /// <param name="productId">The id of the product to purchase.</param>
-    public void PurchaseItem(string productId)
+    public void PurchaseProduct(string productId)
     {
         EventService.UI.OnIAPPurchaseBtn?.Invoke(this, productId);
     }
 
     /// <summary>
+    /// Backwards compatible wrapper for older references. Prefer using
+    /// <see cref="PurchaseProduct"/> instead.
+    /// </summary>
+    /// <param name="productId">The id of the product to purchase.</param>
+    [Obsolete("Use PurchaseProduct instead.")]
+    public void PurchaseItem(string productId) => PurchaseProduct(productId);
+
+    /// <summary>
     /// Convenience wrapper to purchase the first bundle.
     /// </summary>
-    public void PurchaseBundle1() => PurchaseItem(Database.GameSettings.InAppPurchases.Bundle_1.ID);
+    public void PurchaseBundle1() => PurchaseProduct(Database.GameSettings.InAppPurchases.Bundle_1.ID);
 
     /// <summary>
     /// Convenience wrapper to purchase the second bundle.
     /// </summary>
-    public void PurchaseBundle2() => PurchaseItem(Database.GameSettings.InAppPurchases.Bundle_2.ID);
+    public void PurchaseBundle2() => PurchaseProduct(Database.GameSettings.InAppPurchases.Bundle_2.ID);
 
 // While I generally prefer to avoid using Find(), in this case it helps reduce
 // excessive inspector references caused by the current prefab design.
