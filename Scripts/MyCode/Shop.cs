@@ -27,6 +27,8 @@ public class Shop : MonoBehaviour
 
     private RectTransform screensContent;
     private RectTransform[] screenRects;
+    private Vector2[] screenOffsets;
+
     private int currentScreenIndex = 1; // shopScreen2 starts in view
     
     [Header("Image")] 
@@ -50,6 +52,15 @@ public class Shop : MonoBehaviour
             shopScreen2.GetComponent<RectTransform>(),
             shopScreen3.GetComponent<RectTransform>()
         };
+
+
+        // capture the initial local positions of the screens relative to the
+        // middle screen (which starts in view) so we know how far the content
+        // needs to move to bring each into view later.
+        var midPos = (Vector2)screenRects[currentScreenIndex].localPosition;
+        screenOffsets = screenRects
+            .Select(rect => (Vector2)rect.localPosition - midPos)
+            .ToArray();
 
         MoveToScreen(currentScreenIndex);
     }
@@ -78,13 +89,23 @@ public class Shop : MonoBehaviour
 
     private void MoveToScreen(int index)
     {
+
+        if (screensContent == null || screenOffsets == null || index < 0 || index >= screenOffsets.Length)
+
         if (screensContent == null || screenRects == null || index < 0 || index >= screenRects.Length)
+
         {
             return;
         }
 
+
+        var targetOffset = screenOffsets[index];
+        var current = screensContent.localPosition;
+        screensContent.localPosition = new Vector3(-targetOffset.x, -targetOffset.y, current.z);
+
         var target = screenRects[index];
         screensContent.anchoredPosition = -target.anchoredPosition;
+
     }
 
     private IStoreController StoreController
