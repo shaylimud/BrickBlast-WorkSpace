@@ -53,8 +53,6 @@ namespace Ray.Controllers
             EventService.UI.OnMeterStart += RushMeter;
 
             EventService.Resource.OnMenuResourceChanged += Purchase;
-            EventService.IAP.OnPurchasedConsumable += Purchase;
-            EventService.IAP.OnPurchasedSubscriptionNoAds += Purchase;
 
             EventService.Level.OnStart += StartLevel;
 
@@ -84,8 +82,6 @@ namespace Ray.Controllers
             EventService.UI.OnMeterStart -= RushMeter;
 
             EventService.Resource.OnMenuResourceChanged -= Purchase;
-            EventService.IAP.OnPurchasedConsumable -= Purchase;
-            EventService.IAP.OnPurchasedSubscriptionNoAds -= Purchase;
 
             EventService.Level.OnStart -= StartLevel;
 
