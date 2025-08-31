@@ -41,6 +41,9 @@ public class Shop : MonoBehaviour
     [SerializeField] private RectTransform shopScreen3;
 
 
+    private readonly Vector2 offScreenPosition = new Vector2(1200f, -1200f);
+
+
     private void Awake()
     {
         instance = this;
@@ -89,6 +92,44 @@ public class Shop : MonoBehaviour
         var targetPos = screenPositions[index];
         screensContent.anchoredPosition = targetPos;
 
+    }
+
+    public void ShowShop()
+    {
+        SetActiveScreen(shopScreen);
+    }
+
+    public void ShowShop1()
+    {
+        SetActiveScreen(shopScreen2);
+    }
+
+    public void ShowShop2()
+    {
+        SetActiveScreen(shopScreen3);
+    }
+
+    private void SetActiveScreen(RectTransform active)
+    {
+        if (active == null)
+        {
+            return;
+        }
+
+        if (shopScreen != null)
+        {
+            shopScreen.anchoredPosition = shopScreen == active ? Vector2.zero : offScreenPosition;
+        }
+
+        if (shopScreen2 != null)
+        {
+            shopScreen2.anchoredPosition = shopScreen2 == active ? Vector2.zero : offScreenPosition;
+        }
+
+        if (shopScreen3 != null)
+        {
+            shopScreen3.anchoredPosition = shopScreen3 == active ? Vector2.zero : offScreenPosition;
+        }
     }
 
     private IStoreController StoreController
