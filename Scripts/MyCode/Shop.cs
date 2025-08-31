@@ -21,6 +21,10 @@ public class Shop : MonoBehaviour
     [Header("Holders")] 
     [SerializeField] private GameObject itemHolder;
 
+    [SerializeField] private GameObject shopScreen1;
+    [SerializeField] private GameObject shopScreen2;
+    [SerializeField] private GameObject shopScreen3;
+    
     [Header("Image")] 
     [SerializeField] private Image coinIcon;
     [SerializeField] private Image rowIcon;
