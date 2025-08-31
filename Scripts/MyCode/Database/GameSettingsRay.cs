@@ -111,6 +111,7 @@ public class GameSettingsRay
     public class InAppPurchasesData
     {
         [FirestoreProperty] public Dictionary<string, int> Consumables { get; set; }
+        [FirestoreProperty] public Dictionary<string, BundleReward> Bundles { get; set; }
         [FirestoreProperty] public string SubscriptionNoAds { get; set; }
 
         public int ConsumableRewardById(string productId)
@@ -121,6 +122,22 @@ public class GameSettingsRay
             }
             return 0;
         }
+
+        public BundleReward BundleRewardById(string productId)
+        {
+            if (Bundles != null && Bundles.TryGetValue(productId, out var reward))
+            {
+                return reward;
+            }
+            return null;
+        }
+    }
+
+    [FirestoreData]
+    public class BundleReward
+    {
+        [FirestoreProperty] public int Currency { get; set; }
+        [FirestoreProperty] public Dictionary<string, int> Boosters { get; set; }
     }
 
     [FirestoreData]

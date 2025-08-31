@@ -287,6 +287,33 @@ namespace Ray.Services
             var saveData = Database.UserData.Copy();
             saveData.Stats.TotalCurrency += rewardAmount;
 
+            var bundleReward = Database.GameSettings.InAppPurchases.BundleRewardById(product.definition.id);
+            if (bundleReward != null && bundleReward.Boosters != null)
+            {
+                foreach (var booster in bundleReward.Boosters)
+                {
+                    if (Enum.TryParse(booster.Key, out BoosterType boosterType))
+                    {
+                        int amount = booster.Value;
+                        switch (boosterType)
+                        {
+                            case BoosterType.ClearRow:
+                                saveData.Stats.Power_1 = Mathf.Clamp(saveData.Stats.Power_1 + amount, 0, 99);
+                                break;
+                            case BoosterType.ClearColumn:
+                                saveData.Stats.Power_2 = Mathf.Clamp(saveData.Stats.Power_2 + amount, 0, 99);
+                                break;
+                            case BoosterType.ClearSquare:
+                                saveData.Stats.Power_3 = Mathf.Clamp(saveData.Stats.Power_3 + amount, 0, 99);
+                                break;
+                            case BoosterType.ChangeShape:
+                                saveData.Stats.Power_4 = Mathf.Clamp(saveData.Stats.Power_4 + amount, 0, 99);
+                                break;
+                        }
+                    }
+                }
+            }
+
             await Database.Instance.Save(saveData);
 
             EventService.IAP.OnPurchasedConsumable.Invoke(this);
