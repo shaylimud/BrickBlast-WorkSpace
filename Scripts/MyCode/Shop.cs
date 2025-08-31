@@ -24,6 +24,10 @@ public class Shop : MonoBehaviour
     [SerializeField] private GameObject shopScreen1;
     [SerializeField] private GameObject shopScreen2;
     [SerializeField] private GameObject shopScreen3;
+
+    private RectTransform screensContent;
+    private RectTransform[] screenRects;
+    private int currentScreenIndex = 1; // shopScreen2 starts in view
     
     [Header("Image")] 
     [SerializeField] private Image coinIcon;
@@ -31,11 +35,56 @@ public class Shop : MonoBehaviour
     [SerializeField] private Image colIcon; 
     [SerializeField] private Image shapeIcon;
     [SerializeField] private Image squareIcon;
-    
 
     private void Awake()
     {
         instance = this;
+    }
+
+    private void Start()
+    {
+        screensContent = shopScreen1.transform.parent as RectTransform;
+        screenRects = new[]
+        {
+            shopScreen1.GetComponent<RectTransform>(),
+            shopScreen2.GetComponent<RectTransform>(),
+            shopScreen3.GetComponent<RectTransform>()
+        };
+
+        MoveToScreen(currentScreenIndex);
+    }
+
+    public void MoveRight()
+    {
+        if (currentScreenIndex >= screenRects.Length - 1)
+        {
+            return;
+        }
+
+        currentScreenIndex++;
+        MoveToScreen(currentScreenIndex);
+    }
+
+    public void MoveLeft()
+    {
+        if (currentScreenIndex <= 0)
+        {
+            return;
+        }
+
+        currentScreenIndex--;
+        MoveToScreen(currentScreenIndex);
+    }
+
+    private void MoveToScreen(int index)
+    {
+        if (screensContent == null || screenRects == null || index < 0 || index >= screenRects.Length)
+        {
+            return;
+        }
+
+        var target = screenRects[index];
+        screensContent.anchoredPosition = -target.anchoredPosition;
     }
 
     private IStoreController StoreController
