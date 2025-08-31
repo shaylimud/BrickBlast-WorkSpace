@@ -280,14 +280,37 @@ namespace Ray.Services
         {
             Debug.Log($"Unlock Content: {product.definition.id}");
 
-            if(product.definition.id == Database.GameSettings.InAppPurchases.SubscriptionNoAds)
+            var inApps = Database.GameSettings.InAppPurchases;
+
+            if (product.definition.id == inApps.SubscriptionNoAds)
             {
                 EventService.IAP.HandlePurchasedSubscriptionNoAds(this);
                 TenjinService.Instance.SendCompletedInAppPurchaseEvent(product, 1);
                 return;
             }
 
-            int rewardAmount = Database.GameSettings.InAppPurchases.ConsumableRewardById(product.definition.id);
+            // Handle bundle purchases
+            if (product.definition.id == inApps.Bundle_1.ID || product.definition.id == inApps.Bundle_2.ID)
+            {
+                var bundle = product.definition.id == inApps.Bundle_1.ID ? inApps.Bundle_1 : inApps.Bundle_2;
+
+                var bundleSave = Database.UserData.Copy();
+                bundleSave.Stats.TotalCurrency += bundle.Coins;
+                bundleSave.Stats.Power_1 = Mathf.Clamp(bundleSave.Stats.Power_1 + bundle.Booster_Row, 0, 99);
+                bundleSave.Stats.Power_2 = Mathf.Clamp(bundleSave.Stats.Power_2 + bundle.Booster_Col, 0, 99);
+                bundleSave.Stats.Power_3 = Mathf.Clamp(bundleSave.Stats.Power_3 + bundle.Booster_Square, 0, 99);
+                bundleSave.Stats.Power_4 = Mathf.Clamp(bundleSave.Stats.Power_4 + bundle.Booster_Shape, 0, 99);
+
+                await Database.Instance.Save(bundleSave);
+
+                EventService.IAP.HandlePurchasedConsumable(this);
+                EventService.Resource.OnMenuResourceChanged?.Invoke(this);
+
+                TenjinService.Instance.SendCompletedInAppPurchaseEvent(product, bundle.Coins);
+                return;
+            }
+
+            int rewardAmount = inApps.ConsumableRewardById(product.definition.id);
 
             var saveData = Database.UserData.Copy();
             saveData.Stats.TotalCurrency += rewardAmount;
