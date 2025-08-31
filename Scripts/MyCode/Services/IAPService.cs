@@ -282,7 +282,7 @@ namespace Ray.Services
 
             if(product.definition.id == Database.GameSettings.InAppPurchases.SubscriptionNoAds)
             {
-                EventService.IAP.OnPurchasedSubscriptionNoAds.Invoke(this);
+                EventService.IAP.HandlePurchasedSubscriptionNoAds(this);
                 TenjinService.Instance.SendCompletedInAppPurchaseEvent(product, 1);
                 return;
             }
@@ -294,7 +294,7 @@ namespace Ray.Services
 
             await Database.Instance.Save(saveData);
 
-            EventService.IAP.OnPurchasedConsumable.Invoke(this);
+            EventService.IAP.HandlePurchasedConsumable(this);
 
             TenjinService.Instance.SendCompletedInAppPurchaseEvent(product, rewardAmount);
         }

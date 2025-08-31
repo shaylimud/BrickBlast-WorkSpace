@@ -66,8 +66,6 @@ namespace Ray.Controllers
 
             // Shop
             EventService.IAP.OnIAPInitialized += CreateShopUI;
-            EventService.IAP.OnPurchasedSubscriptionNoAds += RefreshShop;
-            EventService.IAP.OnPurchasedConsumable += RefreshCurrencies;
 
             // Level
             EventService.Level.OnStart += HandleLevelStart;
@@ -127,8 +125,6 @@ namespace Ray.Controllers
             EventService.UI.OnStartBtn -= TryOfferNoEnemies;
 
             EventService.IAP.OnIAPInitialized -= CreateShopUI;
-            EventService.IAP.OnPurchasedSubscriptionNoAds -= RefreshShop;
-            EventService.IAP.OnPurchasedConsumable -= RefreshCurrencies;
 
             EventService.Level.OnStart -= HandleLevelStart;
             EventService.Player.OnNewTrackedReach -= RefreshLevelReach;

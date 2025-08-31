@@ -134,10 +134,9 @@ namespace Ray.Services
         public class IAPEvent
         {
             public UnityAction<Component> OnIAPInitialized;
-            public UnityAction<Component> OnPurchasedSubscriptionNoAds;
-            public UnityAction<Component> OnPurchasedConsumable;
             public UnityAction<Component> OnRestoreBtn;
-
+            public void HandlePurchasedSubscriptionNoAds(Component source) { }
+            public void HandlePurchasedConsumable(Component source) { }
         }
 
         public class BrightDataEvent
