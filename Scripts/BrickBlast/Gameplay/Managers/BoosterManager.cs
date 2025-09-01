@@ -24,6 +24,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         [SerializeField] private TextMeshProUGUI squareUsesText;
         [SerializeField] private TextMeshProUGUI changeShapeUsesText;
 
+        private GameObject rowOutline;
+        private GameObject columnOutline;
+        private GameObject squareOutline;
+        private GameObject changeShapeOutline;
+
         private Cell lastHighlightedCell;
         private Camera mainCamera;
         private BoosterType? activeBooster;
@@ -44,6 +49,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 Debug.Log("[BoosterManager] Main camera not found.");
             }
 
+            rowOutline = rowButton?.transform.Find("outline")?.gameObject;
+            columnOutline = columnButton?.transform.Find("outline")?.gameObject;
+            squareOutline = squareButton?.transform.Find("outline")?.gameObject;
+            changeShapeOutline = changeShapeButton?.transform.Find("outline")?.gameObject;
+
             if (rowButton != null)
                 rowButton.onClick.AddListener(() => SelectBooster(BoosterType.ClearRow));
             if (columnButton != null)
@@ -54,6 +64,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 changeShapeButton.onClick.AddListener(() => SelectBooster(BoosterType.ChangeShape));
 
             UpdateBoosterTexts();
+            SetOutlineVisibility(null);
         }
 
         private void OnDestroy()
@@ -85,6 +96,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             if (booster == BoosterType.ChangeShape)
             {
                 ChangeShapes();
+                SetOutlineVisibility(null);
                 return;
             }
 
@@ -93,10 +105,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 ClearRandomSquare();
                 ResourceService.Instance?.ConsumeBooster(BoosterType.ClearSquare);
                 UpdateBoosterTexts();
+                SetOutlineVisibility(null);
                 return;
             }
 
             activeBooster = booster;
+            SetOutlineVisibility(activeBooster);
         }
 
         private int GetBoosterCount(BoosterType booster)
@@ -122,6 +136,18 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             columnUsesText?.SetText(GetBoosterCount(BoosterType.ClearColumn).ToString());
             squareUsesText?.SetText(GetBoosterCount(BoosterType.ClearSquare).ToString());
             changeShapeUsesText?.SetText(GetBoosterCount(BoosterType.ChangeShape).ToString());
+        }
+
+        private void SetOutlineVisibility(BoosterType? booster)
+        {
+            if (rowOutline != null)
+                rowOutline.SetActive(booster == BoosterType.ClearRow);
+            if (columnOutline != null)
+                columnOutline.SetActive(booster == BoosterType.ClearColumn);
+            if (squareOutline != null)
+                squareOutline.SetActive(booster == BoosterType.ClearSquare);
+            if (changeShapeOutline != null)
+                changeShapeOutline.SetActive(booster == BoosterType.ChangeShape);
         }
 
         private void ChangeShapes()
@@ -256,6 +282,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                                 ResourceService.Instance?.ConsumeBooster(activeBooster.Value);
                                 UpdateBoosterTexts();
                                 activeBooster = null;
+                                SetOutlineVisibility(null);
                             }
                             lastHighlightedCell = null;
                             return;
