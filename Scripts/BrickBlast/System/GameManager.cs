@@ -51,7 +51,11 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         public override void Awake()
         {
             base.Awake();
-            DontDestroyOnLoad(this);
+            if (transform.parent != null)
+            {
+                transform.SetParent(null);
+            }
+            DontDestroyOnLoad(gameObject);
             Application.targetFrameRate = 60;
             DOTween.SetTweensCapacity(1250, 512);
         }

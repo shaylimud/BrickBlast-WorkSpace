@@ -34,6 +34,10 @@ namespace Ray.Controllers
             Instance = this;
 
             // Optional: Persist between scenes
+            if (transform.parent != null)
+            {
+                transform.SetParent(null);
+            }
             DontDestroyOnLoad(gameObject);
         }
 
