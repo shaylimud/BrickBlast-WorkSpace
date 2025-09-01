@@ -49,6 +49,20 @@ public class Shop : MonoBehaviour
         instance = this;
     }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void Init()
+    {
+        instance = null;
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
+    }
+
     private void Start()
     {
         if (screensContent == null)

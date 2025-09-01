@@ -35,6 +35,20 @@ namespace Ray.Controllers
             DontDestroyOnLoad(gameObject); // Optional: Keep UIController across scenes
         }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            Instance = null;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
+            }
+        }
+
         private void Start()
         {
             var save = SaveSystem.Load();

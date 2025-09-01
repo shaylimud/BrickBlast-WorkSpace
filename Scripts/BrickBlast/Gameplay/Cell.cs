@@ -23,6 +23,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
     public class Cell : MonoBehaviour
     {
         private static readonly Dictionary<string, ObjectPool<Item>> CustomItemPools = new();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            CustomItemPools.Clear();
+        }
         public Item item;
         private CanvasGroup group;
         public bool busy;

@@ -10,16 +10,31 @@ namespace Ray.Services
             DontDestroyOnLoad(gameObject);
         }
 
-        public static readonly ApplicationEvent Application = new ApplicationEvent();
-        public static readonly UIEvent UI = new UIEvent();
-        public static readonly LevelEvent Level = new LevelEvent();
-        public static readonly ItemEvent Item = new ItemEvent();
-        public static readonly PlayerEvent Player = new PlayerEvent();
-        public static readonly ResourceEvent Resource = new ResourceEvent();
-        public static readonly AdEvent Ad = new AdEvent();
-        public static readonly DatabaseEvent Database = new DatabaseEvent();
-        public static readonly IAPEvent IAP = new IAPEvent();
-        public static readonly BrightDataEvent Brd = new BrightDataEvent();
+        public static ApplicationEvent Application = new ApplicationEvent();
+        public static UIEvent UI = new UIEvent();
+        public static LevelEvent Level = new LevelEvent();
+        public static ItemEvent Item = new ItemEvent();
+        public static PlayerEvent Player = new PlayerEvent();
+        public static ResourceEvent Resource = new ResourceEvent();
+        public static AdEvent Ad = new AdEvent();
+        public static DatabaseEvent Database = new DatabaseEvent();
+        public static IAPEvent IAP = new IAPEvent();
+        public static BrightDataEvent Brd = new BrightDataEvent();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            Application = new ApplicationEvent();
+            UI = new UIEvent();
+            Level = new LevelEvent();
+            Item = new ItemEvent();
+            Player = new PlayerEvent();
+            Resource = new ResourceEvent();
+            Ad = new AdEvent();
+            Database = new DatabaseEvent();
+            IAP = new IAPEvent();
+            Brd = new BrightDataEvent();
+        }
 
         public class ApplicationEvent
         {

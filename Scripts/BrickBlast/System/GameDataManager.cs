@@ -26,6 +26,13 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public static bool isTestPlay = false;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            _level = null;
+            isTestPlay = false;
+        }
+
         private const string SubLevelKey = "SubLevelIndex";
 
         public static int GetSubLevelIndex()

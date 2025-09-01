@@ -23,6 +23,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
     public class SceneLoader : SingletonBehaviour<SceneLoader>
     {
         public static Action<Scene> OnSceneLoadedCallback;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            OnSceneLoadedCallback = null;
+        }
         private Loading loading;
         private Scene previouseScene;
 
