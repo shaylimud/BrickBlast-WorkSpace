@@ -22,6 +22,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Utils.ImageCreator.Editor
         static ImageCreator()
         {
             EditorApplication.hierarchyChanged += OnChanged;
+            AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
+        }
+
+        private static void OnBeforeAssemblyReload()
+        {
+            EditorApplication.hierarchyChanged -= OnChanged;
+            AssemblyReloadEvents.beforeAssemblyReload -= OnBeforeAssemblyReload;
         }
 
         private static void OnChanged()

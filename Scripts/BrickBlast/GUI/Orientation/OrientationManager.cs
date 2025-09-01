@@ -89,6 +89,11 @@ namespace BlockPuzzleGameToolkit.Scripts.GUI.Orientation
             EditorApplication.update -= EditorUpdate;
         }
 
+        private void OnDestroy()
+        {
+            EditorApplication.update -= EditorUpdate;
+        }
+
         private void EditorUpdate()
         {
             if (!detectInEditor || Application.isPlaying)

@@ -23,12 +23,19 @@ namespace BlockPuzzleGameToolkit.Scripts.Editor
     {
         static Autorun()
         {
-            EditorApplication.update += InitProject;
+            EditorApplication.delayCall += InitProject;
+            AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
+        }
+
+        private static void OnBeforeAssemblyReload()
+        {
+            EditorApplication.delayCall -= InitProject;
+            AssemblyReloadEvents.beforeAssemblyReload -= OnBeforeAssemblyReload;
         }
 
         private static void InitProject()
         {
-            EditorApplication.update -= InitProject;
+            EditorApplication.delayCall -= InitProject;
             if (EditorApplication.timeSinceStartup < 10 || !EditorPrefs.GetBool(Application.dataPath + "AlreadyOpened"))
             {
                 if (SceneManager.GetActiveScene().name != "game" && Directory.Exists("Assets/BlockPuzzleGameToolkit/Scenes"))
