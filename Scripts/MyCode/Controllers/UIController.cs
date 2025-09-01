@@ -32,6 +32,10 @@ namespace Ray.Controllers
             }
 
             Instance = this;
+            if (transform.parent != null)
+            {
+                transform.SetParent(null);
+            }
             DontDestroyOnLoad(gameObject); // Optional: Keep UIController across scenes
         }
 

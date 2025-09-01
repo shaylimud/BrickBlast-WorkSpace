@@ -5,6 +5,10 @@ public class UIEventMediator : MonoBehaviour
 {
     private void Awake()
     {
+        if (transform.parent != null)
+        {
+            transform.SetParent(null);
+        }
         DontDestroyOnLoad(gameObject);
     }
 

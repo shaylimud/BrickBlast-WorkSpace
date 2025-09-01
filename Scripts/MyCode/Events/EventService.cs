@@ -7,6 +7,10 @@ namespace Ray.Services
     {
         private void Awake()
         {
+            if (transform.parent != null)
+            {
+                transform.SetParent(null);
+            }
             DontDestroyOnLoad(gameObject);
         }
 

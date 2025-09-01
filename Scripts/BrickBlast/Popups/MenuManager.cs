@@ -32,7 +32,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         public override void Awake()
         {
             base.Awake();
-            DontDestroyOnLoad(this);
+            if (transform.parent != null)
+            {
+                transform.SetParent(null);
+            }
+            DontDestroyOnLoad(gameObject);
         }
 
         private void OnEnable()
