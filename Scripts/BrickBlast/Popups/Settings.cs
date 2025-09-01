@@ -109,6 +109,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             restorePurchase.gameObject.SetActive(GameManager.instance.GameSettings.enableInApps);
             shop.gameObject.SetActive(GameManager.instance.GameSettings.enableInApps);
         }
+        
 
         private void RestorePurchase()
         {
