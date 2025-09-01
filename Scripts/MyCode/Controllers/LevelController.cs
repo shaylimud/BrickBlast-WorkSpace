@@ -16,6 +16,18 @@ namespace Ray.Controllers
             EventService.Player.OnOutOfLevel += EndLevel;
             EventService.Ad.OnReviveDismissed += EndLevel;
             EventService.Ad.OnExtraSpaceDismissed += EndLevel;
+            EventService.Player.OnParked += EndLevel;
+        }
+
+        private void OnDisable()
+        {
+            EventService.Ad.OnNoEnemiesDismissed -= StartLevel;
+            EventService.Resource.OnNoEnemiesReceived -= StartLevel;
+
+            EventService.Player.OnOutOfLevel -= EndLevel;
+            EventService.Ad.OnReviveDismissed -= EndLevel;
+            EventService.Ad.OnExtraSpaceDismissed -= EndLevel;
+            EventService.Player.OnParked -= EndLevel;
         }
 
         private void StartLevel(Component c)
