@@ -192,6 +192,11 @@ namespace Ray.Controllers
         {
             _rayDebug.Event("RefreshMenu", c, this);
 
+            if (_element.Menu.MenuCurrency == null)
+            {
+                return;
+            }
+
             _view.PulseCurrency(_element.Menu.MenuCurrency, Database.UserData.Stats.TotalCurrency);
 
             _view.SetText(_element.Menu.ReachLevel, Database.UserData.Stats.Level);
@@ -335,6 +340,11 @@ namespace Ray.Controllers
         {
             _rayDebug.Event("RefreshShop", c, this);
 
+            if (_element.Shop.ShopCurrency == null)
+            {
+                return;
+            }
+
             _view.PulseCurrency(_element.Shop.ShopCurrency, Database.UserData.Stats.TotalCurrency);
 
          /*   if (IAPService.Instance.IsSubsribed(Database.GameSettings.InAppPurchases.SubscriptionNoAds))
@@ -460,6 +470,11 @@ namespace Ray.Controllers
         private void RefreshEnd(Component c)
         {
             _rayDebug.Event("RefreshEnd", c, this);
+
+            if (_element.End.EndCurrency == null)
+            {
+                return;
+            }
 
             _view.PulseCurrency(_element.End.EndCurrency, ResourceService.Instance.LevelCurrency.Value);
         }
