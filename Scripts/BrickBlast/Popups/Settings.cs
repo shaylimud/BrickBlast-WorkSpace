@@ -187,7 +187,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             StopInteration();
 
             Close();
-            GameManager.instance.MainMenu();
+
+            if (StateManager.instance.CurrentState != EScreenStates.MainMenu)
+            {
+                GameManager.instance.MainMenu();
+            }
         }
     }
 }
