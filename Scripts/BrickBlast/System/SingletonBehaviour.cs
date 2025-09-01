@@ -18,6 +18,12 @@ namespace BlockPuzzleGameToolkit.Scripts.System
     {
         private static T _instance;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            _instance = null;
+        }
+
         public static T instance
         {
             get

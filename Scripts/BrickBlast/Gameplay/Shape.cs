@@ -41,6 +41,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         private readonly Dictionary<Vector2Int, Item> customItems = new();
         private static readonly Dictionary<string, ObjectPool<Item>> CustomItemPools = new();
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            CustomItemPools.Clear();
+        }
+
         private void Awake()
         {
             initialTemplate = Resources.Load<ItemTemplate>("Items/ItemTemplate 0");

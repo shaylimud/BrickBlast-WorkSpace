@@ -27,6 +27,14 @@ namespace BlockPuzzleGameToolkit.Scripts.Services.IAP
         public static event Action<string> OnSuccessfulPurchase;
         public static event Action<bool, List<string>> OnRestorePurchasesFinished;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            storeController = null;
+            OnSuccessfulPurchase = null;
+            OnRestorePurchasesFinished = null;
+        }
+
         public void InitializePurchasing(IEnumerable<(string productId, ProductTypeWrapper.ProductType productType)> products)
         {
             if (IsInitialized())

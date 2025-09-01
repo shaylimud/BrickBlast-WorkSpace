@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using BlockPuzzleGameToolkit.Scripts.Enums;
+using UnityEngine;
 
 namespace BlockPuzzleGameToolkit.Scripts.System
 {
@@ -20,6 +21,14 @@ namespace BlockPuzzleGameToolkit.Scripts.System
     {
         // A dictionary to hold all events
         private static readonly Dictionary<EGameEvent, object> events = new();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            events.Clear();
+            OnGameStateChanged = null;
+            gameStatus = default;
+        }
 
         public static Event<T> GetEvent<T>(EGameEvent eventName)
         {

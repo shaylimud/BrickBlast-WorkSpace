@@ -41,6 +41,14 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         public static event PopupEvents OnClosePopup;
         public static event PopupEvents OnBeforeCloseAction;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            OnOpenPopup = null;
+            OnClosePopup = null;
+            OnBeforeCloseAction = null;
+        }
+
         private Action pendingOnShow;
         private Action<EPopupResult> pendingOnClose;
 

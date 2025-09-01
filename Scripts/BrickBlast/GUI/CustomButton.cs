@@ -31,6 +31,12 @@ namespace BlockPuzzleGameToolkit.Scripts.GUI
 
         private static bool blockInput;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            blockInput = false;
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();

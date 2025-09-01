@@ -37,6 +37,12 @@ namespace Ray.Controllers
             DontDestroyOnLoad(gameObject);
         }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            Instance = null;
+        }
+
         private void OnEnable()
         {
             EventService.UI.OnToggleSound += ToggleSounds;

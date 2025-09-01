@@ -20,6 +20,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay.Pool
     {
         protected static readonly Dictionary<string, PoolObject> pools = new();
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            pools.Clear();
+        }
+
         public GameObject prefab;
 
         protected Queue<GameObject> pool = new();

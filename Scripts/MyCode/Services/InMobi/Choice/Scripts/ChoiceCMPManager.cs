@@ -38,6 +38,18 @@ public class ChoiceCMPManager : MonoBehaviour
 
     #endregion ChoiceCMPEvents
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void Init()
+    {
+        CMPDidLoadEvent = null;
+        CMPDidShowEvent = null;
+        CMPDidErrorEvent = null;
+        CMPDidReceiveIABVendorConsentEvent = null;
+        CMPDidReceiveNonIABVendorConsentEvent = null;
+        CMPDidReceiveAdditionalConsentEvent = null;
+        CMPDidReceiveCCPAConsentEvent = null;
+    }
+
 
     // Singleton.
     public static ChoiceCMPManager Instance { get; protected set; }

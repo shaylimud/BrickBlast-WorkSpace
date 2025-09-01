@@ -24,6 +24,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
     public class HighlightManager : MonoBehaviour
     {
         private static readonly Dictionary<Item, ObjectPool<Item>> CustomItemPools = new();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            CustomItemPools.Clear();
+        }
         private readonly Dictionary<Cell, Item> highlightedCells = new();
         private readonly List<List<Cell>> highlightedFillCells = new();
         private readonly List<Outline> activeOutlines = new();
