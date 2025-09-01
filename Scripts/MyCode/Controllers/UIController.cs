@@ -95,11 +95,6 @@ namespace Ray.Controllers
             EventService.Player.OnHit += TryOfferRevive;
             EventService.Ad.OnReviveWatched += HandleOnReviveWatched;
 
-            // End
-            EventService.Player.OnParked += HandleLevelEnd;
-            EventService.Ad.OnTripleWatched += HandleOnTripleWatched;
-            EventService.Resource.OnEndCurrencyChanged += RefreshEnd;
-
             // Back to Menu
             EventService.UI.OnBackToMenu += HandleBackToMenu;
             EventService.UI.OnBackToMenu += RefreshCurrencies;
@@ -151,10 +146,6 @@ namespace Ray.Controllers
 
             EventService.Player.OnHit -= TryOfferRevive;
             EventService.Ad.OnReviveWatched -= HandleOnReviveWatched;
-
-            EventService.Player.OnParked -= HandleLevelEnd;
-            EventService.Ad.OnTripleWatched -= HandleOnTripleWatched;
-            EventService.Resource.OnEndCurrencyChanged -= RefreshEnd;
 
             EventService.UI.OnBackToMenu -= HandleBackToMenu;
             EventService.UI.OnBackToMenu -= RefreshCurrencies;
@@ -466,77 +457,6 @@ namespace Ray.Controllers
             _view.FadeOff(_element.Canvas.Revive);
         }
 
-        // End
-        private void RefreshEnd(Component c)
-        {
-            _rayDebug.Event("RefreshEnd", c, this);
-
-            if (_element.End.EndCurrency == null)
-            {
-                return;
-            }
-
-            _view.PulseCurrency(_element.End.EndCurrency, ResourceService.Instance.LevelCurrency.Value);
-        }
-        private void HandleLevelEnd(Component c)
-        {
-            _rayDebug.Event("TryOfferTriple", c, this);
-
-            _view.Show(_element.Canvas.End);
-            RefreshEnd(this);
-
-            if (ResourceService.Instance.LevelSpace.Value == 0)
-            {
-                _view.Show(_element.End.CtnrFullSpace);
-                _view.Hide(_element.End.CtnrPartialSpace);
-            }
-            else
-            {
-                _view.Show(_element.End.CtnrPartialSpace);
-                _view.Hide(_element.End.CtnrFullSpace);
-            }
-
-            if (RewardedService.Instance.IsRewardedReady(RewardedType.Triple)
-                && ResourceService.Instance.LevelCurrency.Value > 0)
-            {
-                _view.Show(_element.End.BtnTriple);
-                _view.Show(_element.End.InfoOfferTriple);
-
-                EventService.UI.OnMeterStart.Invoke(this);
-
-                StartCoroutine(_view.DepleteMeter(_element.End.MeterTriple, 3f, () =>
-                {
-                    _view.Hide(_element.End.BtnTriple);
-                    EventService.Ad.OnTripleDismissed.Invoke(this);
-                    EventService.UI.OnBackToMenu.Invoke(this);
-                }));
-            }
-            else
-            {
-                _view.Hide(_element.End.BtnTriple);
-                _view.Hide(_element.End.InfoOfferTriple);
-                EventService.Ad.OnTripleDismissed.Invoke(this);
-
-                StartCoroutine(_view.StandBy(1f, () =>
-                {
-                    EventService.UI.OnBackToMenu.Invoke(this);
-                }));
-            }
-        }
-        private void HandleOnTripleWatched(Component c)
-        {
-            _rayDebug.Event("HandleOnTripleWatched", c, this);
-
-            _view.Hide(_element.End.BtnTriple);
-            _view.Hide(_element.End.InfoOfferTriple);
-
-            EventService.UI.OnMeterStart.Invoke(this);
-
-            StartCoroutine(_view.StandBy(2, () =>
-            {
-                EventService.UI.OnBackToMenu.Invoke(this);
-            }));
-        }
         private void HandleBackToMenu(Component c)
         {
             _rayDebug.Event("HandleBackToMenu", c, this);
