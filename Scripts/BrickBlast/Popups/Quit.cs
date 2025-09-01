@@ -21,7 +21,35 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 
         private void OnEnable()
         {
-            yes.onClick.AddListener(Application.Quit);
+            if (yes == null)
+            {
+                var buttons = GetComponentsInChildren<CustomButton>(true);
+                foreach (var button in buttons)
+                {
+                    if (button != closeButton)
+                    {
+                        yes = button;
+                        break;
+                    }
+                }
+            }
+
+            if (yes != null)
+            {
+                yes.onClick.AddListener(Application.Quit);
+            }
+            else
+            {
+                Debug.LogWarning("Yes button is missing in Quit popup.", this);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (yes != null)
+            {
+                yes.onClick.RemoveListener(Application.Quit);
+            }
         }
     }
 }
