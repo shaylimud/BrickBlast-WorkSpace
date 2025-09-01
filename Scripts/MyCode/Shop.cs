@@ -23,9 +23,14 @@ public class Shop : MonoBehaviour
 
     [SerializeField] private RectTransform screensContent;
     private RectTransform[] screenRects;
-    private Vector2[] screenPositions;
-    
+
     private int currentScreenIndex = 0; // start on first screen
+
+    [Header("Screen Movement")]
+    [SerializeField] private float screenSpacing = 1000f;
+    [SerializeField] private float screenCenterY = 25f;
+    [SerializeField] private float transitionDuration = 0.25f;
+    private Coroutine moveCoroutine;
     
     [Header("Image")] 
     [SerializeField] private Image coinIcon;
@@ -39,9 +44,6 @@ public class Shop : MonoBehaviour
     [SerializeField] private RectTransform shopScreen;
     [SerializeField] private RectTransform shopScreen2;
     [SerializeField] private RectTransform shopScreen3;
-
-
-    private readonly Vector2 offScreenPosition = new Vector2(1200f, -1200f);
 
 
     private void Awake()
@@ -75,13 +77,9 @@ public class Shop : MonoBehaviour
             .Select(i => screensContent.GetChild(i) as RectTransform)
             .ToArray();
 
-        // Cache the anchored positions of each screen so we can snap the
-        // content to the correct spot when navigating between pages.
-        screenPositions = screenRects
-            .Select(rect => rect.anchoredPosition)
-            .ToArray();
-
-        MoveToScreen(currentScreenIndex);
+        // Ensure screens start in the correct positions relative to the
+        // current index.
+        SetScreenPositionsInstant(currentScreenIndex);
     }
 
     public void MoveLeft()
@@ -91,59 +89,83 @@ public class Shop : MonoBehaviour
             return;
         }
 
-        currentScreenIndex--;
-        MoveToScreen(currentScreenIndex);
+        MoveToScreen(currentScreenIndex - 1);
+    }
+
+    public void MoveRight()
+    {
+        if (screenRects == null || currentScreenIndex >= screenRects.Length - 1)
+        {
+            return;
+        }
+
+        MoveToScreen(currentScreenIndex + 1);
     }
 
     private void MoveToScreen(int index)
     {
-
-        if (screensContent == null || screenPositions == null || index < 0 || index >= screenPositions.Length)
+        if (screenRects == null || index < 0 || index >= screenRects.Length)
         {
             return;
         }
 
-        var targetPos = screenPositions[index];
-        screensContent.anchoredPosition = targetPos;
+        if (moveCoroutine != null)
+        {
+            StopCoroutine(moveCoroutine);
+        }
+        moveCoroutine = StartCoroutine(AnimateToScreen(index));
+    }
 
+    private System.Collections.IEnumerator AnimateToScreen(int targetIndex)
+    {
+        var startPositions = screenRects
+            .Select(rect => rect.anchoredPosition)
+            .ToArray();
+
+        float elapsed = 0f;
+        while (elapsed < transitionDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / transitionDuration);
+            for (int i = 0; i < screenRects.Length; i++)
+            {
+                Vector2 endPos = new Vector2((i - targetIndex) * screenSpacing, screenCenterY);
+                screenRects[i].anchoredPosition = Vector2.Lerp(startPositions[i], endPos, t);
+            }
+            yield return null;
+        }
+
+        currentScreenIndex = targetIndex;
+        SetScreenPositionsInstant(currentScreenIndex);
+        moveCoroutine = null;
+    }
+
+    private void SetScreenPositionsInstant(int activeIndex)
+    {
+        if (screenRects == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < screenRects.Length; i++)
+        {
+            screenRects[i].anchoredPosition = new Vector2((i - activeIndex) * screenSpacing, screenCenterY);
+        }
     }
 
     public void ShowShop()
     {
-        SetActiveScreen(shopScreen);
+        MoveToScreen(0);
     }
 
     public void ShowShop1()
     {
-        SetActiveScreen(shopScreen2);
+        MoveToScreen(1);
     }
 
     public void ShowShop2()
     {
-        SetActiveScreen(shopScreen3);
-    }
-
-    private void SetActiveScreen(RectTransform active)
-    {
-        if (active == null)
-        {
-            return;
-        }
-
-        if (shopScreen != null)
-        {
-            shopScreen.anchoredPosition = shopScreen == active ? Vector2.zero : offScreenPosition;
-        }
-
-        if (shopScreen2 != null)
-        {
-            shopScreen2.anchoredPosition = shopScreen2 == active ? Vector2.zero : offScreenPosition;
-        }
-
-        if (shopScreen3 != null)
-        {
-            shopScreen3.anchoredPosition = shopScreen3 == active ? Vector2.zero : offScreenPosition;
-        }
+        MoveToScreen(2);
     }
 
     private IStoreController StoreController
