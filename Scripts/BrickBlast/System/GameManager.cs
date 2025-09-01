@@ -40,6 +40,12 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         public Action<bool, List<string>> OnPurchasesRestored;
         public ProductID noAdsProduct;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void ResetTimeScale()
+        {
+            Time.timeScale = 1f;
+        }
+
         public int Score { get=> ResourceManager.instance.GetResource("Score").GetValue(); set => ResourceManager.instance.GetResource("Score").Set(value); }
 
         public override void Awake()
@@ -62,6 +68,7 @@ namespace BlockPuzzleGameToolkit.Scripts.System
         private void OnDisable()
         {
             GameDataManager.isTestPlay = false; // Reset isTestPlay
+            Time.timeScale = 1f; // Ensure time scale restored
         }
 
         private bool IsTutorialShown()
