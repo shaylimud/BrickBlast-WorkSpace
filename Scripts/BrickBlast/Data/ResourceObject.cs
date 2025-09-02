@@ -75,7 +75,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
                 {
                     var saveData = Database.UserData.Copy();
                     saveData.TotalCurrency += amount;
-                    await Database.Instance.Save(saveData);
+                    await SaveService.Instance.Save(saveData);
                 }
             }
             else
@@ -95,7 +95,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
                 {
                     var saveData = Database.UserData.Copy();
                     saveData.TotalCurrency = amount;
-                    await Database.Instance.Save(saveData);
+                    await SaveService.Instance.Save(saveData);
                 }
             }
             else
@@ -118,7 +118,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Data
                     {
                         var saveData = Database.UserData.Copy();
                         saveData.TotalCurrency -= amount;
-                        _ = Database.Instance.Save(saveData);
+                        _ = SaveService.Instance.Save(saveData);
                     }
                 }
                 else

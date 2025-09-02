@@ -130,7 +130,7 @@ public class UserData
     {
         var saveData = Database.UserData.Copy();
         saveData.TotalCurrency += amount;
-        await Database.Instance?.Save(saveData);
+        await SaveService.Instance.Save(saveData);
     }
 
     public async Task AddScoreAsCurrency(int score)
@@ -138,7 +138,7 @@ public class UserData
         var saveData = Database.UserData.Copy();
         saveData.Stats.TotalCurrency += score;
         saveData.Stats.TotalSessions++;
-        await Database.Instance?.Save(saveData);
+        await SaveService.Instance.Save(saveData);
     }
 
     public async Task<bool> SpendCurrency(int amount)
@@ -147,7 +147,7 @@ public class UserData
         {
             var saveData = Database.UserData.Copy();
             saveData.TotalCurrency -= amount;
-            await Database.Instance?.Save(saveData);
+            await SaveService.Instance.Save(saveData);
             return true;
         }
         return false;
@@ -161,7 +161,7 @@ public class UserData
         Level = value;
 
         var saveData = Database.UserData.Copy();
-        Database.Instance?.Save(saveData);
+        SaveService.Instance.Save(saveData);
     }
 
     public void SetGroupIndex(int value)
@@ -177,6 +177,6 @@ public class UserData
         }
 
         var saveData = Database.UserData.Copy();
-        Database.Instance?.Save(saveData);
+        SaveService.Instance.Save(saveData);
     }
 }

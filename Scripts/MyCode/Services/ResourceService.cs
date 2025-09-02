@@ -85,7 +85,7 @@ namespace Ray.Services
             if (upgradeType == UpgradeType.Reach) saveData.Stats.ReachLevel += upgradeProp.LevelIncrement;
             else saveData.Stats.SpaceLevel += upgradeProp.LevelIncrement;
 
-            await Database.Instance.Save(saveData);
+            await SaveService.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }
@@ -164,7 +164,7 @@ namespace Ray.Services
 
             saveData.Stats.TotalCurrency -= cost;
 
-            await Database.Instance.Save(saveData);
+            await SaveService.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }
@@ -189,7 +189,7 @@ namespace Ray.Services
                     break;
             }
 
-            await Database.Instance.Save(saveData);
+            await SaveService.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }
@@ -214,7 +214,7 @@ namespace Ray.Services
                     break;
             }
 
-            await Database.Instance.Save(saveData);
+            await SaveService.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
 
@@ -226,7 +226,7 @@ namespace Ray.Services
             _rayDebug.Event("RewardNoEnemies", c, this);
 
             var saveData = Database.UserData.Copy();
-            await Database.Instance.Save(saveData);
+            await SaveService.Instance.Save(saveData);
 
             NoEnemies.Value = true;
 
@@ -294,7 +294,7 @@ namespace Ray.Services
             saveData.Stats.TotalCurrency += DoubleAmount;
             LevelCurrency.Value *= 3;
 
-            await Database.Instance.Save(saveData);
+            await SaveService.Instance.Save(saveData);
 
             EventService.Resource.OnEndCurrencyChanged(this);
         }
@@ -308,7 +308,7 @@ namespace Ray.Services
             saveData.bightdData.RewardClaimed = true;
             saveData.Stats.TotalCurrency += Amount;
 
-            await Database.Instance.Save(saveData);
+            await SaveService.Instance.Save(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
         }
@@ -363,7 +363,7 @@ namespace Ray.Services
             saveData.Features.LastDailyGiftClaim = await TimeApiService.Instance.GetCurrentTime();
 
             BufferService.Instance.ReleaseBuffer();
-            await Database.Instance.Save(saveData);
+            await SaveService.Instance.Save(saveData);
             _rayDebug.Log($"Free gift claimed: +{giftAmount} coins!", this);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);

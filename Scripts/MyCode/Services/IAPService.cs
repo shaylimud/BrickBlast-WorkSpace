@@ -314,7 +314,7 @@ namespace Ray.Services
                 }
             }
 
-            await Database.Instance.Save(saveData);
+            await SaveService.Instance.Save(saveData);
 
             EventService.IAP.OnPurchasedConsumable.Invoke(this);
 
