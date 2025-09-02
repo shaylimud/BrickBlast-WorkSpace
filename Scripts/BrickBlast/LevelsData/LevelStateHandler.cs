@@ -3,6 +3,7 @@ using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.Gameplay;
 using BlockPuzzleGameToolkit.Scripts.System;
 using BlockPuzzleGameToolkit.Scripts.Popups;
+using Ray.Controllers;
 
 namespace BlockPuzzleGameToolkit.Scripts.LevelsData
 {
@@ -54,6 +55,8 @@ namespace BlockPuzzleGameToolkit.Scripts.LevelsData
 
         private protected virtual void HandleFailed(LevelManager levelManager)
         {
+            InterstitialService.Instance?.TryShowInter(levelManager);
+
             var failedPopup = levelManager.GetCurrentLevel().levelType.failedPopup;
             if (failedPopup != null)
             {
@@ -83,6 +86,8 @@ namespace BlockPuzzleGameToolkit.Scripts.LevelsData
 
         private protected virtual void HandleWin(LevelManager levelManager)
         {
+            InterstitialService.Instance?.TryShowInter(levelManager);
+
             var winPopup = levelManager.GetCurrentLevel().levelType.winPopup
                 ?? RayBrickMediator.Instance?.WinPopup;
 
