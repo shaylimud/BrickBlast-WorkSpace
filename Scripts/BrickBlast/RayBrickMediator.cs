@@ -141,12 +141,12 @@ using System.Collections.Generic;
                 fill.fillAmount = fillAmount;
             }
 
-            UpdateStar(star1, subLevel >= 2);
-            UpdateStar(star2, subLevel >= 3);
+            UpdateStar(star1, subLevel >= 2, "1");
+            UpdateStar(star2, subLevel >= 3, "2");
         }
 
 
-        private void UpdateStar(Transform parent, bool isFull)
+        private void UpdateStar(Transform parent, bool isFull, string label)
 
         {
             if (parent == null)
@@ -160,9 +160,12 @@ using System.Collections.Generic;
             GameObject prefab = isFull ? progStar_full : progStar_empty;
             if (prefab != null)
             {
-
-                Instantiate(prefab, parent, false);
-
+                var star = Instantiate(prefab, parent, false);
+                var text = star.transform.Find("Text")?.GetComponent<TextMeshProUGUI>();
+                if (text != null)
+                {
+                    text.text = label;
+                }
             }
         }
 
