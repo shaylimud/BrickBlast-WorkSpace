@@ -91,16 +91,24 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         private int GetBoosterCount(BoosterType booster)
         {
+            // Ensure user data and stats are available to avoid null reference errors
+            var stats = Database.UserData?.Stats;
+            if (stats == null)
+            {
+                Debug.LogWarning("[BoosterManager] User stats not loaded.");
+                return 0;
+            }
+
             switch (booster)
             {
                 case BoosterType.ClearRow:
-                    return Database.UserData.Stats.Power_1;
+                    return stats.Power_1;
                 case BoosterType.ClearColumn:
-                    return Database.UserData.Stats.Power_2;
+                    return stats.Power_2;
                 case BoosterType.ClearSquare:
-                    return Database.UserData.Stats.Power_3;
+                    return stats.Power_3;
                 case BoosterType.ChangeShape:
-                    return Database.UserData.Stats.Power_4;
+                    return stats.Power_4;
                 default:
                     return 0;
             }
