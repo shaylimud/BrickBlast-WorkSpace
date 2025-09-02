@@ -41,7 +41,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 
             if (currencyText != null)
             {
-                currencyText.text = GameManager.instance.Score.ToString();
+                currencyText.text = GameManager.instance.LastScore.ToString();
             }
 
             if (tripleRewardButton != null)
@@ -75,7 +75,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             rewardGranted = true;
             StopInteration();
 
-            await Database.UserData.AddScoreAsCurrency(GameManager.instance.Score);
+            await Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore);
             GameManager.instance.RestartLevel();
             Close();
         }
@@ -86,7 +86,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             rewardGranted = true;
             StopInteration();
 
-            await Database.UserData.AddScoreAsCurrency(GameManager.instance.Score);
+            await Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore);
             GameManager.instance.MainMenu();
             Close();
         }
@@ -105,7 +105,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             if (rewardGranted) return;
             rewardGranted = true;
 
-            await Database.UserData.AddScoreAsCurrency(GameManager.instance.Score * 3);
+            await Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore * 3);
             GameManager.instance.MainMenu();
             Close();
         }

@@ -10,8 +10,10 @@
 // // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // // THE SOFTWARE.
 
-using BlockPuzzleGameToolkit.Scripts.Gameplay;
 using BlockPuzzleGameToolkit.Scripts.GUI.Labels;
+
+using BlockPuzzleGameToolkit.Scripts.System;
+
 using UnityEngine;
 using System.Collections;
 
@@ -25,6 +27,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         protected override void OnEnable()
         {
             base.OnEnable();
+
+            int finalScore = GameManager.instance.LastScore;
 
             var modeHandler = FindObjectOfType<BaseModeHandler>(true);
             if (modeHandler == null)

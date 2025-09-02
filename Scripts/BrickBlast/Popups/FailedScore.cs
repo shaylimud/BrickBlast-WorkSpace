@@ -12,7 +12,11 @@
 
 using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.GUI.Labels;
+
+using BlockPuzzleGameToolkit.Scripts.System;
+
 using BlockPuzzleGameToolkit.Scripts.Gameplay;
+
 using UnityEngine;
 
 namespace BlockPuzzleGameToolkit.Scripts.Popups
@@ -33,11 +37,20 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             scoreObject.transform.position = scorePosition.position;
 
             var scoreComponent = scoreObject.GetComponent<TargetScoreGUIElement>();
+
+            if (scoreComponent != null)
+            {
+                int finalScore = GameManager.instance.LastScore;
+                scoreComponent.countText.text = finalScore.ToString();
+                scoreComponent.scoreSlider.maxValue = Mathf.Max(scoreComponent.scoreSlider.maxValue, finalScore);
+                scoreComponent.scoreSlider.value = finalScore;
+
             if (modeHandler != null && scoreComponent != null)
             {
                 scoreComponent.countText.text = modeHandler.score.ToString();
                 scoreComponent.scoreSlider.maxValue = Mathf.Max(scoreComponent.scoreSlider.maxValue, modeHandler.score);
                 scoreComponent.scoreSlider.value = modeHandler.score;
+
             }
         }
     }

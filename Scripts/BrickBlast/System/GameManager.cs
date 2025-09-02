@@ -48,6 +48,9 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public int Score { get=> ResourceManager.instance.GetResource("Score").GetValue(); set => ResourceManager.instance.GetResource("Score").Set(value); }
 
+        // Stores the score from the most recently completed session
+        public int LastScore { get; set; }
+
         public override void Awake()
         {
             base.Awake();

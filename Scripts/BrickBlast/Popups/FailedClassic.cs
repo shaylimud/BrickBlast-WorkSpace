@@ -11,6 +11,7 @@
 // // THE SOFTWARE.
 
 using BlockPuzzleGameToolkit.Scripts.Gameplay;
+using BlockPuzzleGameToolkit.Scripts.System;
 using TMPro;
 using UnityEngine;
 
@@ -29,8 +30,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         {
             base.OnEnable();
             modeHandler = FindObjectOfType<BaseModeHandler>(false);
-            var score = modeHandler.score;
-            var bestScore = modeHandler.bestScore;
+            var score = GameManager.instance.LastScore;
+            var bestScore = modeHandler != null ? modeHandler.bestScore : 0;
             scoreText[0].text = score.ToString();
             scoreText[1].text = score.ToString();
             bestScoreText.text = bestScore.ToString();
