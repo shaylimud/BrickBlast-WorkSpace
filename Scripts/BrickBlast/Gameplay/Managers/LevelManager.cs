@@ -91,6 +91,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         private int failedLevel;
         private int failedSubLevelIndex;
+        private bool winProcessed;
 
         private void OnEnable()
         {
@@ -216,6 +217,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         private void RestartLevel()
         {
+            winProcessed = false;
             comboCounter = 0;
             missCounter = 0;
             field.ShowOutline(false);
@@ -562,6 +564,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
         private void SetWin()
         {
+            if (winProcessed)
+                return;
+            winProcessed = true;
+
             var modeHandler = FindObjectOfType<BaseModeHandler>();
             if (modeHandler != null)
             {
