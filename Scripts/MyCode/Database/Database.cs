@@ -291,6 +291,15 @@ namespace Ray.Services
 
                 foreach (PropertyInfo prop in typeof(UserData.StatsData).GetProperties())
                 {
+                    // Level and HighestLevelReached are updated locally before a save occurs,
+                    // which causes a false mismatch when compared against the server snapshot.
+                    // Skip these fields when performing the cheat/mismatch detection.
+                    if (prop.Name == nameof(UserData.StatsData.Level) ||
+                        prop.Name == nameof(UserData.StatsData.HighestLevelReached))
+                    {
+                        continue;
+                    }
+
                     if (prop.PropertyType == typeof(int)) // Ensure property is an int before casting
                     {
                         int clientValue = (int)prop.GetValue(UserData.Stats);
