@@ -575,8 +575,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 ResourceService.Instance?.SubmitLevelScore(modeHandler.score);
             }
 
-            EventService.Player.OnParked?.Invoke(this);
-
             // Calculate the next stage using absolute level numbering to avoid
             // resetting to the first level when progressing within a group.
             int absoluteLevel = (Database.UserData.Stats.GroupIndex - 1) * 3 + Database.UserData.Stats.Level;
@@ -598,6 +596,9 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             }
             else
             {
+                // At the end of the third level, reward the player and show the end screen
+                EventService.Player.OnParked?.Invoke(this);
+
                 GameDataManager.UnlockGroup(currentGroup + 1);
                 GameDataManager.ResetSubLevelIndex();
 
