@@ -287,8 +287,6 @@ namespace Ray.Services
                         TaskScheduler.FromCurrentSynchronizationContext())
                     .Unwrap();
 
-                _saveQueue = _saveQueue.ContinueWith(_ => Save(saveData)).Unwrap();
-
                 return _saveQueue;
             }
         }
