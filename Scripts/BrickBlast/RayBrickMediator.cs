@@ -141,12 +141,12 @@ using System.Collections.Generic;
                 fill.fillAmount = fillAmount;
             }
 
-            UpdateStar(star1, subLevel >= 2);
-            UpdateStar(star2, subLevel >= 3);
+            UpdateStar(star1, subLevel >= 2, 1);
+            UpdateStar(star2, subLevel >= 3, 2);
         }
 
 
-        private void UpdateStar(Transform parent, bool isFull)
+        private void UpdateStar(Transform parent, bool isFull, int starNumber)
 
         {
             if (parent == null)
@@ -161,7 +161,16 @@ using System.Collections.Generic;
             if (prefab != null)
             {
 
-                Instantiate(prefab, parent, false);
+                GameObject starInstance = Instantiate(prefab, parent, false);
+                Transform textTransform = starInstance.transform.Find("Text");
+                if (textTransform != null)
+                {
+                    var tmp = textTransform.GetComponent<TextMeshProUGUI>();
+                    if (tmp != null)
+                    {
+                        tmp.text = starNumber.ToString();
+                    }
+                }
 
             }
         }
