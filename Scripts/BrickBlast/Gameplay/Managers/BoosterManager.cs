@@ -5,6 +5,8 @@ using BlockPuzzleGameToolkit.Scripts.LevelsData;
 using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.System;
 using Ray.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using static GameSettingsRay;
 
 namespace BlockPuzzleGameToolkit.Scripts.Gameplay
@@ -33,6 +35,9 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         private Camera mainCamera;
         private BoosterType? activeBooster;
 
+        private Button[] boosterButtons;
+        private readonly Dictionary<Button, Color> originalButtonColors = new();
+
         private void Awake()
         {
             Instance = this;
@@ -54,6 +59,13 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             squareOutline = squareButton?.transform.Find("outline")?.gameObject;
             changeShapeOutline = changeShapeButton?.transform.Find("outline")?.gameObject;
 
+            boosterButtons = new[] { rowButton, columnButton, squareButton, changeShapeButton };
+            foreach (var btn in boosterButtons)
+            {
+                if (btn != null)
+                    originalButtonColors[btn] = btn.image.color;
+            }
+
             if (rowButton != null)
                 rowButton.onClick.AddListener(() => SelectBooster(BoosterType.ClearRow));
             if (columnButton != null)
@@ -72,7 +84,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             if (Instance == this) Instance = null;
         }
 
-        public void SelectBooster(BoosterType booster)
+        public async void SelectBooster(BoosterType booster)
         {
             // Prevent using boosters when the player has none available
             if (GetBoosterCount(booster) <= 0)
@@ -93,9 +105,20 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 return;
             }
 
+            Button selectedButton = booster switch
+            {
+                BoosterType.ClearRow => rowButton,
+                BoosterType.ClearColumn => columnButton,
+                BoosterType.ClearSquare => squareButton,
+                BoosterType.ChangeShape => changeShapeButton,
+                _ => null
+            };
+
+            SetBoosterButtonsState(selectedButton);
+
             if (booster == BoosterType.ChangeShape)
             {
-                ChangeShapes();
+                await ChangeShapes();
                 SetOutlineVisibility(null);
                 return;
             }
@@ -103,9 +126,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             if (booster == BoosterType.ClearSquare)
             {
                 ClearRandomSquare();
-                ResourceService.Instance?.ConsumeBooster(BoosterType.ClearSquare);
+                if (ResourceService.Instance != null)
+                    await ResourceService.Instance.ConsumeBooster(BoosterType.ClearSquare);
                 UpdateBoosterTexts();
                 SetOutlineVisibility(null);
+                ResetBoosterButtons();
                 return;
             }
 
@@ -150,16 +175,42 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                 changeShapeOutline.SetActive(booster == BoosterType.ChangeShape);
         }
 
-        private void ChangeShapes()
+        private void SetBoosterButtonsState(Button selected)
+        {
+            foreach (var btn in boosterButtons)
+            {
+                if (btn == null) continue;
+                btn.interactable = false;
+                if (originalButtonColors.TryGetValue(btn, out var color))
+                {
+                    btn.image.color = btn == selected ? color : Color.gray;
+                }
+            }
+        }
+
+        private void ResetBoosterButtons()
+        {
+            foreach (var btn in boosterButtons)
+            {
+                if (btn == null) continue;
+                btn.interactable = true;
+                if (originalButtonColors.TryGetValue(btn, out var color))
+                    btn.image.color = color;
+            }
+        }
+
+        private async Task ChangeShapes()
         {
             var deckManager = FindObjectOfType<CellDeckManager>();
             if (deckManager != null)
             {
                 deckManager.UpdateCellDeckAfterFail();
             }
-            ResourceService.Instance?.ConsumeBooster(BoosterType.ChangeShape);
+            if (ResourceService.Instance != null)
+                await ResourceService.Instance.ConsumeBooster(BoosterType.ChangeShape);
             UpdateBoosterTexts();
             activeBooster = null;
+            ResetBoosterButtons();
         }
 
         private void Update()
@@ -242,7 +293,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         }
 
 
-        private void HighlightCell(Cell cell)
+        private async void HighlightCell(Cell cell)
         {
             Debug.Log("[BoosterManager] Highlighting cell.");
             if (lastHighlightedCell != null)
@@ -272,17 +323,19 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
                                     FillColumn(col);
                                     break;
                                 case BoosterType.ChangeShape:
-                                    ChangeShapes();
+                                    await ChangeShapes();
                                     break;
                             }
                             UpdateBoosterTexts();
 
                             if (activeBooster.HasValue)
                             {
-                                ResourceService.Instance?.ConsumeBooster(activeBooster.Value);
+                                if (ResourceService.Instance != null)
+                                    await ResourceService.Instance.ConsumeBooster(activeBooster.Value);
                                 UpdateBoosterTexts();
                                 activeBooster = null;
                                 SetOutlineVisibility(null);
+                                ResetBoosterButtons();
                             }
                             lastHighlightedCell = null;
                             return;
