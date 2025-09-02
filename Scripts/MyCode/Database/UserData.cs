@@ -141,6 +141,8 @@ public class UserData
             saveData.Stats.HighestLevelReached = absoluteLevel;
         }
 
+        // Update the runtime copy immediately so subsequent code sees the new level
+        Database.UserData = saveData;
         Database.Instance?.Save(saveData);
     }
 
@@ -155,6 +157,8 @@ public class UserData
             saveData.Stats.HighestLevelReached = absoluteLevel;
         }
 
+        // Ensure local data reflects the new group before saving asynchronously
+        Database.UserData = saveData;
         Database.Instance?.Save(saveData);
     }
 }
