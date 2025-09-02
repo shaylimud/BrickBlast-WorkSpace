@@ -222,13 +222,10 @@ namespace Ray.Services
             }
 
             // Apply the change locally so text updates immediately instead of after the next use
-
-            
-            await Database.Instance.QueueSave(saveData);
-
             Database.UserData = saveData;
-            await Database.Instance.QueueSave(saveData, false);
 
+            // Save without showing the buffer screen
+            await Database.Instance.QueueSave(saveData, false);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
             RayBrickMediator.Instance?.RefreshShop(this);
