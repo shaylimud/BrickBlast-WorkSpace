@@ -432,7 +432,7 @@ namespace Ray.Services
             UserData.Stats.TotalCurrency++;
 
             var saveData = Database.UserData.Copy();
-            await Database.Instance.Save(saveData);
+            await SaveService.Instance.Save(saveData);
         }
 
         // Development
