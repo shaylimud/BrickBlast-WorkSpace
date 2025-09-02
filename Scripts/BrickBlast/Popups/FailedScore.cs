@@ -45,12 +45,14 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
                 scoreComponent.scoreSlider.maxValue = Mathf.Max(scoreComponent.scoreSlider.maxValue, finalScore);
                 scoreComponent.scoreSlider.value = finalScore;
 
-            if (modeHandler != null && scoreComponent != null)
-            {
-                scoreComponent.countText.text = modeHandler.score.ToString();
-                scoreComponent.scoreSlider.maxValue = Mathf.Max(scoreComponent.scoreSlider.maxValue, modeHandler.score);
-                scoreComponent.scoreSlider.value = modeHandler.score;
+                if (modeHandler != null && scoreComponent != null)
+                {
+                    scoreComponent.countText.text = modeHandler.score.ToString();
+                    scoreComponent.scoreSlider.maxValue =
+                        Mathf.Max(scoreComponent.scoreSlider.maxValue, modeHandler.score);
+                    scoreComponent.scoreSlider.value = modeHandler.score;
 
+                }
             }
         }
     }

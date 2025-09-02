@@ -13,9 +13,10 @@
 using BlockPuzzleGameToolkit.Scripts.GUI.Labels;
 
 using BlockPuzzleGameToolkit.Scripts.System;
-
+using BlockPuzzleGameToolkit;
 using UnityEngine;
 using System.Collections;
+using BlockPuzzleGameToolkit.Scripts.Gameplay;
 
 namespace BlockPuzzleGameToolkit.Scripts.Popups
 {
@@ -37,7 +38,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
                 return;
             }
 
-            int finalScore = modeHandler.score;
+            finalScore = modeHandler.score;
 
             // Set up the total score and animate
             scoreSlider.totalText.text = finalScore.ToString();
