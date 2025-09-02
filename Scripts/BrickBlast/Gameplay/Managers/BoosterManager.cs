@@ -62,7 +62,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             boosterButtons = new[] { rowButton, columnButton, squareButton, changeShapeButton };
             foreach (var btn in boosterButtons)
             {
-                if (btn != null)
+                if (btn != null && btn.image != null)
                     originalButtonColors[btn] = btn.image.color;
             }
 
