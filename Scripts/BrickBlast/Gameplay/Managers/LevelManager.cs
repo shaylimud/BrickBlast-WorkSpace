@@ -570,7 +570,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
 
             EventService.Player.OnParked?.Invoke(this);
 
-            int nextLevel = Database.UserData.Stats.Level + 1;
+            // Calculate the next stage using absolute level numbering to avoid
+            // resetting to the first level when progressing within a group.
+            int absoluteLevel = (Database.UserData.Stats.GroupIndex - 1) * 3 + Database.UserData.Stats.Level;
+            int nextLevel = absoluteLevel + 1;
             Database.UserData.SetLevel(nextLevel);
             GameDataManager.SetLevel(null);
 
@@ -587,7 +590,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             }
             else
             {
-                int currentGroup = Mathf.CeilToInt(currentLevel / 3f);
+                int currentGroup = Database.UserData.Stats.GroupIndex;
                 GameDataManager.UnlockGroup(currentGroup + 1);
                 GameDataManager.ResetSubLevelIndex();
 
