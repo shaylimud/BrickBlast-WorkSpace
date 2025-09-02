@@ -264,7 +264,7 @@ namespace Ray.Controllers
         {
             _rayDebug.Event("CreateShopUI", c, this);
 
-            _view.Show(_element.Menu.BtnShop);
+            //_view.Show(_element.Menu.BtnShop);
 
             CreateNoAdsSubscriptionUI();
             CreateConsumablesUI();
@@ -320,7 +320,7 @@ namespace Ray.Controllers
             var textComponent = container.transform.Find(textPath)?.GetComponent<TextMeshProUGUI>();
             if (textComponent != null)
             {
-                _view.SetText(textComponent, value);
+//                _view.SetText(textComponent, value);
             }
             else
             {
