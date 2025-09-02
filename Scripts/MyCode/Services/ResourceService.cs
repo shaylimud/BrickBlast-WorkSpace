@@ -201,7 +201,7 @@ namespace Ray.Services
             RayBrickMediator.Instance?.RefreshShop(this);
         }
 
-        public async void ConsumeBooster(BoosterType type)
+        public async Task ConsumeBooster(BoosterType type)
         {
             var saveData = Database.UserData.Copy();
 
@@ -222,8 +222,13 @@ namespace Ray.Services
             }
 
             // Apply the change locally so text updates immediately instead of after the next use
+
             
             await Database.Instance.QueueSave(saveData);
+
+            Database.UserData = saveData;
+            await Database.Instance.QueueSave(saveData, false);
+
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
             RayBrickMediator.Instance?.RefreshShop(this);
