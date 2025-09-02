@@ -14,6 +14,7 @@ using BlockPuzzleGameToolkit.Scripts.Audio;
 using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.System;
+using Ray.Services;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.InputSystem.HID;
@@ -128,8 +129,14 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         private async void ContinueGame()
         {
             result = EPopupResult.Continue;
-            await Ray.Services.Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore);
-            GameManager.instance.MainMenu();
+            await Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore);
+
+            // Restart from the first level within the current group
+            Database.UserData.SetLevel(1);
+            GameDataManager.ResetSubLevelIndex();
+            GameDataManager.SetLevel(null);
+
+            GameManager.instance.RestartLevel();
             Close();
         }
     }
