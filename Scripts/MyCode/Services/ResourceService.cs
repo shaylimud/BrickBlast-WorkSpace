@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using BlockPuzzleGameToolkit.Scripts.System;
 
 namespace Ray.Services
 {
@@ -237,13 +238,22 @@ namespace Ray.Services
         {
             _rayDebug.Event("ResetLevelResources", c, this);
 
-            LevelCurrency.Value = 0;
-            LevelScore.Value = 0;
+            // Only reset earnings at the start of a new stage. During
+            // intermediate levels, keep accumulated values so they can be
+            // rewarded together at the end of the three-level group.
+            if (GameDataManager.GetSubLevelIndex() == 1)
+            {
+                LevelCurrency.Value = 0;
+                LevelScore.Value = 0;
+
+                // Notify listeners that resources were reset so UI and score
+                // handlers can update accordingly.
+                EventService.Resource.OnEndCurrencyChanged.Invoke(this);
+            }
 
             LevelSpace.Value = Database.UserData.Stats.Level;
 
             EventService.Resource.OnLevelResourceChanged.Invoke(this);
-            EventService.Resource.OnEndCurrencyChanged.Invoke(this);
         }
 
         private void ProcessItemValueUsingY(Component c, ItemType itemType, Vector2 itemPos)
