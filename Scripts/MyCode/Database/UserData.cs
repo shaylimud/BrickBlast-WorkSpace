@@ -149,6 +149,13 @@ public class UserData
     public void SetGroupIndex(int value)
     {
         var saveData = Database.UserData.Copy();
+
+        // Reset level when switching groups
+        if (saveData.Stats.GroupIndex != value)
+        {
+            saveData.Stats.Level = 1;
+        }
+
         saveData.Stats.GroupIndex = value;
 
         int absoluteLevel = ((saveData.Stats.GroupIndex - 1) * 3) + saveData.Stats.Level;

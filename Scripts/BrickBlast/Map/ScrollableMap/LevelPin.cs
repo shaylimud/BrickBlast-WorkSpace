@@ -11,6 +11,7 @@
 // // THE SOFTWARE.
 
 using BlockPuzzleGameToolkit.Scripts.LevelsData;
+using Ray.Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -85,6 +86,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Map.ScrollableMap
         {
             if (isLocked)
                 return;
+
+            // Begin a new session at the first level of this group
+            Database.UserData.SetGroupIndex(groupIndex);
+
             var startLevel = (groupIndex - 1) * 3 + 1;
             ScrollableMapManager.instance.OpenLevel(startLevel);
         }
