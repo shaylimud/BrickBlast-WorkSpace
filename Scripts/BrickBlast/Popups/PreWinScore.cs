@@ -12,7 +12,6 @@
 
 using BlockPuzzleGameToolkit.Scripts.Gameplay;
 using BlockPuzzleGameToolkit.Scripts.GUI.Labels;
-using BlockPuzzleGameToolkit.Scripts.LevelsData;
 using UnityEngine;
 using System.Collections;
 
@@ -20,26 +19,21 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 {
     public class PreWinScore : PreWin
     {
-        public TargetScriptable scoreTarget;
         public TargetScoreGUIElement scoreSlider;
         private bool animationCompleted = false;
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            var targetManager = FindObjectOfType<TargetManager>();
 
-            if (!targetManager.GetTargetGuiElements().TryGetValue(scoreTarget, out var targetGuiElement))
+            var modeHandler = FindObjectOfType<BaseModeHandler>(true);
+            if (modeHandler == null)
             {
                 scoreSlider.UpdateCount(0, false);
                 return;
             }
 
-            // Get the final score value
-            if (!int.TryParse(targetGuiElement.countText.text, out int finalScore))
-            {
-                return;
-            }
+            int finalScore = modeHandler.score;
 
             // Set up the total score and animate
             scoreSlider.totalText.text = finalScore.ToString();
@@ -54,12 +48,12 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         private IEnumerator AnimateWithDelay(int finalScore)
         {
             yield return new WaitForSeconds(.3f);
-            
+
             scoreSlider.UpdateCount(finalScore, true);
-            
+
             float startTime = Time.time;
             float elapsedTime = 0f;
-            
+
             // Wait until the slider animation is complete or timeout
             while (Mathf.Abs(scoreSlider.scoreSlider.value - finalScore) > 0.01f && elapsedTime < scoreSlider.duration * 1.5f)
             {
@@ -72,7 +66,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             {
                 scoreSlider.scoreSlider.value = finalScore;
             }
-            
+
             animationCompleted = true;
             yield return new WaitForSeconds(.1f);
             base.AfterShowAnimation();
