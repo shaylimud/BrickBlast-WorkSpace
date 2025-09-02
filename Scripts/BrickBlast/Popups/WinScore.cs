@@ -12,9 +12,8 @@
 
 
 using BlockPuzzleGameToolkit.Scripts.System;
-
 using BlockPuzzleGameToolkit.Scripts.Gameplay;
-
+using Ray.Services;
 using TMPro;
 
 namespace BlockPuzzleGameToolkit.Scripts.Popups
@@ -25,11 +24,11 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 
         private void Start()
         {
-            scoreText.text = GameManager.instance.LastScore.ToString();
+            int currency = ResourceService.Instance != null
+                ? ResourceService.Instance.LevelCurrency.Value
+                : GameManager.instance.LastScore;
 
-            var modeHandler = FindObjectOfType<BaseModeHandler>(true);
-            scoreText.text = modeHandler != null ? modeHandler.score.ToString() : "0";
-
+            scoreText.text = currency.ToString();
         }
     }
 }
