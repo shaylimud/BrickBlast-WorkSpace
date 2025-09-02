@@ -454,7 +454,10 @@ namespace Ray.Controllers
         {
             _rayDebug.Event("HandleOnReviveWatched", c, this);
 
-            _view.FadeOff(_element.Canvas.Revive);
+            if (_view != null && _element?.Canvas?.Revive != null)
+            {
+                _view.FadeOff(_element.Canvas.Revive);
+            }
         }
 
         private void HandleBackToMenu(Component c)
