@@ -301,7 +301,7 @@ namespace Ray.Services
                 bundleSave.Stats.Power_3 = Mathf.Clamp(bundleSave.Stats.Power_3 + bundle.Booster_Square, 0, 99);
                 bundleSave.Stats.Power_4 = Mathf.Clamp(bundleSave.Stats.Power_4 + bundle.Booster_Shape, 0, 99);
 
-                await Database.Instance.Save(bundleSave);
+                await Database.Instance.QueueSave(bundleSave);
 
                 EventService.IAP.HandlePurchasedConsumable(this);
                 EventService.Resource.OnMenuResourceChanged?.Invoke(this);
@@ -315,7 +315,7 @@ namespace Ray.Services
             var saveData = Database.UserData.Copy();
             saveData.Stats.TotalCurrency += rewardAmount;
 
-            await Database.Instance.Save(saveData);
+            await Database.Instance.QueueSave(saveData);
 
             EventService.IAP.HandlePurchasedConsumable(this);
 

@@ -98,7 +98,7 @@ public class UserData
     {
         var saveData = Database.UserData.Copy();
         saveData.TotalCurrency += amount;
-        await Database.Instance?.Save(saveData);
+        await Database.Instance?.QueueSave(saveData);
     }
 
     public async Task AddScoreAsCurrency(int score)
@@ -106,7 +106,7 @@ public class UserData
         var saveData = Database.UserData.Copy();
         saveData.Stats.TotalCurrency += score;
         saveData.Stats.TotalSessions++;
-        await Database.Instance?.Save(saveData);
+        await Database.Instance?.QueueSave(saveData);
     }
 
     public async Task<bool> SpendCurrency(int amount)
@@ -115,7 +115,7 @@ public class UserData
         {
             var saveData = Database.UserData.Copy();
             saveData.TotalCurrency -= amount;
-            await Database.Instance?.Save(saveData);
+            await Database.Instance?.QueueSave(saveData);
             return true;
         }
         return false;
@@ -143,7 +143,7 @@ public class UserData
 
         // Update the runtime copy immediately so subsequent code sees the new level
         Database.UserData = saveData;
-        Database.Instance?.Save(saveData);
+        Database.Instance?.QueueSave(saveData);
     }
 
     public void SetGroupIndex(int value)
@@ -159,6 +159,6 @@ public class UserData
 
         // Ensure local data reflects the new group before saving asynchronously
         Database.UserData = saveData;
-        Database.Instance?.Save(saveData);
+        Database.Instance?.QueueSave(saveData);
     }
 }

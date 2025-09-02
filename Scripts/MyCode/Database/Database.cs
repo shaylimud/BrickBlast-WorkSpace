@@ -22,6 +22,8 @@ namespace Ray.Services
         private string _userID;
         public string UserId => _userID;
         private readonly SemaphoreSlim _saveSemaphore = new SemaphoreSlim(1, 1);
+        private Task _saveQueue = Task.CompletedTask;
+        private readonly object _saveQueueLock = new object();
 
         private RayDebugService _rayDebug => ServiceAllocator.Instance.GetDebugService(ConfigType.Services);
 
@@ -154,7 +156,7 @@ namespace Ray.Services
 
                     await MigrateLegacyProgress();
 
-                    await Save(UserData);
+                    await QueueSave(UserData);
                     _rayDebug.Log("User Data Loaded and Saved: " + JsonUtility.ToJson(UserData, true), this);
                 }
                 else
@@ -192,7 +194,7 @@ namespace Ray.Services
 
             if (changed)
             {
-                await Save(UserData);
+                await QueueSave(UserData);
             }
 
             PlayerPrefs.SetInt("MigratedToUserData", 1);
@@ -274,7 +276,20 @@ namespace Ray.Services
             }
         }
 
-        public async Task Save(UserData saveData)
+        public Task QueueSave(UserData saveData)
+        {
+            lock (_saveQueueLock)
+            {
+                _saveQueue = _saveQueue
+                    .ContinueWith(_ => Save(saveData), CancellationToken.None,
+                        TaskContinuationOptions.None,
+                        TaskScheduler.FromCurrentSynchronizationContext())
+                    .Unwrap();
+                return _saveQueue;
+            }
+        }
+
+        private async Task Save(UserData saveData)
         {
             await _saveSemaphore.WaitAsync();
             try
@@ -446,7 +461,7 @@ namespace Ray.Services
             UserData.Stats.TotalCurrency++;
 
             var saveData = Database.UserData.Copy();
-            await Database.Instance.Save(saveData);
+            await QueueSave(saveData);
         }
 
         // Development
