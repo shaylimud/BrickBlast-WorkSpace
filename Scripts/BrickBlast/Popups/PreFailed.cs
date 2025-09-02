@@ -29,6 +29,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         public Button continueButton;
         public Button reviveButton;
         public TextMeshProUGUI timeLeftText;
+        public TextMeshProUGUI currencyText;
         protected int timer;
         protected int price;
         protected bool hasContinued = false;
@@ -49,6 +50,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             if (timerText != null)
             {
                 timerText.text = timer.ToString();
+            }
+            if (currencyText != null)
+            {
+                currencyText.text = RayBrickMediator.Instance?.CalculateStageCurrency().ToString();
             }
             SoundBase.instance.PlaySound(SoundBase.instance.warningTime);
             InvokeRepeating(nameof(UpdateTimer), 1, 1);
@@ -129,7 +134,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         private async void ContinueGame()
         {
             result = EPopupResult.Continue;
-            await Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore);
+            await Database.UserData.AddCurrency(RayBrickMediator.Instance.CalculateStageCurrency());
 
             // Restart from the first level within the current group
             Database.UserData.SetLevel(1);

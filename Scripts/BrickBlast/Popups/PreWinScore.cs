@@ -29,18 +29,8 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         {
             base.OnEnable();
 
-            int finalScore = GameManager.instance.LastScore;
+            int finalScore = RayBrickMediator.Instance?.CalculateStageCurrency() ?? 0;
 
-            var modeHandler = FindObjectOfType<BaseModeHandler>(true);
-            if (modeHandler == null)
-            {
-                scoreSlider.UpdateCount(0, false);
-                return;
-            }
-
-            finalScore = modeHandler.score;
-
-            // Set up the total score and animate
             scoreSlider.totalText.text = finalScore.ToString();
             scoreSlider.scoreSlider.maxValue = finalScore;
             scoreSlider.scoreSlider.value = 0;

@@ -26,7 +26,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         {
             int currency = ResourceService.Instance != null
                 ? ResourceService.Instance.LevelCurrency.Value
-                : GameManager.instance.LastScore;
+                : RayBrickMediator.Instance?.CalculateStageCurrency() ?? 0;
 
             scoreText.text = currency.ToString();
         }

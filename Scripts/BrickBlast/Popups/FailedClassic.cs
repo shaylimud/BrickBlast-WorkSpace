@@ -30,7 +30,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         {
             base.OnEnable();
             modeHandler = FindObjectOfType<BaseModeHandler>(false);
-            var score = GameManager.instance.LastScore;
+            var score = RayBrickMediator.Instance?.CalculateStageCurrency() ?? 0;
             var bestScore = modeHandler != null ? modeHandler.bestScore : 0;
             scoreText[0].text = score.ToString();
             scoreText[1].text = score.ToString();
