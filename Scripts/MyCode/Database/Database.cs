@@ -291,10 +291,11 @@ namespace Ray.Services
 
                 foreach (PropertyInfo prop in typeof(UserData.StatsData).GetProperties())
                 {
-                    // Level and HighestLevelReached are updated locally before a save occurs,
+                    // Level, GroupIndex and HighestLevelReached are updated locally before a save occurs,
                     // which causes a false mismatch when compared against the server snapshot.
                     // Skip these fields when performing the cheat/mismatch detection.
                     if (prop.Name == nameof(UserData.StatsData.Level) ||
+                        prop.Name == nameof(UserData.StatsData.GroupIndex) ||
                         prop.Name == nameof(UserData.StatsData.HighestLevelReached))
                     {
                         continue;
