@@ -25,6 +25,7 @@ public class UIEventMediator : MonoBehaviour
     public void _OnToggleInsufficientBtn() => EventService.UI.OnToggleInsufficient.Invoke(this);
     public void _OnToggleDataMismatchBtn() => EventService.UI.OnToggleDataMismatch.Invoke(this);
     public void _OnToggleShop() => EventService.UI.OnToggleShop.Invoke(this);
+    public void _OnBackToMenu() => EventService.UI.OnBackToMenu.Invoke(this);
 
     public void _OnBuyClearRow(int cost) => EventService.UI.OnBoosterPurchaseBtn.Invoke(this, BoosterType.ClearRow, cost);
     public void _OnBuyClearColumn(int cost) => EventService.UI.OnBoosterPurchaseBtn.Invoke(this, BoosterType.ClearColumn, cost);
