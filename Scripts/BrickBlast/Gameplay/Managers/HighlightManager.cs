@@ -55,6 +55,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
         private void OnDisable()
         {
             EventManager.GetEvent<Shape>(EGameEvent.ShapePlaced).Unsubscribe(OnShapePlaced);
+
+            // Ensure any active outlines or highlight particles are cleaned up
+            // when the manager is disabled (e.g. when switching stages).
+            ClearAllHighlights();
         }
 
         private void OnShapePlaced(Shape obj)
