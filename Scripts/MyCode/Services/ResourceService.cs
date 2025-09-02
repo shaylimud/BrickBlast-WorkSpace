@@ -167,6 +167,8 @@ namespace Ray.Services
 
             saveData.Stats.TotalCurrency -= cost;
 
+            // Reflect the purchase immediately so UI can display the new values
+            Database.UserData = saveData;
             await Database.Instance.QueueSave(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
@@ -193,6 +195,8 @@ namespace Ray.Services
                     break;
             }
 
+            // Update runtime data immediately to avoid delayed UI updates
+            Database.UserData = saveData;
             await Database.Instance.QueueSave(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
@@ -219,6 +223,8 @@ namespace Ray.Services
                     break;
             }
 
+            // Apply the change locally so text updates immediately instead of after the next use
+            Database.UserData = saveData;
             await Database.Instance.QueueSave(saveData);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
