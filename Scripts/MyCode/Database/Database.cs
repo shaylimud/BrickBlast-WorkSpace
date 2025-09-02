@@ -276,13 +276,13 @@ namespace Ray.Services
             }
         }
 
-        public Task QueueSave(UserData saveData)
+        public Task QueueSave(UserData saveData, bool showBuffer = true)
         {
             lock (_saveQueueLock)
             {
 
                 _saveQueue = _saveQueue
-                    .ContinueWith(_ => Save(saveData), CancellationToken.None,
+                    .ContinueWith(_ => Save(saveData, showBuffer), CancellationToken.None,
                         TaskContinuationOptions.None,
                         TaskScheduler.FromCurrentSynchronizationContext())
                     .Unwrap();
@@ -291,12 +291,13 @@ namespace Ray.Services
             }
         }
 
-        private async Task Save(UserData saveData)
+        private async Task Save(UserData saveData, bool showBuffer)
         {
             await _saveSemaphore.WaitAsync();
             try
             {
-                BufferService.Instance.RequestBuffer();
+                if (showBuffer)
+                    BufferService.Instance.RequestBuffer();
 
                 var userDoc = _firestore.Collection("UserData").Document(_userID);
                 DocumentSnapshot serverSnapshot = await userDoc.GetSnapshotAsync();
@@ -386,7 +387,8 @@ namespace Ray.Services
             }
             finally
             {
-                BufferService.Instance.ReleaseBuffer();
+                if (showBuffer)
+                    BufferService.Instance.ReleaseBuffer();
                 _saveSemaphore.Release();
             }
         }
