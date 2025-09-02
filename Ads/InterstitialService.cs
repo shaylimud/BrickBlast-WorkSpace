@@ -36,7 +36,7 @@ namespace Ray.Controllers
             MaxSdk.LoadInterstitial(Database.GameSettings.Advertising.Interstitial.Penalty);
         }
 
-        private void TryShowInter(Component c)
+        public void TryShowInter(Component c)
         {
             _rayDebug.Event("TryShowInter", c, this);
 
