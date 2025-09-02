@@ -11,7 +11,9 @@
 // // THE SOFTWARE.
 
 using BlockPuzzleGameToolkit.Scripts.GUI.Labels;
+
 using BlockPuzzleGameToolkit.Scripts.System;
+
 using UnityEngine;
 using System.Collections;
 
@@ -27,6 +29,15 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             base.OnEnable();
 
             int finalScore = GameManager.instance.LastScore;
+
+            var modeHandler = FindObjectOfType<BaseModeHandler>(true);
+            if (modeHandler == null)
+            {
+                scoreSlider.UpdateCount(0, false);
+                return;
+            }
+
+            int finalScore = modeHandler.score;
 
             // Set up the total score and animate
             scoreSlider.totalText.text = finalScore.ToString();
