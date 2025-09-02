@@ -287,14 +287,11 @@ namespace Ray.Services
         {
             _rayDebug.Event("RewardEndCurrency", c, this);
 
-            // Combine any transient level earnings with collected currency
-            int total = LevelCurrency.Value + LevelScore.Value;
-
-            LevelCurrency.Value = total;
-
+            int reward = RayBrickMediator.Instance?.CalculateStageCurrency() ?? 0;
+            LevelCurrency.Value = reward;
             if (Database.UserData != null)
             {
-                await Database.UserData.AddScoreAsCurrency(total);
+                await Database.UserData.AddCurrency(reward);
             }
             LevelScore.Value = 0;
 
@@ -305,11 +302,11 @@ namespace Ray.Services
         {
             _rayDebug.Event("RewardEndTriple", c, this);
 
-            int DoubleAmount = LevelCurrency.Value * 2;
+            int reward = (RayBrickMediator.Instance?.CalculateStageCurrency() ?? 0) * 3;
 
             var saveData = Database.UserData.Copy();
-            saveData.Stats.TotalCurrency += DoubleAmount;
-            LevelCurrency.Value *= 3;
+            saveData.Stats.TotalCurrency += reward;
+            LevelCurrency.Value = reward;
 
             await Database.Instance.QueueSave(saveData);
 

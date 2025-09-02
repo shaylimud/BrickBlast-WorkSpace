@@ -41,7 +41,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 
             if (currencyText != null)
             {
-                currencyText.text = GameManager.instance.LastScore.ToString();
+                currencyText.text = RayBrickMediator.Instance?.CalculateStageCurrency().ToString();
             }
 
             if (tripleRewardButton != null)
@@ -75,7 +75,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             rewardGranted = true;
             StopInteration();
 
-            await Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore);
+            await Database.UserData.AddCurrency(RayBrickMediator.Instance.CalculateStageCurrency());
             GameManager.instance.RestartLevel();
             Close();
         }
@@ -86,7 +86,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             rewardGranted = true;
             StopInteration();
 
-            await Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore);
+            await Database.UserData.AddCurrency(RayBrickMediator.Instance.CalculateStageCurrency());
             GameManager.instance.MainMenu();
             Close();
         }
@@ -105,7 +105,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             if (rewardGranted) return;
             rewardGranted = true;
 
-            await Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore * 3);
+            await Database.UserData.AddCurrency(RayBrickMediator.Instance.CalculateStageCurrency() * 3);
             GameManager.instance.MainMenu();
             Close();
         }

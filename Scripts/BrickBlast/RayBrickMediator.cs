@@ -187,6 +187,11 @@ using System.Collections.Generic;
             RewardedService.Instance.ShowRewarded(RewardedType.Revive);
         }
 
+        public int CalculateStageCurrency()
+        {
+            return 5;
+        }
+
         public void SetWinButtons(Button collectButton, Button tripleButton, TextMeshProUGUI currencyText)
         {
             // Remove previous listeners if any
@@ -201,7 +206,7 @@ using System.Collections.Generic;
             winRewardGranted = false;
 
             if (winCurrencyText != null)
-                winCurrencyText.text = GameManager.instance.LastScore.ToString();
+                winCurrencyText.text = CalculateStageCurrency().ToString();
 
             if (winCollectButton != null)
                 winCollectButton.onClick.AddListener(OnWinCollectClicked);
@@ -221,7 +226,7 @@ using System.Collections.Generic;
             var popup = MenuManager.instance.GetLastPopup() as Popup;
             popup?.StopInteration();
 
-            await Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore);
+            await Database.UserData.AddCurrency(CalculateStageCurrency());
             GameManager.instance.NextLevel();
             popup?.Close();
         }
@@ -243,7 +248,7 @@ using System.Collections.Generic;
             var popup = MenuManager.instance.GetLastPopup() as Popup;
             popup?.StopInteration();
 
-            await Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore * 3);
+            await Database.UserData.AddCurrency(CalculateStageCurrency() * 3);
             GameManager.instance.NextLevel();
             popup?.Close();
         }
