@@ -574,6 +574,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             // resetting to the first level when progressing within a group.
             int absoluteLevel = (Database.UserData.Stats.GroupIndex - 1) * 3 + Database.UserData.Stats.Level;
             int nextLevel = absoluteLevel + 1;
+            int currentGroup = Database.UserData.Stats.GroupIndex;
             Database.UserData.SetLevel(nextLevel);
             GameDataManager.SetLevel(null);
 
@@ -590,7 +591,6 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             }
             else
             {
-                int currentGroup = Database.UserData.Stats.GroupIndex;
                 GameDataManager.UnlockGroup(currentGroup + 1);
                 GameDataManager.ResetSubLevelIndex();
 
