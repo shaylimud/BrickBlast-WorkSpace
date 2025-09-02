@@ -61,7 +61,10 @@ namespace Ray.Services
 
         public void SubmitLevelScore(int score)
         {
-            LevelScore.Value = score;
+            // Accumulate the score across arcade sub-levels so the final
+            // reward reflects the total points earned over all three
+            // stages rather than just the most recent level.
+            LevelScore.Value += score;
         }
 
         private async void ProcessUpgrade(Component c, UpgradeType upgradeType)
