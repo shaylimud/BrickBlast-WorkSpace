@@ -280,7 +280,15 @@ namespace Ray.Services
         {
             lock (_saveQueueLock)
             {
+
+                _saveQueue = _saveQueue
+                    .ContinueWith(_ => Save(saveData), CancellationToken.None,
+                        TaskContinuationOptions.None,
+                        TaskScheduler.FromCurrentSynchronizationContext())
+                    .Unwrap();
+
                 _saveQueue = _saveQueue.ContinueWith(_ => Save(saveData)).Unwrap();
+
                 return _saveQueue;
             }
         }
