@@ -94,7 +94,12 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public static int GetLevelNum()
         {
-            return Database.UserData.Stats.Level;
+            // Levels are organized in groups of three. "Level" is the index
+            // within its group, so we need to convert the current group and
+            // level into an absolute level number.
+            int groupIndex = Database.UserData.Stats.GroupIndex;
+            int levelIndex = Database.UserData.Stats.Level;
+            return ((groupIndex - 1) * 3) + levelIndex;
         }
 
         public static int GetGroupIndex()
