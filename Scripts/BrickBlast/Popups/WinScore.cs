@@ -10,8 +10,7 @@
 // // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // // THE SOFTWARE.
 
-using BlockPuzzleGameToolkit.Scripts.Gameplay;
-using BlockPuzzleGameToolkit.Scripts.LevelsData;
+using BlockPuzzleGameToolkit.Scripts.System;
 using TMPro;
 
 namespace BlockPuzzleGameToolkit.Scripts.Popups
@@ -19,14 +18,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
     public class WinScore : Win
     {
         public TextMeshProUGUI scoreText;
-        public TargetScriptable scoreTarget;
 
         private void Start()
         {
-            var targetManager = FindObjectOfType<TargetManager>();
-            scoreText.text = targetManager.GetTargetGuiElements().TryGetValue(scoreTarget, out var targetGuiElement)
-                ? targetGuiElement.countText.text
-                : "0";
+            scoreText.text = GameManager.instance.LastScore.ToString();
         }
     }
 }

@@ -128,7 +128,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         private async void ContinueGame()
         {
             result = EPopupResult.Continue;
-            await Ray.Services.Database.UserData.AddScoreAsCurrency(GameManager.instance.Score);
+            await Ray.Services.Database.UserData.AddScoreAsCurrency(GameManager.instance.LastScore);
             GameManager.instance.MainMenu();
             Close();
         }

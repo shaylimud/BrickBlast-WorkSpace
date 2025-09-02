@@ -565,6 +565,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Gameplay
             var modeHandler = FindObjectOfType<BaseModeHandler>();
             if (modeHandler != null)
             {
+                GameManager.instance.LastScore = modeHandler.score;
                 ResourceService.Instance?.SubmitLevelScore(modeHandler.score);
             }
 
