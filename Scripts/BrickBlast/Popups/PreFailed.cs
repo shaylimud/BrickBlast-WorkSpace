@@ -136,12 +136,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             result = EPopupResult.Continue;
             await Database.UserData.AddCurrency(RayBrickMediator.Instance.CalculateStageCurrency());
 
-            // Restart from the first level within the current group
-            Database.UserData.SetLevel(1);
-            GameDataManager.ResetSubLevelIndex();
-            GameDataManager.SetLevel(null);
-
-            GameManager.instance.RestartLevel();
+            GameManager.instance.MainMenu();
             Close();
         }
     }
