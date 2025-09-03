@@ -36,7 +36,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 
             if (closeButton != null)
             {
-                closeButton.onClick.AddListener(CollectAndExit);
+                closeButton.onClick.AddListener(Continue);
             }
 
             if (currencyText != null)
@@ -60,7 +60,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 
             if (closeButton != null)
             {
-                closeButton.onClick.RemoveListener(CollectAndExit);
+                closeButton.onClick.RemoveListener(Continue);
             }
 
             if (tripleRewardButton != null)
@@ -85,7 +85,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             Close();
         }
 
-        private async void CollectAndExit()
+        private async void Continue()
         {
             if (rewardGranted) return;
             rewardGranted = true;
