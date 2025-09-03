@@ -137,6 +137,10 @@ namespace BlockPuzzleGameToolkit.Scripts.System
 
         public void MainMenu()
         {
+            // Reset the player's level whenever navigating back to the main menu
+            // This ensures a fresh state regardless of how the menu is reached
+            Database.UserData.SetLevel(1);
+
             DOTween.KillAll();
             if (StateManager.instance.CurrentState == EScreenStates.Game && GameDataManager.GetGameMode() == EGameMode.Classic)
             {
