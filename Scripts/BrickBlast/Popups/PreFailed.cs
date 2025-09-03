@@ -129,6 +129,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
         {
             result = EPopupResult.Continue;
             await Ray.Services.Database.UserData.AddScoreAsCurrency(GameManager.instance.Score);
+            EventManager.GameStatus = EGameState.Failed;
             GameManager.instance.MainMenu();
             Close();
         }

@@ -10,6 +10,7 @@
 // // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // // THE SOFTWARE.
 
+using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.System;
 using UnityEngine.UI;
@@ -62,6 +63,7 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
             StopInteration();
 
             await Database.UserData.AddScoreAsCurrency(GameManager.instance.Score);
+            EventManager.GameStatus = EGameState.Failed;
             GameManager.instance.MainMenu();
             Close();
         }
