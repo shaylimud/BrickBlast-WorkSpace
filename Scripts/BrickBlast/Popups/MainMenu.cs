@@ -15,6 +15,7 @@ using BlockPuzzleGameToolkit.Scripts.Enums;
 using BlockPuzzleGameToolkit.Scripts.GUI;
 using BlockPuzzleGameToolkit.Scripts.LevelsData;
 using BlockPuzzleGameToolkit.Scripts.System;
+using Ray.Services;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,6 +42,10 @@ namespace BlockPuzzleGameToolkit.Scripts.Popups
 
         private void Start()
         {
+            // Ensure the player's level is reset whenever the main menu is shown
+            // This covers both the initial game launch and any return to the menu
+            Database.UserData.SetLevel(1);
+
             timedMode.onClick.AddListener(PlayTimedMode);
             classicMode.onClick.AddListener(PlayClassicMode);
             adventureMode.onClick.AddListener(PlayAdventureMode);
