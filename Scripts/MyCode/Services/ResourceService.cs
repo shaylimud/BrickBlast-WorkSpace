@@ -219,7 +219,7 @@ namespace Ray.Services
                     break;
             }
 
-            await Database.Instance.QueueSave(saveData);
+            await Database.Instance.QueueSave(saveData, showBuffer:false);
 
             EventService.Resource.OnMenuResourceChanged.Invoke(this);
             RayBrickMediator.Instance?.RefreshShop(this);
